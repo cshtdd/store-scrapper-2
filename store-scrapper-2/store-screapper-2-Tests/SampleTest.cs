@@ -1,9 +1,8 @@
-using System;
 using Xunit;
 
 namespace store_screapper_2_Tests
 {
-    public class UnitTest1
+    public class SampleTest
     {
         [Fact]
         public void PassingTest()
