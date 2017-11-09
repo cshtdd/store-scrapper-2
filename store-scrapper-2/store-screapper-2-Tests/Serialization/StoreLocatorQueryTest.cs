@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using store_scrapper_2.Serialization;
 using Xunit;
 
@@ -55,7 +54,7 @@ namespace store_screapper_2_Tests.Serialization
         .Select(_ => _.Trim())
         .Aggregate((a, b) => a + b);  
 
-      var actual = new StoreLocatorQuery("AAAA", 3, "11", "chipotle").ToString();
+      var actual = new StoreLocatorQuery("AAAA", 3, "11", "chipotle").ToJson();
       
       Assert.Equal(expected, actual);
     }

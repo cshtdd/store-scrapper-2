@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Json;
 
-namespace store_scrapper_2.Serialization.Util
+namespace store_scrapper_2.Serialization
 {
   public static class GenericJsonSerializer
   {
-    public static string toJson(this object sender)
+    public static string ToJson(this object sender)
     {
       using (var stream = new MemoryStream())
       {

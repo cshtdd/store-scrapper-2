@@ -1,6 +1,5 @@
 ﻿using System.Runtime.Serialization;
 using store;
-using store_scrapper_2.Serialization.Util;
 
 namespace store_scrapper_2.Serialization
 {
@@ -35,11 +34,6 @@ namespace store_scrapper_2.Serialization
         Key = key
       };
       LocationType = locationType;
-    }
-    
-    public override string ToString()
-    {
-      return this.toJson();
     }
   }
 }
