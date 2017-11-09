@@ -37,13 +37,25 @@ namespace store_screapper_2_Tests.Serialization
           ""PageSize"": 10
         },
 
+        ""ConsumerParameters"":
+        {
+          ""metric"": false,
+          ""culture"": ""en-US"",
+          ""country"": ""US"",
+          ""size"": ""D"",
+          ""template"": """",
+          ""rtl"": false,
+          ""clientId"": ""11"",
+          ""key"": ""chipotle""
+        },
+
         ""Filters"": [],
         ""LocationType"": 3
       }".Split()
         .Select(_ => _.Trim())
         .Aggregate((a, b) => a + b);  
 
-      var actual = new StoreLocatorQuery("AAAA", 3).ToString();
+      var actual = new StoreLocatorQuery("AAAA", 3, "11", "chipotle").ToString();
       
       Assert.Equal(expected, actual);
     }
