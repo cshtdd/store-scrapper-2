@@ -31,6 +31,12 @@ namespace store_screapper_2_Tests.Serialization
           ""Accuracy"": 0
         },
 
+        ""Paging"":
+        {
+          ""StartIndex"": 1,
+          ""PageSize"": 10
+        },
+
         ""Filters"": [],
         ""LocationType"": 3
       }".Split()
