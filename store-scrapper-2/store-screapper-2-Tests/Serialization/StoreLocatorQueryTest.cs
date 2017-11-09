@@ -24,6 +24,13 @@ namespace store_screapper_2_Tests.Serialization
           ""LocalityType"": null
         },
 
+        ""DetectedLocation"":
+        {
+          ""Latitude"": 0,
+          ""Longitude"": 0,
+          ""Accuracy"": 0
+        },
+
         ""Filters"": [],
         ""LocationType"": 3
       }".Split()

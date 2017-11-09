@@ -10,7 +10,10 @@ namespace store_scrapper_2.Serialization
     public string InputText { get; set; }
 
     [DataMember(Order = 1)]
-    public GeoCode GeoCode { get; set; }
+    public GeoCode GeoCode { get; set; } = new GeoCode();
+
+    [DataMember(Order = 2)]
+    public DetectedLocation DetectedLocation { get; set; } = new DetectedLocation();
     
     [DataMember(Order = 2)]
     public string[] Filters { get; set; } = { };
@@ -21,7 +24,6 @@ namespace store_scrapper_2.Serialization
     {
       InputText = inputText;
       LocationType = locationType;
-      GeoCode = new GeoCode();
     }
     
     public override string ToString()
