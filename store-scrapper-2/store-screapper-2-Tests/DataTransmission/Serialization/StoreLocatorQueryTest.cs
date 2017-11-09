@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using store_scrapper_2.Serialization;
+using store_scrapper_2.DataTransmission.Serialization;
 using Xunit;
 
-namespace store_screapper_2_Tests.Serialization
+namespace store_screapper_2_Tests.DataTransmission.Serialization
 {
   public class StoreLocatorQueryTest
   {

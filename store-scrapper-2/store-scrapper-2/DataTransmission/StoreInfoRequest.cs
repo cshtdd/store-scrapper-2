@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using store_scrapper_2.Serialization;
+using store_scrapper_2.DataTransmission.Serialization;
 
 namespace store_scrapper_2.DataTransmission
 {

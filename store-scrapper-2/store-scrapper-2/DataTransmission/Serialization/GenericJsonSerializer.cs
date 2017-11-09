@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Json;
 
-namespace store_scrapper_2.Serialization
+namespace store_scrapper_2.DataTransmission.Serialization
 {
   public static class GenericJsonSerializer
   {

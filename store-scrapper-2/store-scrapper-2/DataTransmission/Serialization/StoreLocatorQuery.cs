@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
-using store;
+using store_scrapper_2.DataTransmission.Serialization.QueryParameters;
 
-namespace store_scrapper_2.Serialization
+namespace store_scrapper_2.DataTransmission.Serialization
 {
   [DataContract]
   public class StoreLocatorQuery

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace store
+namespace store_scrapper_2.DataTransmission.Serialization.QueryParameters
 {
   [DataContract]
   public class DetectedLocation
