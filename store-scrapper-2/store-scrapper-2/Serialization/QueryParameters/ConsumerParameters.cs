@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace store_scrapper_2.Serialization
+namespace store
 {
   [DataContract]
   public class ConsumerParameters

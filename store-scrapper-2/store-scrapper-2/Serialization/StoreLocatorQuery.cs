@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using store;
 using store_scrapper_2.Serialization.Util;
 
 namespace store_scrapper_2.Serialization
