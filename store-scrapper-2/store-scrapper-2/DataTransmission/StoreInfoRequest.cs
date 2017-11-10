@@ -6,12 +6,19 @@ namespace store_scrapper_2.DataTransmission
   public struct StoreInfoRequest
   {
     public string StoreNumber { get; }
+    public string SatelliteNumber { get; }
 
-    public StoreInfoRequest(string storeNumber) => StoreNumber = storeNumber;
+    public string FullStoreNumber => $"{StoreNumber}-{SatelliteNumber}";
+
+    public StoreInfoRequest(string storeNumber, string satelliteNumber)
+    {
+      StoreNumber = storeNumber;
+      SatelliteNumber = satelliteNumber;
+    }
 
     public override string ToString()
     {
-      var q = new StoreLocatorQuery($"#{StoreNumber}", 4, "17", "SUBWAY_PROD");
+      var q = new StoreLocatorQuery($"#{FullStoreNumber}", 4, "17", "SUBWAY_PROD");
       var qJson = q.ToJson();
       var qUrl = WebUtility.UrlEncode(qJson);
 

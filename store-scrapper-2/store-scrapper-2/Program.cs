@@ -13,7 +13,7 @@ namespace store_scrapper_2
 
       var downloader = new UrlDownloader();
 
-      var requestUrl = new StoreInfoRequest("11111").ToString();
+      var requestUrl = new StoreInfoRequest("11111", "0").ToString();
 
       var rawResponse1 = await downloader.DownloadAsync(requestUrl);
       var rawResponse2 = downloader.Download(requestUrl);
