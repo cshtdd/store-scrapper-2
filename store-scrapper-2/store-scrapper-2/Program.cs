@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 
@@ -17,10 +15,13 @@ namespace store_scrapper_2
 
       var requestUrl = new StoreInfoRequest("11111").ToString();
 
-      var rawResponse = await downloader.Download(requestUrl);
+      var rawResponse1 = await downloader.DownloadAsync(requestUrl);
+      var rawResponse2 = downloader.Download(requestUrl);
 
-      Console.WriteLine("Received Response:");
-      Console.WriteLine(rawResponse);
+      Console.WriteLine($"The two responses match {rawResponse1 == rawResponse2}");
+      
+      Console.WriteLine("Received Response1:");
+      Console.WriteLine(rawResponse1);
     }
   }
 }

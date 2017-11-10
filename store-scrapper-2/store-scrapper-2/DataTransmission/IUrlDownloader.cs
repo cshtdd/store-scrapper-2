@@ -4,6 +4,7 @@ namespace store_scrapper_2.DataTransmission
 {
   public interface IUrlDownloader
   {
-    Task<string> Download(string url);
+    string Download(string url);
+    Task<string> DownloadAsync(string url);
   }
 }

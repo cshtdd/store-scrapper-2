@@ -6,7 +6,19 @@ namespace store_scrapper_2.DataTransmission
 {
   public class UrlDownloader : IUrlDownloader
   {
-    public async Task<string> Download(string url)
+    public string Download(string url)
+    {
+      var request = WebRequest.CreateHttp(url);
+      
+      using (var response = request.GetResponse())
+      using (var responseStream = response.GetResponseStream())
+      using (var reader = new StreamReader(responseStream))
+      {
+        return reader.ReadToEnd();
+      }
+    }
+
+    public async Task<string> DownloadAsync(string url)
     {
       var request = WebRequest.CreateHttp(url);
       
