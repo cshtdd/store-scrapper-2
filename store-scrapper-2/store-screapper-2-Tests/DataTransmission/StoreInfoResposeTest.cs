@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentAssertions;
 using store_scrapper_2.DataTransmission;
 using Xunit;
 
@@ -51,26 +52,26 @@ namespace store_screapper_2_Tests.DataTransmission
 
       var response = StoreInfoResponse.Parse(json);
       
-      Assert.Equal("11111-0", response.FullStoreNumber);
-      Assert.Equal(true, response.IsRestricted);
-      
-      Assert.Equal("360 Lyndock St", response.Address1);
-      Assert.Equal("Box 653", response.Address2);
-      Assert.Equal("third address", response.Address3);
-      Assert.Equal("Corunna", response.City);
-      Assert.Equal("ON", response.State);
-      Assert.Equal("N0N 1G0", response.PostalCode);
-      Assert.Equal("CA", response.CountryCode);
-      Assert.Equal("CAN", response.CountryCode3);
-      
-      Assert.Equal(42.8915, response.Latitude);
-      Assert.Equal(-82.4534, response.Longitude);
-      Assert.Equal("America/Detroit", response.TimeZoneId);
-      Assert.Equal(1, response.CurrentUtcOffset);
-      
-      Assert.Equal(1, response.ListingNumber);
-      Assert.Equal("http://order.subway.com/Stores/Redirect.aspx?s=11111&sa=0&f=r", response.OrderingUrl);
-      Assert.Equal("http://order.subway.com/Stores/Redirect.aspx?s=11111&sa=0&f=c", response.CateringUrl);
+      response.FullStoreNumber.Should().Be("11111-0");
+      response.IsRestricted.Should().Be(true);
+
+      response.Address1.Should().Be("360 Lyndock St");
+      response.Address2.Should().Be("Box 653");
+      response.Address3.Should().Be("third address");
+      response.City.Should().Be("Corunna");
+      response.State.Should().Be("ON");
+      response.PostalCode.Should().Be("N0N 1G0");
+      response.CountryCode.Should().Be("CA");
+      response.CountryCode3.Should().Be("CAN");
+
+      response.Latitude.Should().Be(42.8915);
+      response.Longitude.Should().Be(-82.4534);
+      response.TimeZoneId.Should().Be("America/Detroit");
+      response.CurrentUtcOffset.Should().Be(1);
+
+      response.ListingNumber.Should().Be(1);
+      response.OrderingUrl.Should().Be("http://order.subway.com/Stores/Redirect.aspx?s=11111&sa=0&f=r");
+      response.CateringUrl.Should().Be("http://order.subway.com/Stores/Redirect.aspx?s=11111&sa=0&f=c");
     }
   }
 }

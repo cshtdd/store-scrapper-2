@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentAssertions;
 using store_scrapper_2.DataTransmission.Serialization;
 using Xunit;
 
@@ -52,11 +53,12 @@ namespace store_screapper_2_Tests.DataTransmission.Serialization
         ""LocationType"": 3
       }".Split()
         .Select(_ => _.Trim())
-        .Aggregate((a, b) => a + b);  
+        .Aggregate((a, b) => a + b);
 
-      var actual = new StoreLocatorQuery("AAAA", 3, "11", "chipotle").ToJson();
-      
-      Assert.Equal(expected, actual);
+      new StoreLocatorQuery("AAAA", 3, "11", "chipotle")
+        .ToJson()
+        .Should()
+        .Be(expected);
     }
   }
 }
