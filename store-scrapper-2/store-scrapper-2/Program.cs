@@ -15,13 +15,13 @@ namespace store_scrapper_2
 
       var requestUrl = new StoreInfoRequest("11111", "0").ToString();
 
-      var rawResponse1 = await downloader.DownloadAsync(requestUrl);
-      var rawResponse2 = downloader.Download(requestUrl);
+      var responseJson = await downloader.DownloadAsync(requestUrl);
 
-      Console.WriteLine($"The two responses match {rawResponse1 == rawResponse2}");
+      Console.WriteLine("Received Response:");
       
-      Console.WriteLine("Received Response1:");
-      Console.WriteLine(rawResponse1);
+      var response = StoreInfoResponse.Parse(responseJson);
+
+      Console.WriteLine(response);
     }
   }
 }

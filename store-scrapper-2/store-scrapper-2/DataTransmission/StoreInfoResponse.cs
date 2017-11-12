@@ -65,6 +65,8 @@ namespace store_scrapper_2.DataTransmission
         CateringUrl = storeData.CateringUrl
       };
     }
+
+    public override string ToString() => $"StoreInfoResponse {FullStoreNumber}";
   }
 }
 
