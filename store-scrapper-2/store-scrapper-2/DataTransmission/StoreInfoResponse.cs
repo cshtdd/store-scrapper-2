@@ -8,9 +8,7 @@ namespace store_scrapper_2.DataTransmission
   {
     public string StoreNumber { get; set; }
     public string SatelliteNumber { get; set; }
-    
     public string FullStoreNumber => $"{StoreNumber}-{SatelliteNumber}";
-
     public bool IsRestricted { get; set; }
 
     public string Address1 { get; set; }
