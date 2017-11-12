@@ -7,7 +7,7 @@ namespace store_scrapper_2.DataTransmission.Serialization
   public class StoresLocatorResponse
   {
     [DataMember(Order = 0)]
-    public StoreInfoData[] ResultInfo { get; set; }
+    public StoreInfoData[] ResultData { get; set; }
     [DataMember(Order = 1)]
     public string[] ResultHtml { get; set; }
     [DataMember(Order = 2)]
