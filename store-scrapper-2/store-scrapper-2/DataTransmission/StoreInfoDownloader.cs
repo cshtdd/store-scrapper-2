@@ -11,9 +11,10 @@ namespace store_scrapper_2.DataTransmission
       _urlDownloader = urlDownloader;
     }
 
-    public async Task<StoreInfoResponse> Download(StoreInfoRequest request)
+    public async Task<StoreInfoResponse> DownloadAsync(StoreInfoRequest request)
     {
-      return await new Task<StoreInfoResponse>(() => new StoreInfoResponse());
+      var responseJson = await _urlDownloader.DownloadAsync(request.ToUrl());
+      return StoreInfoResponse.Parse(responseJson);
     }
   }
 }
