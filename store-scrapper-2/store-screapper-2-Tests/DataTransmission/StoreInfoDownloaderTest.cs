@@ -28,7 +28,7 @@ namespace store_screapper_2_Tests.DataTransmission
             Address = new Address
             {
               Address1 = "addr1",
-              Address2 = "add2",
+              Address2 = "addr2",
               Address3 = "addr3",
               City = "city1",
               CountryCode = "us",
@@ -49,8 +49,7 @@ namespace store_screapper_2_Tests.DataTransmission
           }
         }
       };
-      var seededResponse = $"({seededStoreLocatorResponse.ToJson()})";
-      return seededResponse;
+      return $"({seededStoreLocatorResponse.ToJson()})";
     }
 
     [Fact]
@@ -62,10 +61,31 @@ namespace store_screapper_2_Tests.DataTransmission
       urlDownloader.DownloadAsync(request.ToUrl())
         .Returns(Task.FromResult(GenerateStoreLocatorResponse()));
 
+      
       var response = await new StoreInfoDownloader(urlDownloader)
         .DownloadAsync(request);
 
+      
+      response.FullStoreNumber.Should().Be("67789-4");
+      response.IsRestricted.Should().BeTrue();
+      
       response.Address1.Should().Be("addr1");
+      response.Address2.Should().Be("addr2");
+      response.Address3.Should().Be("addr3");
+      response.City.Should().Be("city1");
+      response.CountryCode.Should().Be("us");
+      response.CountryCode3.Should().Be("us3");
+      response.PostalCode.Should().Be("12345");
+      response.State.Should().Be("ny");
+      response.CurrentUtcOffset.Should().Be(5);
+      
+      response.Latitude.Should().Be(34);
+      response.Longitude.Should().Be(67);
+      response.TimeZoneId.Should().Be("GMT");
+
+      response.ListingNumber.Should().Be(12);
+      response.CateringUrl.Should().Be("the catering");
+      response.OrderingUrl.Should().Be("the ordering");
     }
   }
 }
