@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Castle.DynamicProxy.Generators;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using store;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DataTransmission.Serialization;
@@ -58,17 +58,14 @@ namespace store_screapper_2_Tests.DataTransmission
     {
       var request = new StoreInfoRequest("77777", "2");
 
-      var urlDownloader = new Mock<IUrlDownloader>();
-      urlDownloader
-        .Setup(_ => _.DownloadAsync(request.ToUrl()))
+      var urlDownloader = Substitute.For<IUrlDownloader>();
+      urlDownloader.DownloadAsync(request.ToUrl())
         .Returns(Task.FromResult(GenerateStoreLocatorResponse()));
-      
-      var downloader = new StoreInfoDownloader(urlDownloader.Object);
 
-      var response = await downloader.DownloadAsync(request);
+      var response = await new StoreInfoDownloader(urlDownloader)
+        .DownloadAsync(request);
 
       response.Address1.Should().Be("addr1");
     }
-
   }
 }
