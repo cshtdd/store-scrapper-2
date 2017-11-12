@@ -16,7 +16,7 @@ namespace store_scrapper_2.DataTransmission
       SatelliteNumber = satelliteNumber;
     }
 
-    public override string ToString()
+    public string ToUrl()
     {
       var q = new StoreLocatorQuery($"#{FullStoreNumber}", 4, "17", "SUBWAY_PROD");
       var qJson = q.ToJson();
@@ -26,5 +26,7 @@ namespace store_scrapper_2.DataTransmission
 
       return $"{endpoint}?&q={qUrl}";
     }
+    
+    public override string ToString() => $"StoreInfoResponse {FullStoreNumber}";
   }
 }

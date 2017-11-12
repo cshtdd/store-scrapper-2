@@ -13,9 +13,11 @@ namespace store_scrapper_2
 
       var downloader = new UrlDownloader();
 
-      var requestUrl = new StoreInfoRequest("11111", "0").ToString();
+      var request = new StoreInfoRequest("11111", "0");
+      
+      Console.WriteLine($"Sending Request: {request}");
 
-      var responseJson = await downloader.DownloadAsync(requestUrl);
+      var responseJson = await downloader.DownloadAsync(request.ToUrl());
 
       Console.WriteLine("Received Response:");
       
