@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 
@@ -9,19 +10,15 @@ namespace store_scrapper_2
     // ReSharper disable once UnusedParameter.Local
     public static async Task Main(string[] args)
     {
-      Console.WriteLine($"Launching Program with args={string.Join(",", args)}");
+      var downloader = new StoreInfoDownloader(new UrlDownloader());
 
-      var downloader = new UrlDownloader();
+      Console.WriteLine($"Launching Program with args={string.Join(",", args)}");
 
       var request = new StoreInfoRequest("11111", "0");
       
       Console.WriteLine($"Sending Request: {request}");
 
-      var responseJson = await downloader.DownloadAsync(request.ToUrl());
-
-      Console.WriteLine("Received Response:");
-      
-      var response = StoreInfoResponse.Parse(responseJson);
+      var response = await downloader.DownloadAsync(request);
 
       Console.WriteLine(response);
     }
