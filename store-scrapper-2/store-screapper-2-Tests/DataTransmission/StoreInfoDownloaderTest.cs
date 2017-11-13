@@ -10,13 +10,14 @@ namespace store_screapper_2_Tests.DataTransmission
   public class StoreInfoDownloaderTest
   {
     [Fact]
-    public async void DownloadsTheStoreInfoFromTheStoreLocator()
+    public async void DownloadsTheFirstStoreInfoFromTheStoreLocator()
     {
       var request = new StoreInfoRequest("77777", "2");
+      var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");
 
       var urlDownloader = Substitute.For<IUrlDownloader>();
       urlDownloader.DownloadAsync(request.ToUrl())
-        .Returns(Task.FromResult(StoresLocatorResponseFactory.Create("67789-4")));
+        .Returns(Task.FromResult(seededResponse));
 
       
       var response = await new StoreInfoDownloader(urlDownloader)
