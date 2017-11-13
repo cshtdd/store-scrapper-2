@@ -12,17 +12,22 @@ namespace store_scrapper_2
     {
       Console.WriteLine($"Launching Program with args={string.Join(",", args)}");
       
-      var response = await DownloadStore();
+      var response = await DownloadStoreData();
       Console.WriteLine($"response={response}");
 
+      SaveStoreData(response);
+    }
+
+    private static void SaveStoreData(StoreInfoResponse response)
+    {
       Console.WriteLine(new string('=', 16));
 
       Console.WriteLine("AAAAA");
-      
+
       Console.WriteLine(new string('=', 16));
     }
 
-    private static async Task<StoreInfoResponse> DownloadStore()
+    private static async Task<StoreInfoResponse> DownloadStoreData()
     {
       var request = new StoreInfoRequest("11111", "0");
 
