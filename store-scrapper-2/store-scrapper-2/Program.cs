@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using store;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
@@ -13,16 +14,19 @@ namespace store_scrapper_2
     public static async Task Main(string[] args)
     {
       Console.WriteLine($"Launching Program with args={string.Join(",", args)}");
+
+      Console.WriteLine("Migrating the database");
+      await new StoreDataContext().Database.MigrateAsync();
       
       var response = await DownloadStoreData();
       Console.WriteLine($"response={response}");
 
-      SaveStoreData(response);
+      await SaveStoreData(response);
 
       Console.WriteLine("Ending program");
     }
 
-    private static async void SaveStoreData(StoreInfoResponse response)
+    private static async Task SaveStoreData(StoreInfoResponse response)
     {
       Console.WriteLine($"Saving Response");
 
