@@ -1,4 +1,4 @@
-﻿namespace store_scrapper_2.DAL
+﻿namespace store
 {
   public class Store
   {

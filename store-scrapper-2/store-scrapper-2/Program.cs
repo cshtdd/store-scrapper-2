@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using store;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
 
@@ -17,41 +18,15 @@ namespace store_scrapper_2
       Console.WriteLine($"response={response}");
 
       SaveStoreData(response);
+
+      Console.WriteLine("Ending program");
     }
 
     private static async void SaveStoreData(StoreInfoResponse response)
     {
-      Console.WriteLine(new string('=', 16));
+      Console.WriteLine($"Saving Response");
 
-      using (var db = new StoreDataContext())
-      {
-        db.Stores.Add(new Store
-        {
-          StoreNumber = response.StoreNumber,
-          SatelliteNumber = response.SatelliteNumber,
-          IsRestricted = response.IsRestricted,
-          Address1 = response.Address1,
-          Address2 = response.Address2,
-          Address3 = response.Address3,
-          City = response.City,
-          State = response.State,
-          PostalCode = response.PostalCode,
-          CountryCode = response.CountryCode,
-          CountryCode3 = response.CountryCode3,
-          Latitude = response.Latitude,
-          Longitude = response.Longitude,
-          TimeZoneId = response.TimeZoneId,
-          CurrentUtcOffset = response.CurrentUtcOffset,
-          ListingNumber = response.ListingNumber,
-          OrderingUrl = response.OrderingUrl,
-          CateringUrl = response.CateringUrl
-        });
-        var changedEntries = await db.SaveChangesAsync();
-        
-        Console.WriteLine($"changedEntries={changedEntries}");
-      }
-
-      Console.WriteLine(new string('=', 16));
+      await CreateResponseDataService().SaveAsync(response);
     }
 
     private static async Task<StoreInfoResponse> DownloadStoreData()
@@ -64,5 +39,6 @@ namespace store_scrapper_2
     }
 
     private static StoreInfoDownloader CreateDownloader() => new StoreInfoDownloader(new UrlDownloader());
+    private static IStoreInfoResponseDataService CreateResponseDataService() => new StoreInfoResponseDataService();
   }
 }

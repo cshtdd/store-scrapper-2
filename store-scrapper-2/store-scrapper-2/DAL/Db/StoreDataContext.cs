@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using store;
 
 namespace store_scrapper_2.DAL
 {
