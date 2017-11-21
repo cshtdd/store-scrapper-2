@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using store;
 using store_scrapper_2.DataTransmission;
@@ -15,15 +15,30 @@ namespace store_scrapper_2
     {
       Console.WriteLine($"Launching Program with args={string.Join(",", args)}");
 
-      Console.WriteLine("Migrating the database");
-      await new StoreDataContext().Database.MigrateAsync();
+      ConfigureMappings();
       
+      await MigrateTheDatabase();
+
       var response = await DownloadStoreData();
       Console.WriteLine($"response={response}");
 
       await SaveStoreData(response);
 
       Console.WriteLine("Ending program");
+    }
+
+    private static void ConfigureMappings()
+    {
+      Mapper.Initialize(_ =>
+      {
+        _.CreateMap<StoreInfoResponse, Store>();
+      });
+    }
+
+    private static async Task MigrateTheDatabase()
+    {
+      Console.WriteLine("Migrating the database");
+      await new StoreDataContext().Database.MigrateAsync();
     }
 
     private static async Task SaveStoreData(StoreInfoResponse response)

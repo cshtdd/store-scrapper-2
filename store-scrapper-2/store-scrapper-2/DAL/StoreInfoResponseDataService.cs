@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
 
@@ -9,30 +10,12 @@ namespace store
   {
     public async Task SaveAsync(StoreInfoResponse response)
     {
+      var storeInfo = Mapper.Map<Store>(response);
+      
       using (var db = new StoreDataContext())
       {
-        db.Stores.Add(new Store
-        {
-          StoreNumber = response.StoreNumber,
-          SatelliteNumber = response.SatelliteNumber,
-          IsRestricted = response.IsRestricted,
-          Address1 = response.Address1,
-          Address2 = response.Address2,
-          Address3 = response.Address3,
-          City = response.City,
-          State = response.State,
-          PostalCode = response.PostalCode,
-          CountryCode = response.CountryCode,
-          CountryCode3 = response.CountryCode3,
-          Latitude = response.Latitude,
-          Longitude = response.Longitude,
-          TimeZoneId = response.TimeZoneId,
-          CurrentUtcOffset = response.CurrentUtcOffset,
-          ListingNumber = response.ListingNumber,
-          OrderingUrl = response.OrderingUrl,
-          CateringUrl = response.CateringUrl
-        });
-
+        db.Stores.Add(storeInfo);
+        
         var changedEntries = await db.SaveChangesAsync();
 
         Console.WriteLine($"changedEntries={changedEntries}");
