@@ -28,5 +28,11 @@ namespace store_scrapper_2.DataTransmission
     }
     
     public override string ToString() => $"StoreInfoResponse {FullStoreNumber}";
+
+    public static StoreInfoRequest FromFullStoreNumber(string fullStoreNumber)
+    {
+      var storeNumberPieces = fullStoreNumber.Split('-');
+      return new StoreInfoRequest(storeNumberPieces[0], storeNumberPieces[1]);
+    }
   }
 }

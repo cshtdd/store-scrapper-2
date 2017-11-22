@@ -25,5 +25,14 @@ namespace store_screapper_2_Tests.DataTransmission
         .Should()
         .Be("11111-2");
     }
+
+    [Fact]
+    public void CanBeCreatedOutOfAFullStoreNumber()
+    {
+      StoreInfoRequest.FromFullStoreNumber("34562-5")
+        .FullStoreNumber
+        .Should()
+        .Be("34562-5");
+    }
   }
 }
