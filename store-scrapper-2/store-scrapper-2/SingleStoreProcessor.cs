@@ -18,8 +18,33 @@ namespace store_scrapper_2
 
     public async Task Process(string fullStoreNumber)
     {
+      Console.WriteLine($"Processing; fullStoreNumber={fullStoreNumber}");
       var storeNumber = StoreInfoRequest.FromFullStoreNumber(fullStoreNumber);
-      await _downloader.DownloadAsync(storeNumber);
+
+      Console.WriteLine($"Downloading Store; storeNumber={storeNumber}");     
+      var storeInfo = await _downloader.DownloadAsync(storeNumber);
+
+      await SaveStoreInfo(storeNumber, storeInfo);
+    }
+
+    private async Task SaveStoreInfo(StoreInfoRequest storeNumber, StoreInfoResponse storeInfo)
+    {
+      Console.WriteLine($"Saving Response; storeNumber={storeNumber}");
+      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(
+        storeNumber.StoreNumber,
+        storeNumber.SatelliteNumber
+      );
+
+      if (shouldUpdateExistingStore)
+      {
+        Console.WriteLine($"Updating Existing Store Info");
+        await _dataService.UpdateAsync(storeInfo);
+      }
+      else
+      {
+        Console.WriteLine($"Creating new Store Info");
+        await _dataService.CreateNewAsync(storeInfo);
+      }
     }
   }
 }
