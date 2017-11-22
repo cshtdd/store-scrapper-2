@@ -58,7 +58,7 @@ namespace store_scrapper_2
       return await CreateDownloader().DownloadAsync(request);
     }
 
-    private static StoreInfoDownloader CreateDownloader() => new StoreInfoDownloader(new UrlDownloader());
+    private static IStoreInfoDownloader CreateDownloader() => new StoreInfoDownloader(new UrlDownloader());
     private static IStoreInfoResponseDataService CreateResponseDataService() => new StoreInfoResponseDataService();
   }
 }

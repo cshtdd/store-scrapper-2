@@ -2,7 +2,7 @@
 
 namespace store_scrapper_2.DataTransmission
 {
-  public class StoreInfoDownloader
+  public class StoreInfoDownloader : IStoreInfoDownloader
   {
     private readonly IUrlDownloader _urlDownloader;
 
