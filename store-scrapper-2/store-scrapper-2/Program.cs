@@ -33,7 +33,20 @@ namespace store_scrapper_2
     {
       Console.WriteLine($"Saving Response");
 
-      await CreateResponseDataService().SaveAsync(response);
+      var dataService = CreateResponseDataService();
+
+      bool shouldUpdateStore = await dataService.ContainsStoreAsync(response.StoreNumber, response.SatelliteNumber);
+
+      if (shouldUpdateStore)
+      {
+        Console.WriteLine($"Updating Existing Store Info");
+        await dataService.UpdateAsync(response);
+      }
+      else
+      {
+        Console.WriteLine($"Creating new Store Info");
+        await dataService.CreateNewAsync(response);       
+      }
     }
 
     private static async Task<StoreInfoResponse> DownloadStoreData()
