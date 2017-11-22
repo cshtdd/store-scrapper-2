@@ -1,12 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml;
 using log4net;
-using log4net.Appender;
 using log4net.Config;
-using log4net.Repository;
 using store;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission;
