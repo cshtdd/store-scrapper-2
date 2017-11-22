@@ -17,7 +17,7 @@ namespace store_screapper_2_Tests
       
       var processor = new SingleStoreProcessor(downloader, null);
 
-      await processor.Process("55555", "3");
+      await processor.Process("55555-3");
 
       downloader
         .Received(1)

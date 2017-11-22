@@ -16,9 +16,10 @@ namespace store_scrapper_2
       _dataService = dataService;
     }
 
-    public async Task Process(string storeNumber, string satelliteNumber)
+    public async Task Process(string fullStoreNumber)
     {
-      await _downloader.DownloadAsync(new StoreInfoRequest(storeNumber, satelliteNumber));
+      var storeNumber = StoreInfoRequest.FromFullStoreNumber(fullStoreNumber);
+      await _downloader.DownloadAsync(storeNumber);
     }
   }
 }
