@@ -10,8 +10,19 @@ namespace store_scrapper_2.Configuration
     {
       Mapper.Initialize(_ =>
       {
-        _.CreateMap<StoreInfoResponse, Store>();
-      });      
+        _.AddProfile<DalMappingProfile>();
+      });
+      
+      Mapper.AssertConfigurationIsValid();
+    }
+
+    class DalMappingProfile : Profile
+    {
+      public DalMappingProfile()
+      {
+        CreateMap<StoreInfoResponse, Store>()
+          .ForMember(dest => dest.StoreId, mi => mi.Ignore());
+      }
     }
   }
 }
