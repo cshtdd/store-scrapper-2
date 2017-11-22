@@ -10,6 +10,8 @@ namespace store
 {
   public class StoreInfoResponseDataService : IStoreInfoResponseDataService
   {
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    
     public async Task<bool> ContainsStoreAsync(string storeNumber, string satellite)
     {
       using (var db = CreateContext())
@@ -57,7 +59,7 @@ namespace store
     {
       var changedEntries = await db.SaveChangesAsync();
 
-      Console.WriteLine($"changedEntries={changedEntries}");
+      log.Info($"SaveContextChanges; changedEntries={changedEntries}");
 
       if (changedEntries == 0)
       {

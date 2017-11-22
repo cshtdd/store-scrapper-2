@@ -8,7 +8,9 @@ namespace store_scrapper_2
   public class SingleStoreProcessor
   {
     private readonly IStoreInfoDownloader _downloader;
-    private readonly IStoreInfoResponseDataService _dataService; 
+    private readonly IStoreInfoResponseDataService _dataService;
+    
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     public SingleStoreProcessor(IStoreInfoDownloader downloader, IStoreInfoResponseDataService dataService)
     {
@@ -17,7 +19,7 @@ namespace store_scrapper_2
     }
 
     private string GenerateUniqueLogId() => Guid.NewGuid().ToString("N");
-    private void Log(string id, string logString) => Console.WriteLine($"{GetType().Name}; {logString}; correlationId={id};");
+    private void Log(string id, string logString) => log.Info($"{logString}; correlationId={id};");
     
     public async Task Process(string fullStoreNumber)
     {
