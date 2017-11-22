@@ -19,7 +19,9 @@ namespace store_scrapper_2
       Console.WriteLine("Ending program");
     }
 
-    private static SingleStoreProcessor CreateSingleStoreProcessor() => new SingleStoreProcessor(new StoreInfoDownloader(new UrlDownloader()), new StoreInfoResponseDataService());
+    private static SingleStoreProcessor CreateSingleStoreProcessor() => new SingleStoreProcessor(
+      new StoreInfoDownloader(new UrlDownloader()), new StoreInfoResponseDataService()
+    );
 
     private static async Task Initialize()
     {

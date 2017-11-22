@@ -16,20 +16,20 @@ namespace store_scrapper_2
       _dataService = dataService;
     }
 
+    private string GenerateUniqueLogId() => Guid.NewGuid().ToString("N");
+    private void Log(string id, string logString) => Console.WriteLine($"{GetType().Name}; {logString}; correlationId={id};");
+    
     public async Task Process(string fullStoreNumber)
     {
-      Console.WriteLine($"Processing; fullStoreNumber={fullStoreNumber}");
+      var correlationId = GenerateUniqueLogId();
+      
+      Log(correlationId, $"Processing; fullStoreNumber={fullStoreNumber}");
       var storeNumber = StoreInfoRequest.FromFullStoreNumber(fullStoreNumber);
 
-      Console.WriteLine($"Downloading Store; storeNumber={storeNumber}");     
+      Log(correlationId, $"Downloading Store");     
       var storeInfo = await _downloader.DownloadAsync(storeNumber);
 
-      await SaveStoreInfo(storeNumber, storeInfo);
-    }
-
-    private async Task SaveStoreInfo(StoreInfoRequest storeNumber, StoreInfoResponse storeInfo)
-    {
-      Console.WriteLine($"Saving Response; storeNumber={storeNumber}");
+      Log(correlationId, $"Saving Response");
       var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(
         storeNumber.StoreNumber,
         storeNumber.SatelliteNumber
@@ -37,12 +37,12 @@ namespace store_scrapper_2
 
       if (shouldUpdateExistingStore)
       {
-        Console.WriteLine($"Updating Existing Store Info");
+        Log(correlationId, $"Updating Existing Store");
         await _dataService.UpdateAsync(storeInfo);
       }
       else
       {
-        Console.WriteLine($"Creating new Store Info");
+        Log(correlationId, $"Creating new Store");
         await _dataService.CreateNewAsync(storeInfo);
       }
     }
