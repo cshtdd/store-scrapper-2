@@ -1,4 +1,4 @@
-﻿namespace store
+﻿namespace store_scrapper_2
 {
   public class Store
   {

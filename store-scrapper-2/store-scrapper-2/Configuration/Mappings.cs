@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using store;
 using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2.Configuration
@@ -16,7 +15,7 @@ namespace store_scrapper_2.Configuration
       Mapper.AssertConfigurationIsValid();
     }
 
-    class DalMappingProfile : Profile
+    private class DalMappingProfile : Profile
     {
       public DalMappingProfile()
       {

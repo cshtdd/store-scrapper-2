@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using NSubstitute;
-using store;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 using Xunit;
@@ -19,7 +18,7 @@ namespace store_screapper_2_Tests
       await new SingleStoreProcessor(downloader, Substitute.For<IStoreInfoResponseDataService>())
         .Process("55555-3");
 
-      downloader
+      await downloader
         .Received(1)
         .DownloadAsync(Arg.Is<StoreInfoRequest>(_ => _.FullStoreNumber == "55555-3"));
     }
@@ -39,7 +38,7 @@ namespace store_screapper_2_Tests
       await new SingleStoreProcessor(downloader, dataService)
         .Process("77754-4");
 
-      dataService
+      await dataService
         .Received(1)
         .CreateNewAsync(Arg.Is(seededResponse));
     }
@@ -59,7 +58,7 @@ namespace store_screapper_2_Tests
       await new SingleStoreProcessor(downloader, dataService)
         .Process("77754-4");
 
-      dataService
+      await dataService
         .Received(1)
         .UpdateAsync(Arg.Is(seededResponse));
     }

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using store;
 
 namespace store_scrapper_2.DataTransmission.Serialization
 {

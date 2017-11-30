@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace storescrapper2.Migrations
+namespace store_scrapper_2.Migrations
 {
     public partial class InitialCreate : Migration
     {

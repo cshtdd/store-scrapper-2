@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 
-namespace store
+namespace store_scrapper_2
 {
   public interface IStoreInfoResponseDataService
   {

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Xml.Serialization;
 using store_scrapper_2.DataTransmission.Serialization;
 
 namespace store_scrapper_2.DataTransmission

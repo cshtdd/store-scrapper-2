@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using store;
 using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2
@@ -10,7 +9,7 @@ namespace store_scrapper_2
     private readonly IStoreInfoDownloader _downloader;
     private readonly IStoreInfoResponseDataService _dataService;
     
-    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     public SingleStoreProcessor(IStoreInfoDownloader downloader, IStoreInfoResponseDataService dataService)
     {
@@ -18,20 +17,20 @@ namespace store_scrapper_2
       _dataService = dataService;
     }
 
-    private string GenerateUniqueLogId() => Guid.NewGuid().ToString("N");
-    private void Log(string id, string logString) => log.Info($"{logString}; correlationId={id};");
+    private static string GenerateUniqueLogId() => Guid.NewGuid().ToString("N");
+    private static void LogInfo(string id, string logString) => Logger.Info($"{logString}; correlationId={id};");
     
     public async Task Process(string fullStoreNumber)
     {
       var correlationId = GenerateUniqueLogId();
       
-      Log(correlationId, $"Processing; fullStoreNumber={fullStoreNumber}");
+      LogInfo(correlationId, $"Processing; fullStoreNumber={fullStoreNumber}");
       var storeNumber = StoreInfoRequest.FromFullStoreNumber(fullStoreNumber);
 
-      Log(correlationId, $"Downloading Store");     
+      LogInfo(correlationId, "Downloading Store");     
       var storeInfo = await _downloader.DownloadAsync(storeNumber);
 
-      Log(correlationId, $"Saving Response");
+      LogInfo(correlationId, "Saving Response");
       var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(
         storeNumber.StoreNumber,
         storeNumber.SatelliteNumber
@@ -39,12 +38,12 @@ namespace store_scrapper_2
 
       if (shouldUpdateExistingStore)
       {
-        Log(correlationId, $"Updating Existing Store");
+        LogInfo(correlationId, "Updating Existing Store");
         await _dataService.UpdateAsync(storeInfo);
       }
       else
       {
-        Log(correlationId, $"Creating new Store");
+        LogInfo(correlationId, "Creating new Store");
         await _dataService.CreateNewAsync(storeInfo);
       }
     }

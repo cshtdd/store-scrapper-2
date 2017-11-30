@@ -1,4 +1,5 @@
-﻿using store;
+﻿
+using store_scrapper_2;
 
 namespace store_screapper_2_Tests.Factory
 {

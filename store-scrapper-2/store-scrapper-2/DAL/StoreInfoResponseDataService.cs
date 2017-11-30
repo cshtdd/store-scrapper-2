@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
 
-namespace store
+namespace store_scrapper_2
 {
   public class StoreInfoResponseDataService : IStoreInfoResponseDataService
   {
-    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     
     public async Task<bool> ContainsStoreAsync(string storeNumber, string satellite)
     {
@@ -55,11 +55,11 @@ namespace store
       return new StoreDataContext();
     }
 
-    private static async Task SaveContextChanges(StoreDataContext db)
+    private static async Task SaveContextChanges(DbContext db)
     {
       var changedEntries = await db.SaveChangesAsync();
 
-      log.Info($"SaveContextChanges; changedEntries={changedEntries}");
+      Logger.Info($"SaveContextChanges; changedEntries={changedEntries}");
 
       if (changedEntries == 0)
       {
