@@ -16,6 +16,7 @@ namespace store_scrapper_2_Tests.Configuration
     public void CanResolve()
     {
       IocContainer.Resolve<SingleStoreProcessor>().Should().NotBeNull();
+      IocContainer.Resolve<IPersistenceInitializer>().Should().NotBeNull();
     }
   }
 }

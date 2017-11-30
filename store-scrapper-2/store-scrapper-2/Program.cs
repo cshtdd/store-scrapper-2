@@ -24,11 +24,14 @@ namespace store_scrapper_2
 
     private static SingleStoreProcessor CreateSingleStoreProcessor() => IocContainer.Resolve<SingleStoreProcessor>();
 
+    private static IPersistenceInitializer CreatePersistenceInitializer() =>
+      IocContainer.Resolve<IPersistenceInitializer>();
+
     private static async Task Initialize()
     {
       IocContainer.Initialize();
       Mappings.Configure();
-      await DbMigrator.MigrateAsync();
+      await CreatePersistenceInitializer().Initialize();
     }
   }
 }
