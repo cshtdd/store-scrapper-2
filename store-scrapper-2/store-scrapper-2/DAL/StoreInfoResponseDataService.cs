@@ -59,7 +59,7 @@ namespace store_scrapper_2
     {
       var changedEntries = await db.SaveChangesAsync();
 
-      Logger.Info($"SaveContextChanges; changedEntries={changedEntries}");
+      Logger.Debug($"SaveContextChanges; changedEntries={changedEntries}");
 
       if (changedEntries == 0)
       {
