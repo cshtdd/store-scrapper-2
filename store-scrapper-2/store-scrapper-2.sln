@@ -1,9 +1,9 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "store-scrapper-2", "store-scrapper-2\store-scrapper-2.csproj", "{35061F4E-E467-4E89-9C63-1709FCCF575F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "store-screapper-2-Tests", "store-screapper-2-Tests\store-screapper-2-Tests.csproj", "{6F8BCD8B-65C2-4EBA-819B-AD0C3962692E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "store-scrapper-2-Tests", "store-scrapper-2-Tests\store-scrapper-2-Tests.csproj", "{ACAF368C-422C-41ED-BEA5-5D7C5EFF6891}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +15,9 @@ Global
 		{35061F4E-E467-4E89-9C63-1709FCCF575F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35061F4E-E467-4E89-9C63-1709FCCF575F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35061F4E-E467-4E89-9C63-1709FCCF575F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F8BCD8B-65C2-4EBA-819B-AD0C3962692E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F8BCD8B-65C2-4EBA-819B-AD0C3962692E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F8BCD8B-65C2-4EBA-819B-AD0C3962692E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F8BCD8B-65C2-4EBA-819B-AD0C3962692E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACAF368C-422C-41ED-BEA5-5D7C5EFF6891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACAF368C-422C-41ED-BEA5-5D7C5EFF6891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACAF368C-422C-41ED-BEA5-5D7C5EFF6891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACAF368C-422C-41ED-BEA5-5D7C5EFF6891}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

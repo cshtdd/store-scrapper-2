@@ -3,7 +3,7 @@ using FluentAssertions;
 using store_scrapper_2.DataTransmission.Serialization;
 using Xunit;
 
-namespace store_screapper_2_Tests.DataTransmission.Serialization
+namespace store_scrapper_2_Tests.DataTransmission.Serialization
 {
   public class StoreLocatorQueryTest
   {

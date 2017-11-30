@@ -3,7 +3,7 @@ using store_scrapper_2;
 using store_scrapper_2.Configuration;
 using Xunit;
 
-namespace store_screapper_2_Tests.Configuration
+namespace store_scrapper_2_Tests.Configuration
 {
   public class IocContainerTest
   {

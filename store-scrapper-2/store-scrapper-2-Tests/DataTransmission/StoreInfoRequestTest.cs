@@ -2,7 +2,7 @@
 using store_scrapper_2.DataTransmission;
 using Xunit;
 
-namespace store_screapper_2_Tests.DataTransmission
+namespace store_scrapper_2_Tests.DataTransmission
 {
   public class StoreInfoRequestTest
   {

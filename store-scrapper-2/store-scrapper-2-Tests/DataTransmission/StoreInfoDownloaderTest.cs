@@ -2,10 +2,10 @@
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.DataTransmission;
-using store_screapper_2_Tests.Factory;
+using store_scrapper_2_Tests.Factory;
 using Xunit;
 
-namespace store_screapper_2_Tests.DataTransmission
+namespace store_scrapper_2_Tests.DataTransmission
 {
   public class StoreInfoDownloaderTest
   {

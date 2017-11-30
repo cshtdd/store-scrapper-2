@@ -4,7 +4,7 @@ using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 using Xunit;
 
-namespace store_screapper_2_Tests
+namespace store_scrapper_2_Tests
 {
   public class SingleStoreProcessorTest
   {
