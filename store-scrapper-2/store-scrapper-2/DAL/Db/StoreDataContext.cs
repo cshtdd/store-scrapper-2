@@ -6,10 +6,7 @@ namespace store_scrapper_2.DAL
   {
     private readonly string _databaseName;
 
-    public StoreDataContext(string databaseName="stores.db")
-    {
-      _databaseName = databaseName;
-    }
+    internal StoreDataContext(string databaseName) => _databaseName = databaseName;
 
     public DbSet<Store> Stores { get; set; }
 

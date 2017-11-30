@@ -10,11 +10,17 @@ namespace store_scrapper_2
 {
   public class StoreInfoResponseDataService : IStoreInfoResponseDataService
   {
+    private readonly IStoreDataContextFactory _contextFactory;
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory)
+    {
+      _contextFactory = contextFactory;
+    }
     
     public async Task<bool> ContainsStoreAsync(string storeNumber, string satellite)
     {
-      using (var db = CreateContext())
+      using (var db = _contextFactory.Create())
       {
         return await db.Stores
           .Where(_ => _.StoreNumber == storeNumber && _.SatelliteNumber == satellite)
@@ -26,7 +32,7 @@ namespace store_scrapper_2
     {
       var storeInfo = Mapper.Map<Store>(response);
       
-      using (var db = CreateContext())
+      using (var db = _contextFactory.Create())
       {
         db.Stores.Add(storeInfo);
         
@@ -36,7 +42,7 @@ namespace store_scrapper_2
 
     public async Task UpdateAsync(StoreInfoResponse response)
     {
-      using (var db = CreateContext())
+      using (var db = _contextFactory.Create())
       {
         var storeInfo = await db.Stores
           .Where(_ => _.StoreNumber == response.StoreNumber && _.SatelliteNumber == response.SatelliteNumber)
@@ -48,11 +54,6 @@ namespace store_scrapper_2
         
         await SaveContextChanges(db);
       }
-    }
-    
-    private static StoreDataContext CreateContext()
-    {
-      return new StoreDataContext();
     }
 
     private static async Task SaveContextChanges(DbContext db)
