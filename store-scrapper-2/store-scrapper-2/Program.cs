@@ -5,7 +5,6 @@ using System.Xml;
 using log4net;
 using log4net.Config;
 using store_scrapper_2.Configuration;
-using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2
 {
@@ -32,17 +31,17 @@ namespace store_scrapper_2
       log4NetConfig.Load(File.OpenRead("log4net.config"));
 
       var repo = LogManager.CreateRepository(
-        Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+        Assembly.GetEntryAssembly(),
+        typeof(log4net.Repository.Hierarchy.Hierarchy));
 
       XmlConfigurator.Configure(repo, log4NetConfig["log4net"]);
     }
 
-    private static SingleStoreProcessor CreateSingleStoreProcessor() => new SingleStoreProcessor(
-      new StoreInfoDownloader(new UrlDownloader()), new StoreInfoResponseDataService()
-    );
+    private static SingleStoreProcessor CreateSingleStoreProcessor() => IocContainer.Resolve<SingleStoreProcessor>();
 
     private static async Task Initialize()
     {
+      IocContainer.Initialize();
       Mappings.Configure();
       await DbMigrator.MigrateAsync();
     }
