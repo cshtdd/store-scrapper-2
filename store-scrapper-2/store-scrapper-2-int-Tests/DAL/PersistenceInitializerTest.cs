@@ -12,14 +12,18 @@ namespace store_scrapper_2_int_Tests.DAL
     [Fact]
     public async Task RunsTheMigrations()
     {
-      ContextFactory.Create().Database.GetPendingMigrations().Should().NotBeEmpty();
-
+      using (var context = ContextFactory.Create())
+      {
+        context.Database.GetPendingMigrations().Should().NotBeEmpty();
+      }
       DatabaseExists.Should().BeFalse();
       
-      await new PersistenceInitializer(ContextFactory).Initialize();
+      await new PersistenceInitializer(ContextFactory).InitializeAsync();
 
-      ContextFactory.Create().Database.GetPendingMigrations().Should().BeEmpty();
-      
+      using (var context = ContextFactory.Create())
+      {
+        context.Database.GetPendingMigrations().Should().BeEmpty();
+      }
       DatabaseExists.Should().BeTrue();
     }
   }
