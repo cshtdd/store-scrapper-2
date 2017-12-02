@@ -9,4 +9,10 @@
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\store-scrapper-2\store-scrapper-2.csproj">
+      <Project>{35061F4E-E467-4E89-9C63-1709FCCF575F}</Project>
+      <Name>store-scrapper-2</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
