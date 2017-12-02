@@ -14,7 +14,7 @@ namespace store_scrapper_2
       _contextFactory = contextFactory;
     }
     
-    public async Task Initialize()
+    public async Task InitializeAsync()
     {
       using (var context = _contextFactory.Create())
       {
