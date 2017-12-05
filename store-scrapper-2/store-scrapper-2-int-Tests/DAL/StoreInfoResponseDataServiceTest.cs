@@ -8,7 +8,7 @@ using Xunit;
 
 namespace store_scrapper_2_int_Tests.DAL
 {
-  public class StoreInfoResponseDataServiceTest : BaseDatabaseTest
+  public class StoreInfoResponseDataServiceTest : DatabaseTest
   {   
     [Fact]
     public async Task SavesANewResponse()
