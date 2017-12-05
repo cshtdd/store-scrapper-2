@@ -8,7 +8,7 @@ namespace store_scrapper_2_int_Tests.Utils
   {
     private readonly string _testDatabaseName = $"test_stores{Guid.NewGuid():X}.db";
     
-    protected IStoreDataContextFactory ContextFactory => new StoreDataContextFactory(_testDatabaseName);
+    protected IStoreDataContextFactory ContextFactory => new StoreDataContextFactorySqlite(_testDatabaseName);
     
     protected bool DatabaseExists => File.Exists(_testDatabaseName);
     

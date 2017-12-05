@@ -25,7 +25,8 @@ namespace store_scrapper_2_Tests.Configuration
     {
       var storeDataContextFactory = IocContainer.Resolve<IStoreDataContextFactory>();
       storeDataContextFactory.Should().NotBeNull();
-      ((StoreDataContextFactory) storeDataContextFactory).DatabaseName.Should().Be("stores.db");
+      ((StoreDataContextFactorySqlite) storeDataContextFactory).DatabaseName.Should().Be("stores.db");
+      ((StoreDataContextFactorySqlite) storeDataContextFactory).DatabaseProvider.Should().Be(SupportedDatabases.Sqlite);
     }
   }
 }
