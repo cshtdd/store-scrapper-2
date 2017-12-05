@@ -4,15 +4,26 @@ namespace store_scrapper_2.DAL
 {
   public class StoreDataContext : DbContext
   {
-    private readonly string _databaseName;
+    private readonly string _connectionString;
+    private readonly SupportedDatabases _dbProvider;
 
-    internal StoreDataContext(string databaseName) => _databaseName = databaseName;
+    internal StoreDataContext(string connectionString, SupportedDatabases dbProvider)
+    {
+      _connectionString = connectionString;
+      _dbProvider = dbProvider;
+    }
 
     public DbSet<Store> Stores { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      optionsBuilder.UseSqlite($"Data Source={_databaseName}");
+      if (_dbProvider == SupportedDatabases.Postgres)
+      {
+        optionsBuilder.UseNpgsql(_connectionString);
+        return;
+      }
+
+      optionsBuilder.UseSqlite(_connectionString);
     }
   }
 }
