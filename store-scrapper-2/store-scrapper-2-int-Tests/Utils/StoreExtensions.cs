@@ -2,7 +2,7 @@
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 
-namespace store
+namespace store_scrapper_2_int_Tests.Utils
 {
   public static class StoreExtensions
   {
