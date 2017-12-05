@@ -30,6 +30,12 @@ namespace store_scrapper_2
 
     public async Task CreateNewAsync(StoreInfoResponse response)
     {
+      var storeAlreadyExists = await ContainsStoreAsync(response.StoreNumber, response.SatelliteNumber);
+      if (storeAlreadyExists)
+      {
+        throw new InvalidOperationException("Store already exists");
+      }
+      
       var storeInfo = Mapper.Map<Store>(response);
       
       using (var db = _contextFactory.Create())

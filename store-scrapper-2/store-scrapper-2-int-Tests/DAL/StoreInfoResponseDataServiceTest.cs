@@ -73,6 +73,46 @@ namespace store_scrapper_2_int_Tests.DAL
       }
     }
 
+    [Fact]
+    public async Task CannotInsertTheSameItemTwice()
+    {
+      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+   
+      var response = StoreInfoResponseFactory.Create("11111-3");
+
+      await dataService.CreateNewAsync(response);
+
+      InvalidOperationException thrownException = null;
+      try
+      {
+        await dataService.CreateNewAsync(response);
+      }
+      catch (InvalidOperationException ex)
+      {
+        thrownException = ex;
+      }
+      thrownException.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task CannotUpdateANonExistingStore()
+    {
+      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+
+      var response = StoreInfoResponseFactory.Create("11111-3");
+
+      InvalidOperationException thrownException = null;
+      try
+      {
+        await dataService.UpdateAsync(response);
+      }
+      catch (InvalidOperationException ex)
+      {
+        thrownException = ex;
+      }
+      thrownException.Should().NotBeNull();
+    }
+
     private static StoreInfoResponse CreateUpdatedResponse(StoreInfoResponse originalResponse)
     {
       var updatedResponse = StoreInfoResponseFactory.Create("00000-0");
