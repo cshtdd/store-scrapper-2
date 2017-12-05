@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
+using store_scrapper_2.DAL;
 
 namespace store_scrapper_2.Configuration
 {
@@ -50,6 +51,8 @@ namespace store_scrapper_2.Configuration
       builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
         .Where(_ => true)
         .AsImplementedInterfaces();
+
+      builder.RegisterInstance(new StoreDataContextFactory("Server=localhost;Database=stores", SupportedDatabases.Postgres)).As<IStoreDataContextFactory>();
       
       return builder.Build();
     }

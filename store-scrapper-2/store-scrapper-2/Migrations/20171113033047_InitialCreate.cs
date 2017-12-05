@@ -1,19 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
 
 namespace store_scrapper_2.Migrations
 {
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        {               
             migrationBuilder.CreateTable(
                 name: "Stores",
                 columns: table => new
                 {
-                    StoreId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    StoreId = CreateStoreIdColumn(migrationBuilder, table),
                     Address1 = table.Column<string>(type: "TEXT", nullable: true),
                     Address2 = table.Column<string>(type: "TEXT", nullable: true),
                     Address3 = table.Column<string>(type: "TEXT", nullable: true),
@@ -22,7 +23,7 @@ namespace store_scrapper_2.Migrations
                     CountryCode = table.Column<string>(type: "TEXT", nullable: true),
                     CountryCode3 = table.Column<string>(type: "TEXT", nullable: true),
                     CurrentUtcOffset = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsRestricted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsRestricted = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     Latitude = table.Column<double>(type: "REAL", nullable: false),
                     ListingNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     Longitude = table.Column<double>(type: "REAL", nullable: false),
@@ -37,6 +38,17 @@ namespace store_scrapper_2.Migrations
                 {
                     table.PrimaryKey("PK_Stores", x => x.StoreId);
                 });
+        }
+
+        private static OperationBuilder<AddColumnOperation> CreateStoreIdColumn(MigrationBuilder migrationBuilder, ColumnsBuilder table)
+        {
+            if (migrationBuilder.ActiveProvider.Contains("Sqlite"))
+            {
+                return table.Column<int>(type: "INTEGER", nullable: false)
+                    .Annotation("Sqlite:Autoincrement", true);
+            }
+
+            return table.Column<int>(type: "SERIAL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
