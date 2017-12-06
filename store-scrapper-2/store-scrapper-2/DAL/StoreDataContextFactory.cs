@@ -2,9 +2,14 @@
 {
   public class StoreDataContextFactory : IStoreDataContextFactory
   {
+    private readonly IConnectionStringReader _connectionStringReader;
     public string ConnectionString { get; }
 
-    public StoreDataContextFactory(string connectionString) => ConnectionString = connectionString;
+    public StoreDataContextFactory(IConnectionStringReader connectionStringReader)
+    {
+      _connectionStringReader = connectionStringReader;
+      ConnectionString = _connectionStringReader.Read();
+    }
 
     public StoreDataContext Create() => new StoreDataContext(ConnectionString);
   }

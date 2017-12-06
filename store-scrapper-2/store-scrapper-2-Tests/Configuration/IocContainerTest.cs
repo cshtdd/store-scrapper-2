@@ -21,6 +21,12 @@ namespace store_scrapper_2_Tests.Configuration
     }
 
     [Fact]
+    public void CorrectlyResolvesTheConnectionStringReader()
+    {
+      ((ConnectionStringReader) IocContainer.Resolve<IConnectionStringReader>()).EnvironmentName.Should().Be("PROD");
+    }
+
+    [Fact]
     public void CorrectlyBuildsStoreDataContextFactories()
     {
       var storeDataContextFactory = IocContainer.Resolve<IStoreDataContextFactory>();

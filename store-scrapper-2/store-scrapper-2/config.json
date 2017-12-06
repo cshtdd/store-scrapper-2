@@ -1,0 +1,5 @@
+﻿{
+  "StoresDb": {
+    "ConnectionString": "Server=localhost;Database=stores"
+  }
+}

@@ -15,4 +15,7 @@
       <Name>store-scrapper-2</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config.TEST.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

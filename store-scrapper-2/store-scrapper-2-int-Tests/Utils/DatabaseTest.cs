@@ -5,10 +5,7 @@ namespace store_scrapper_2_int_Tests.Utils
 {
   public abstract class DatabaseTest : IntegrationTest, IDisposable
   {
-    private const string TestDatabaseName = "test_stores";
-    private readonly string _connectionStringTestDb = $"Server=localhost;Database={TestDatabaseName}";
-
-    protected IStoreDataContextFactory ContextFactory => new StoreDataContextFactory(_connectionStringTestDb);
+    protected static IStoreDataContextFactory ContextFactory => new StoreDataContextFactory(new ConnectionStringReader("TEST"));
 
     protected DatabaseTest() => DeleteDatabaseIfNeeded();
 
