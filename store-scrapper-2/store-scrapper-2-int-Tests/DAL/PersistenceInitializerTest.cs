@@ -16,15 +16,13 @@ namespace store_scrapper_2_int_Tests.DAL
       {
         context.Database.GetPendingMigrations().Should().NotBeEmpty();
       }
-      DatabaseExists.Should().BeFalse();
-      
+
       await new PersistenceInitializer(ContextFactory).InitializeAsync();
 
       using (var context = ContextFactory.Create())
       {
         context.Database.GetPendingMigrations().Should().BeEmpty();
       }
-      DatabaseExists.Should().BeTrue();
     }
   }
 }

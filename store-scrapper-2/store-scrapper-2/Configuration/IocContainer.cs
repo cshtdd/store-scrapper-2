@@ -52,7 +52,7 @@ namespace store_scrapper_2.Configuration
         .Where(_ => true)
         .AsImplementedInterfaces();
 
-      builder.RegisterInstance(new StoreDataContextFactory("Server=localhost;Database=stores", SupportedDatabases.Postgres)).As<IStoreDataContextFactory>();
+      builder.RegisterInstance(new StoreDataContextFactory("Server=localhost;Database=stores")).As<IStoreDataContextFactory>();
       
       return builder.Build();
     }

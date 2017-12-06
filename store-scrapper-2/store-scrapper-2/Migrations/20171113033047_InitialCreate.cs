@@ -14,7 +14,7 @@ namespace store_scrapper_2.Migrations
                 name: "Stores",
                 columns: table => new
                 {
-                    StoreId = CreateStoreIdColumn(migrationBuilder, table),
+                    StoreId = table.Column<int>(type: "SERIAL"),
                     Address1 = table.Column<string>(type: "TEXT", nullable: true),
                     Address2 = table.Column<string>(type: "TEXT", nullable: true),
                     Address3 = table.Column<string>(type: "TEXT", nullable: true),
@@ -38,17 +38,6 @@ namespace store_scrapper_2.Migrations
                 {
                     table.PrimaryKey("PK_Stores", x => x.StoreId);
                 });
-        }
-
-        private static OperationBuilder<AddColumnOperation> CreateStoreIdColumn(MigrationBuilder migrationBuilder, ColumnsBuilder table)
-        {
-            if (migrationBuilder.ActiveProvider.Contains("Sqlite"))
-            {
-                return table.Column<int>(type: "INTEGER", nullable: false)
-                    .Annotation("Sqlite:Autoincrement", true);
-            }
-
-            return table.Column<int>(type: "SERIAL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

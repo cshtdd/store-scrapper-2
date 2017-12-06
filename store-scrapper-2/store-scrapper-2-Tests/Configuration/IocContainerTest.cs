@@ -27,8 +27,6 @@ namespace store_scrapper_2_Tests.Configuration
       
       storeDataContextFactory.Should().NotBeNull();
       
-      ((StoreDataContextFactory) storeDataContextFactory).DatabaseProvider.Should().Be(SupportedDatabases.Postgres);
-      //      ((StoreDataContextFactorySqlite) storeDataContextFactory).DatabaseName.Should().Be("stores.db");
       ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Should().Contain("Server=localhost");
       ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Should().Contain("Database=stores");
     }

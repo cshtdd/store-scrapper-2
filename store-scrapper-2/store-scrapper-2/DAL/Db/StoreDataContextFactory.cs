@@ -2,15 +2,10 @@
 {
   public class StoreDataContextFactory : IStoreDataContextFactory
   {
-    public SupportedDatabases DatabaseProvider { get; }
     public string ConnectionString { get; }
 
-    public StoreDataContextFactory(string connectionString, SupportedDatabases databaseProvider)
-    {
-      DatabaseProvider = databaseProvider;
-      ConnectionString = connectionString;
-    }
+    public StoreDataContextFactory(string connectionString) => ConnectionString = connectionString;
 
-    public StoreDataContext Create() => new StoreDataContext(ConnectionString, DatabaseProvider);
+    public StoreDataContext Create() => new StoreDataContext(ConnectionString);
   }
 }
