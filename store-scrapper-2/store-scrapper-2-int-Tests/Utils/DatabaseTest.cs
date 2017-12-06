@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DAL;
 
 namespace store_scrapper_2_int_Tests.Utils
@@ -13,7 +10,7 @@ namespace store_scrapper_2_int_Tests.Utils
 
     protected IStoreDataContextFactory ContextFactory => new StoreDataContextFactory(_connectionStringTestDb);
 
-    public DatabaseTest() => DeleteDatabaseIfNeeded();
+    protected DatabaseTest() => DeleteDatabaseIfNeeded();
 
     void IDisposable.Dispose() => DeleteDatabaseIfNeeded();
 
