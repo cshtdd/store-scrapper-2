@@ -6,7 +6,7 @@ namespace store_scrapper_2_int_Tests.Utils
 {
   public abstract class DatabaseTest : IntegrationTest, IDisposable
   {
-    private readonly string _testDatabaseName = $"test_stores{Guid.NewGuid():X}.db";
+    private readonly string _testDatabaseName = $"test_stores.db";
     
     protected IStoreDataContextFactory ContextFactory => new StoreDataContextFactorySqlite(_testDatabaseName);
     
