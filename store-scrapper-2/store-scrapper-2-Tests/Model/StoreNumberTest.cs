@@ -54,5 +54,12 @@ namespace store_scrapper_2_Tests.Model
       (new StoreNumber("55555", "3") == new StoreNumber(22222, 3)).Should().BeFalse();
       (new StoreNumber("55555", "3") != new StoreNumber(22222, 3)).Should().BeTrue();
     }
+
+    [Fact]
+    public void CanBeImplicitlyBuiltOutOfAString()
+    {
+      StoreNumber sn = "111111-1";
+      sn.Should().Be(new StoreNumber(111111, 1));
+    }
   }
 }
