@@ -13,7 +13,7 @@ namespace store_scrapper_2_Tests.DataTransmission
     [Fact]
     public async void DownloadsTheFirstStoreInfoFromTheStoreLocator()
     {
-      var request = new StoreInfoRequest(new StoreNumber("77777-2"));
+      var request = new StoreInfoRequest("77777-2");
       var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");
 
       var urlDownloader = Substitute.For<IUrlDownloader>();

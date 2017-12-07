@@ -10,7 +10,7 @@ namespace store_scrapper_2_Tests.DataTransmission
     [Fact]
     public void GeneratesTheUrlBasedOnTheStoreNumber()
     {
-      new StoreInfoRequest(new StoreNumber("32229-0"))
+      new StoreInfoRequest("32229-0")
         .ToUrl()
         .Should()
         .Be(

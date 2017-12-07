@@ -57,7 +57,7 @@ namespace store_scrapper_2_int_Tests.DAL
         (await dataService.ContainsStoreAsync(response.StoreNumber)).Should().BeTrue();
       }
 
-      (await dataService.ContainsStoreAsync(new StoreNumber("7777-3"))).Should().BeFalse();
+      (await dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
     }
 
     [Fact]
