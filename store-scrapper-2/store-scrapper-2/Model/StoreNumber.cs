@@ -16,5 +16,9 @@
     public StoreNumber(string fullNumber) : this(fullNumber.Split('-')[0], fullNumber.Split('-')[1]) { }
 
     public override string ToString() => $"{Store}-{Satellite}";
+    
+    public static bool operator == (StoreNumber number1, StoreNumber number2) => number1.Equals(number2);
+
+    public static bool operator != (StoreNumber number1, StoreNumber number2) => !(number1 == number2);
   }
 }

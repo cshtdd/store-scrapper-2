@@ -10,7 +10,7 @@ namespace store_scrapper_2_int_Tests.Utils
   {
     public static async Task ShouldContainStoreEquivalentTo(this StoreDataContext context, StoreInfoResponse response)
     {
-      var dbStore = await context.Stores.FirstAsync(_ => response.StoreNumber.Equals(new StoreNumber(_.StoreNumber, _.SatelliteNumber)));
+      var dbStore = await context.Stores.FirstAsync(_ => response.StoreNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber));
       dbStore.ShouldBeEquivalentTo(response);
     }
   }

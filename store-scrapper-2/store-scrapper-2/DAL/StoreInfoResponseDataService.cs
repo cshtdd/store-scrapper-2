@@ -24,7 +24,7 @@ namespace store_scrapper_2
       using (var db = _contextFactory.Create())
       {
         return await db.Stores
-          .Where(_ => storeNumber.Equals(new StoreNumber(_.StoreNumber, _.SatelliteNumber)))
+          .Where(_ => storeNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber))
           .AnyAsync();
       }
     }
@@ -52,7 +52,7 @@ namespace store_scrapper_2
       using (var db = _contextFactory.Create())
       {
         var storeInfo = await db.Stores
-          .Where(_ => response.StoreNumber.Equals(new StoreNumber(_.StoreNumber, _.SatelliteNumber)))
+          .Where(_ => response.StoreNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber))
           .FirstAsync();
 
         var updatedStoreInfo = Mapper.Map(response, storeInfo);

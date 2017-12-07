@@ -39,6 +39,20 @@ namespace store_scrapper_2_Tests.Model
       new StoreNumber("22222", "3")
         .Should()
         .Be(new StoreNumber(22222, 3));
+      
+      new StoreNumber("55555", "3")
+        .Should()
+        .NotBe(new StoreNumber(22222, 3));
+    }
+    
+    [Fact]
+    public void CanBeComparedUsingTheEqualsSign()
+    {
+      (new StoreNumber("22222", "3") == new StoreNumber(22222, 3)).Should().BeTrue();
+      (new StoreNumber("22222", "3") != new StoreNumber(22222, 3)).Should().BeFalse();
+      
+      (new StoreNumber("55555", "3") == new StoreNumber(22222, 3)).Should().BeFalse();
+      (new StoreNumber("55555", "3") != new StoreNumber(22222, 3)).Should().BeTrue();
     }
   }
 }

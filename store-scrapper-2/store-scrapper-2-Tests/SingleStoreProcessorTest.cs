@@ -21,7 +21,7 @@ namespace store_scrapper_2_Tests
 
       await downloader
         .Received(1)
-        .DownloadAsync(Arg.Is<StoreInfoRequest>(_ => _.StoreNumber.Equals(new StoreNumber("55555-3"))));
+        .DownloadAsync(Arg.Is<StoreInfoRequest>(_ => _.StoreNumber == new StoreNumber("55555-3")));
     }
 
     [Fact]
