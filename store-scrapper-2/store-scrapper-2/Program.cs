@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using log4net;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2
 {
@@ -17,7 +18,8 @@ namespace store_scrapper_2
       Logger.Info($"Launching Program with args={string.Join(",", args)}");
 
       await Initialize();
-      await CreateSingleStoreProcessor().Process(args[0]);
+      var storeNumber = new StoreNumber(args[0]);
+      await CreateSingleStoreProcessor().Process(storeNumber);
       
       Logger.Info("Ending program");
     }

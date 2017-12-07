@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using store_scrapper_2.DataTransmission.Serialization;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2.DataTransmission
 {
   public struct StoreInfoResponse
   {
-    public string StoreNumber { get; set; }
-    public string SatelliteNumber { get; set; }
-    public string FullStoreNumber => $"{StoreNumber}-{SatelliteNumber}";
+    public StoreNumber StoreNumber { get; set; }
     public bool IsRestricted { get; set; }
 
     public string Address1 { get; set; }
@@ -39,8 +38,7 @@ namespace store_scrapper_2.DataTransmission
       
       return new StoreInfoResponse
       {
-        StoreNumber = storeData.LocationId.StoreNumber.ToString(),
-        SatelliteNumber = storeData.LocationId.SatelliteNumber.ToString(),
+        StoreNumber = storeData.LocationId.ToStoreNumber(),
         IsRestricted = storeData.LocationId.IsRestricted,
         
         Address1 = storeData.Address.Address1,
@@ -63,7 +61,12 @@ namespace store_scrapper_2.DataTransmission
       };
     }
 
-    public override string ToString() => $"StoreInfoResponse {FullStoreNumber}";
+    public override string ToString() => $"StoreInfoResponse {StoreNumber}";
   }
+
+  internal static class LocationIdExtensions
+  {
+    public static StoreNumber ToStoreNumber(this LocationId sender) => new StoreNumber(sender.StoreNumber, sender.SatelliteNumber);
+  } 
 }
 

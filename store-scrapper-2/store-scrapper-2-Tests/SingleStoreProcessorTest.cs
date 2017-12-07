@@ -2,6 +2,7 @@
 using NSubstitute;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 using Xunit;
 
 namespace store_scrapper_2_Tests
@@ -16,11 +17,11 @@ namespace store_scrapper_2_Tests
         .Returns(Task.FromResult(new StoreInfoResponse()));
 
       await new SingleStoreProcessor(downloader, Substitute.For<IStoreInfoResponseDataService>())
-        .Process("55555-3");
+        .Process(new StoreNumber("55555-3"));
 
       await downloader
         .Received(1)
-        .DownloadAsync(Arg.Is<StoreInfoRequest>(_ => _.FullStoreNumber == "55555-3"));
+        .DownloadAsync(Arg.Is<StoreInfoRequest>(_ => _.StoreNumber.Equals(new StoreNumber("55555-3"))));
     }
 
     [Fact]
@@ -33,10 +34,10 @@ namespace store_scrapper_2_Tests
         .Returns(Task.FromResult(seededResponse));
 
       var dataService = Substitute.For<IStoreInfoResponseDataService>();
-      dataService.ContainsStoreAsync("77754", "4").Returns(Task.FromResult(false));
+      dataService.ContainsStoreAsync(new StoreNumber("77754-4")).Returns(Task.FromResult(false));
       
       await new SingleStoreProcessor(downloader, dataService)
-        .Process("77754-4");
+        .Process(new StoreNumber("77754-4"));
 
       await dataService
         .Received(1)
@@ -53,10 +54,10 @@ namespace store_scrapper_2_Tests
         .Returns(Task.FromResult(seededResponse));
 
       var dataService = Substitute.For<IStoreInfoResponseDataService>();
-      dataService.ContainsStoreAsync("77754", "4").Returns(Task.FromResult(true));
+      dataService.ContainsStoreAsync(new StoreNumber("77754-4")).Returns(Task.FromResult(true));
       
       await new SingleStoreProcessor(downloader, dataService)
-        .Process("77754-4");
+        .Process(new StoreNumber("77754-4"));
 
       await dataService
         .Received(1)

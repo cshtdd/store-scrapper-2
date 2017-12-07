@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2
 {
@@ -20,21 +21,18 @@ namespace store_scrapper_2
     private static string GenerateUniqueLogId() => Guid.NewGuid().ToString("N");
     private static void LogInfo(string id, string logString) => Logger.Info($"{logString}; correlationId={id};");
     
-    public async Task Process(string fullStoreNumber)
+    public async Task Process(StoreNumber storeNumber)
     {
       var correlationId = GenerateUniqueLogId();
       
-      LogInfo(correlationId, $"Processing; fullStoreNumber={fullStoreNumber}");
-      var storeNumber = StoreInfoRequest.FromFullStoreNumber(fullStoreNumber);
+      LogInfo(correlationId, $"Processing; fullStoreNumber={storeNumber}");
+      var storeInfoRequest = new StoreInfoRequest(storeNumber);
 
       LogInfo(correlationId, "Downloading Store");     
-      var storeInfo = await _downloader.DownloadAsync(storeNumber);
+      var storeInfo = await _downloader.DownloadAsync(storeInfoRequest);
 
       LogInfo(correlationId, "Saving Response");
-      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(
-        storeNumber.StoreNumber,
-        storeNumber.SatelliteNumber
-      );
+      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeNumber);
 
       if (shouldUpdateExistingStore)
       {

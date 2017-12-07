@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2_int_Tests.Utils
 {
@@ -22,10 +23,11 @@ namespace store_scrapper_2_int_Tests.Utils
       sender.ListingNumber.Should().Be(response.ListingNumber);
       sender.OrderingUrl.Should().Be(response.OrderingUrl);
       sender.PostalCode.Should().Be(response.PostalCode);
-      sender.SatelliteNumber.Should().Be(response.SatelliteNumber);
       sender.State.Should().Be(response.State);
-      sender.StoreNumber.Should().Be(response.StoreNumber);
       sender.TimeZoneId.Should().Be(response.TimeZoneId);
+      new StoreNumber(sender.StoreNumber, sender.SatelliteNumber)
+        .Should()
+        .Be(response.StoreNumber);
     }
   }
 }

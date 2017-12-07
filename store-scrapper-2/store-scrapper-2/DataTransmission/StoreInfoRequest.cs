@@ -1,24 +1,18 @@
 ﻿using System.Net;
 using store_scrapper_2.DataTransmission.Serialization;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2.DataTransmission
 {
   public struct StoreInfoRequest
   {
-    public string StoreNumber { get; }
-    public string SatelliteNumber { get; }
+    public StoreNumber StoreNumber { get; }
 
-    public string FullStoreNumber => $"{StoreNumber}-{SatelliteNumber}";
-
-    public StoreInfoRequest(string storeNumber, string satelliteNumber)
-    {
-      StoreNumber = storeNumber;
-      SatelliteNumber = satelliteNumber;
-    }
+    public StoreInfoRequest(StoreNumber storeNumber) => StoreNumber = storeNumber;
 
     public string ToUrl()
     {
-      var q = new StoreLocatorQuery($"#{FullStoreNumber}", 4, "17", "SUBWAY_PROD");
+      var q = new StoreLocatorQuery($"#{StoreNumber}", 4, "17", "SUBWAY_PROD");
       var qJson = q.ToJson();
       var qUrl = WebUtility.UrlEncode(qJson);
 
@@ -27,12 +21,6 @@ namespace store_scrapper_2.DataTransmission
       return $"{endpoint}?&q={qUrl}";
     }
     
-    public override string ToString() => $"StoreInfoResponse {FullStoreNumber}";
-
-    public static StoreInfoRequest FromFullStoreNumber(string fullStoreNumber)
-    {
-      var storeNumberPieces = fullStoreNumber.Split('-');
-      return new StoreInfoRequest(storeNumberPieces[0], storeNumberPieces[1]);
-    }
+    public override string ToString() => $"StoreInfoRequest {StoreNumber }";
   }
 }

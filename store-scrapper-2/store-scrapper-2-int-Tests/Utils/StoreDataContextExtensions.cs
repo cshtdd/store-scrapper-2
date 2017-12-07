@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2_int_Tests.Utils
 {
@@ -9,7 +10,7 @@ namespace store_scrapper_2_int_Tests.Utils
   {
     public static async Task ShouldContainStoreEquivalentTo(this StoreDataContext context, StoreInfoResponse response)
     {
-      var dbStore = await context.Stores.FirstAsync(_ => _.StoreNumber == response.StoreNumber && _.SatelliteNumber == response.SatelliteNumber);
+      var dbStore = await context.Stores.FirstAsync(_ => response.StoreNumber.Equals(new StoreNumber(_.StoreNumber, _.SatelliteNumber)));
       dbStore.ShouldBeEquivalentTo(response);
     }
   }

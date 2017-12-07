@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 using store_scrapper_2_int_Tests.Utils;
 using Xunit;
 
@@ -53,10 +54,10 @@ namespace store_scrapper_2_int_Tests.DAL
 
       foreach (var response in responses)
       {
-        (await dataService.ContainsStoreAsync(response.StoreNumber, response.SatelliteNumber)).Should().BeTrue();
+        (await dataService.ContainsStoreAsync(response.StoreNumber)).Should().BeTrue();
       }
 
-      (await dataService.ContainsStoreAsync("7777", "3")).Should().BeFalse();
+      (await dataService.ContainsStoreAsync(new StoreNumber("7777-3"))).Should().BeFalse();
     }
 
     [Fact]
@@ -67,12 +68,12 @@ namespace store_scrapper_2_int_Tests.DAL
       var originalResponse = StoreInfoResponseFactory.Create("11111-3");
 
       await dataService.CreateNewAsync(originalResponse);
-      (await dataService.ContainsStoreAsync(originalResponse.StoreNumber, originalResponse.SatelliteNumber)).Should().BeTrue();
+      (await dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
       
       var updatedResponse = CreateUpdatedResponse(originalResponse);
 
       await dataService.UpdateAsync(updatedResponse);
-      (await dataService.ContainsStoreAsync(originalResponse.StoreNumber, originalResponse.SatelliteNumber)).Should().BeTrue();
+      (await dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
       
       using (var context = ContextFactory.Create())
       {
@@ -126,7 +127,6 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       var updatedResponse = StoreInfoResponseFactory.Create("00000-0");
       updatedResponse.StoreNumber = originalResponse.StoreNumber;
-      updatedResponse.SatelliteNumber = originalResponse.SatelliteNumber;
       return updatedResponse;
     }
   }

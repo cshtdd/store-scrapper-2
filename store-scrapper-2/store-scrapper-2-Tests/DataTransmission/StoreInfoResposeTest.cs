@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 using Xunit;
 
 namespace store_scrapper_2_Tests.DataTransmission
@@ -52,7 +53,7 @@ namespace store_scrapper_2_Tests.DataTransmission
 
       var response = StoreInfoResponse.Parse(json);
       
-      response.FullStoreNumber.Should().Be("11111-0");
+      response.StoreNumber.Should().Be(new StoreNumber("11111-0"));
       response.IsRestricted.Should().Be(true);
 
       response.Address1.Should().Be("360 Lyndock St");

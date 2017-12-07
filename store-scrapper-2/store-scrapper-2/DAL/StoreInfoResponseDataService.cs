@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2
 {
@@ -18,19 +19,19 @@ namespace store_scrapper_2
       _contextFactory = contextFactory;
     }
     
-    public async Task<bool> ContainsStoreAsync(string storeNumber, string satellite)
+    public async Task<bool> ContainsStoreAsync(StoreNumber storeNumber)
     {
       using (var db = _contextFactory.Create())
       {
         return await db.Stores
-          .Where(_ => _.StoreNumber == storeNumber && _.SatelliteNumber == satellite)
+          .Where(_ => storeNumber.Equals(new StoreNumber(_.StoreNumber, _.SatelliteNumber)))
           .AnyAsync();
       }
     }
 
     public async Task CreateNewAsync(StoreInfoResponse response)
     {
-      var storeAlreadyExists = await ContainsStoreAsync(response.StoreNumber, response.SatelliteNumber);
+      var storeAlreadyExists = await ContainsStoreAsync(response.StoreNumber);
       if (storeAlreadyExists)
       {
         throw new InvalidOperationException("Store already exists");
@@ -51,7 +52,7 @@ namespace store_scrapper_2
       using (var db = _contextFactory.Create())
       {
         var storeInfo = await db.Stores
-          .Where(_ => _.StoreNumber == response.StoreNumber && _.SatelliteNumber == response.SatelliteNumber)
+          .Where(_ => response.StoreNumber.Equals(new StoreNumber(_.StoreNumber, _.SatelliteNumber)))
           .FirstAsync();
 
         var updatedStoreInfo = Mapper.Map(response, storeInfo);

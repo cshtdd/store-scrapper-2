@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 using Xunit;
 
 namespace store_scrapper_2_Tests.DataTransmission
@@ -9,7 +10,7 @@ namespace store_scrapper_2_Tests.DataTransmission
     [Fact]
     public void GeneratesTheUrlBasedOnTheStoreNumber()
     {
-      new StoreInfoRequest("32229", "0")
+      new StoreInfoRequest(new StoreNumber("32229-0"))
         .ToUrl()
         .Should()
         .Be(
@@ -20,19 +21,10 @@ namespace store_scrapper_2_Tests.DataTransmission
     [Fact]
     public void CalculatesTheFullStoreNumber()
     {
-      new StoreInfoRequest("11111", "2")
-        .FullStoreNumber
+      new StoreInfoRequest(new StoreNumber("11111", "2"))
+        .ToString()
         .Should()
-        .Be("11111-2");
-    }
-
-    [Fact]
-    public void CanBeCreatedOutOfAFullStoreNumber()
-    {
-      StoreInfoRequest.FromFullStoreNumber("34562-5")
-        .FullStoreNumber
-        .Should()
-        .Be("34562-5");
+        .Be("StoreInfoRequest 11111-2");
     }
   }
 }
