@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Model;
 
-namespace store_scrapper_2
+namespace store_scrapper_2.Services
 {
+  [Obsolete]
   public class SingleStoreProcessor
   {
     private readonly IStoreInfoDownloader _downloader;

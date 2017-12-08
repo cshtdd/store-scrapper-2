@@ -2,10 +2,10 @@
 using NSubstitute;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
-using store_scrapper_2.Model;
+using store_scrapper_2.Services;
 using Xunit;
 
-namespace store_scrapper_2_Tests
+namespace store_scrapper_2_Tests.Services
 {
   public class SingleStoreProcessorTest
   {
