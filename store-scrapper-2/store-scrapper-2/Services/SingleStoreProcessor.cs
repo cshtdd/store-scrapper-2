@@ -7,14 +7,14 @@ namespace store_scrapper_2.Services
   public class SingleStoreProcessor
   {
     private readonly IStoreInfoDownloader _downloader;
-    private readonly IStoreInfoResponseDataService _dataService;
-    
+    private readonly ISingleStorePersistor _singleStorePersistor;
+
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public SingleStoreProcessor(IStoreInfoDownloader downloader, IStoreInfoResponseDataService dataService)
+    public SingleStoreProcessor(IStoreInfoDownloader downloader, ISingleStorePersistor singleStorePersistor)
     {
       _downloader = downloader;
-      _dataService = dataService;
+      _singleStorePersistor = singleStorePersistor;
     }
 
     public async Task ProcessAsync(StoreNumber storeNumber)
@@ -27,24 +27,7 @@ namespace store_scrapper_2.Services
 
       foreach (var store in stores)
       {
-        await PersistSingleStoreAsync(store);
-      }
-    }
-
-    private async Task PersistSingleStoreAsync(StoreInfoResponse store)
-    {
-      Logger.Info($"Saving Response; storeNumber={store.StoreNumber};");
-      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(store.StoreNumber);
-
-      if (shouldUpdateExistingStore)
-      {
-        Logger.Info($"Updating Existing Store; storeNumber={store.StoreNumber};");
-        await _dataService.UpdateAsync(store);
-      }
-      else
-      {
-        Logger.Info($"Creating new Store; storeNumber={store.StoreNumber};");
-        await _dataService.CreateNewAsync(store);
+        await _singleStorePersistor.PersistAsync(store);
       }
     }
   }
