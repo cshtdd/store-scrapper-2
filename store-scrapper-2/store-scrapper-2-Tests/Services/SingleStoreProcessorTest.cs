@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NSubstitute;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
@@ -14,7 +15,7 @@ namespace store_scrapper_2_Tests.Services
     {
       var downloader = Substitute.For<IStoreInfoDownloader>();
       downloader.DownloadAsync(Arg.Any<StoreInfoRequest>())
-        .Returns(Task.FromResult(new StoreInfoResponse()));
+        .Returns(Task.FromResult((IEnumerable<StoreInfoResponse>) new [] { new StoreInfoResponse() }));
 
       await new SingleStoreProcessor(downloader, Substitute.For<IStoreInfoResponseDataService>())
         .Process("55555-3");
@@ -31,7 +32,7 @@ namespace store_scrapper_2_Tests.Services
 
       var downloader = Substitute.For<IStoreInfoDownloader>();
       downloader.DownloadAsync(Arg.Any<StoreInfoRequest>())
-        .Returns(Task.FromResult(seededResponse));
+        .Returns(Task.FromResult((IEnumerable<StoreInfoResponse>) new [] { seededResponse }));
 
       var dataService = Substitute.For<IStoreInfoResponseDataService>();
       dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(false));
@@ -47,11 +48,15 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async void UpdatesTheStoreDataIfItAlreadyExists()
     {
-      var seededResponse = new StoreInfoResponse { Address1 = "seeded address" };
+      var seededResponse = new StoreInfoResponse
+      {
+        StoreNumber = "77754-4",
+        Address1 = "seeded address"
+      };
 
       var downloader = Substitute.For<IStoreInfoDownloader>();
       downloader.DownloadAsync(Arg.Any<StoreInfoRequest>())
-        .Returns(Task.FromResult(seededResponse));
+        .Returns(Task.FromResult((IEnumerable<StoreInfoResponse>) new [] { seededResponse }));
 
       var dataService = Substitute.For<IStoreInfoResponseDataService>();
       dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(true));

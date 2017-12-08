@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace store_scrapper_2.DataTransmission
 {
@@ -11,10 +12,13 @@ namespace store_scrapper_2.DataTransmission
       _urlDownloader = urlDownloader;
     }
 
-    public async Task<StoreInfoResponse> DownloadAsync(StoreInfoRequest request)
+    public async Task<IEnumerable<StoreInfoResponse>> DownloadAsync(StoreInfoRequest request)
     {
       var responseJson = await _urlDownloader.DownloadAsync(request.ToUrl());
-      return StoreInfoResponse.Parse(responseJson);
+      return new []
+      {
+        StoreInfoResponse.Parse(responseJson)
+      };
     }
   }
 }

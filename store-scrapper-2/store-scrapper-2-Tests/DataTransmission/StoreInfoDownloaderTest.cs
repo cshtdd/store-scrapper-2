@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.DataTransmission;
@@ -21,8 +22,9 @@ namespace store_scrapper_2_Tests.DataTransmission
         .Returns(Task.FromResult(seededResponse));
 
       
-      var response = await new StoreInfoDownloader(urlDownloader)
+      var responses = await new StoreInfoDownloader(urlDownloader)
         .DownloadAsync(request);
+      var response = responses.First();
 
       
       response.StoreNumber.Should().Be(new StoreNumber("67789-4"));

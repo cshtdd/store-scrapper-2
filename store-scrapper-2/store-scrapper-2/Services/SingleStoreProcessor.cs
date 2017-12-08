@@ -22,21 +22,29 @@ namespace store_scrapper_2.Services
       Logger.Info($"Processing; fullStoreNumber={storeNumber};");
       var storeInfoRequest = new StoreInfoRequest(storeNumber);
 
-      Logger.Info("Downloading Store;");     
-      var storeInfo = await _downloader.DownloadAsync(storeInfoRequest);
+      Logger.Info("Downloading Stores;");     
+      var stores = await _downloader.DownloadAsync(storeInfoRequest);
 
-      Logger.Info("Saving Response;");
-      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeNumber);
+      foreach (var store in stores)
+      {
+        await PersistSingleStoreAsync(store);
+      }
+    }
+
+    private async Task PersistSingleStoreAsync(StoreInfoResponse store)
+    {
+      Logger.Info($"Saving Response; storeNumber={store.StoreNumber};");
+      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(store.StoreNumber);
 
       if (shouldUpdateExistingStore)
       {
-        Logger.Info("Updating Existing Store;");
-        await _dataService.UpdateAsync(storeInfo);
+        Logger.Info($"Updating Existing Store; storeNumber={store.StoreNumber};");
+        await _dataService.UpdateAsync(store);
       }
       else
       {
-        Logger.Info("Creating new Store;");
-        await _dataService.CreateNewAsync(storeInfo);
+        Logger.Info($"Creating new Store; storeNumber={store.StoreNumber};");
+        await _dataService.CreateNewAsync(store);
       }
     }
   }
