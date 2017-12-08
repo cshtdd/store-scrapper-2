@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Model;
 
 namespace store_scrapper_2.Services
 {
-  [Obsolete]
   public class SingleStoreProcessor
   {
     private readonly IStoreInfoDownloader _downloader;
@@ -19,30 +17,25 @@ namespace store_scrapper_2.Services
       _dataService = dataService;
     }
 
-    private static string GenerateUniqueLogId() => Guid.NewGuid().ToString("N");
-    private static void LogInfo(string id, string logString) => Logger.Info($"{logString}; correlationId={id};");
-    
     public async Task Process(StoreNumber storeNumber)
-    {
-      var correlationId = GenerateUniqueLogId();
-      
-      LogInfo(correlationId, $"Processing; fullStoreNumber={storeNumber}");
+    {     
+      Logger.Info($"Processing; fullStoreNumber={storeNumber};");
       var storeInfoRequest = new StoreInfoRequest(storeNumber);
 
-      LogInfo(correlationId, "Downloading Store");     
+      Logger.Info("Downloading Store;");     
       var storeInfo = await _downloader.DownloadAsync(storeInfoRequest);
 
-      LogInfo(correlationId, "Saving Response");
+      Logger.Info("Saving Response;");
       var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeNumber);
 
       if (shouldUpdateExistingStore)
       {
-        LogInfo(correlationId, "Updating Existing Store");
+        Logger.Info("Updating Existing Store;");
         await _dataService.UpdateAsync(storeInfo);
       }
       else
       {
-        LogInfo(correlationId, "Creating new Store");
+        Logger.Info("Creating new Store;");
         await _dataService.CreateNewAsync(storeInfo);
       }
     }
