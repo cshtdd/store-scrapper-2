@@ -18,9 +18,9 @@ namespace store_scrapper_2
       
       Logger.Info($"Launching Program with args={string.Join(",", args)}");
 
-      await Initialize();
+      await InitializeAsync();
       var storeNumber = new StoreNumber(args[0]);
-      await CreateSingleStoreProcessor().Process(storeNumber);
+      await CreateSingleStoreProcessor().ProcessAsync(storeNumber);
       
       Logger.Info("Ending program");
     }
@@ -30,7 +30,7 @@ namespace store_scrapper_2
     private static IPersistenceInitializer CreatePersistenceInitializer() =>
       IocContainer.Resolve<IPersistenceInitializer>();
 
-    private static async Task Initialize()
+    private static async Task InitializeAsync()
     {
       IocContainer.Initialize();
       Mappings.Configure();

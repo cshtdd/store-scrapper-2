@@ -44,7 +44,7 @@ namespace store_scrapper_2
       {
         db.Stores.Add(storeInfo);
         
-        await SaveContextChanges(db);
+        await SaveContextChangesAsync(db);
       }
     }
 
@@ -60,11 +60,11 @@ namespace store_scrapper_2
 
         db.Entry(updatedStoreInfo).State = EntityState.Modified;
         
-        await SaveContextChanges(db);
+        await SaveContextChangesAsync(db);
       }
     }
 
-    private static async Task SaveContextChanges(DbContext db)
+    private static async Task SaveContextChangesAsync(DbContext db)
     {
       var changedEntries = await db.SaveChangesAsync();
 

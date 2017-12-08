@@ -18,7 +18,7 @@ namespace store_scrapper_2_Tests.Services
         .Returns(Task.FromResult((IEnumerable<StoreInfoResponse>) new [] { new StoreInfoResponse() }));
 
       await new SingleStoreProcessor(downloader, Substitute.For<IStoreInfoResponseDataService>())
-        .Process("55555-3");
+        .ProcessAsync("55555-3");
 
       await downloader
         .Received(1)
@@ -38,7 +38,7 @@ namespace store_scrapper_2_Tests.Services
       dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(false));
       
       await new SingleStoreProcessor(downloader, dataService)
-        .Process("77754-4");
+        .ProcessAsync("77754-4");
 
       await dataService
         .Received(1)
@@ -62,7 +62,7 @@ namespace store_scrapper_2_Tests.Services
       dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(true));
       
       await new SingleStoreProcessor(downloader, dataService)
-        .Process("77754-4");
+        .ProcessAsync("77754-4");
 
       await dataService
         .Received(1)

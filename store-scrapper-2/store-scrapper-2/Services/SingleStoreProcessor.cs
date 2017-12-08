@@ -17,7 +17,7 @@ namespace store_scrapper_2.Services
       _dataService = dataService;
     }
 
-    public async Task Process(StoreNumber storeNumber)
+    public async Task ProcessAsync(StoreNumber storeNumber)
     {     
       Logger.Info($"Processing; fullStoreNumber={storeNumber};");
       var storeInfoRequest = new StoreInfoRequest(storeNumber);

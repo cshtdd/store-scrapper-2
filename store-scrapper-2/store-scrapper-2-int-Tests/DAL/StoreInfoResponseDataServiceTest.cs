@@ -48,7 +48,7 @@ namespace store_scrapper_2_int_Tests.DAL
 
         foreach (var response in responses)
         {
-          await context.ShouldContainStoreEquivalentTo(response);
+          await context.ShouldContainStoreEquivalentToAsync(response);
         }
       }
 
@@ -79,7 +79,7 @@ namespace store_scrapper_2_int_Tests.DAL
       {
         context.Stores.Count().Should().Be(1);
 
-        await context.ShouldContainStoreEquivalentTo(updatedResponse);
+        await context.ShouldContainStoreEquivalentToAsync(updatedResponse);
       }
     }
 
