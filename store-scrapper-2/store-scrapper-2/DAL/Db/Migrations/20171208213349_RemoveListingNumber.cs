@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace store_scrapper_2.Migrations
+namespace store_scrapper_2.DAL.Db.Migrations
 {
     public partial class RemoveListingNumber : Migration
     {

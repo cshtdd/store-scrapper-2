@@ -4,20 +4,19 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
-using store_scrapper_2.DAL.Db;
 using System;
+using store_scrapper_2.DAL.Db;
 
-namespace storescrapper2.Migrations
+namespace store_scrapper_2.DAL.Db.Migrations
 {
     [DbContext(typeof(StoreDataContext))]
-    partial class StoreDataContextModelSnapshot : ModelSnapshot
+    [Migration("20171113033047_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
             modelBuilder.Entity("store_scrapper_2.DAL.Db.Store", b =>
@@ -44,6 +43,8 @@ namespace storescrapper2.Migrations
                     b.Property<bool>("IsRestricted");
 
                     b.Property<double>("Latitude");
+
+                    b.Property<int>("ListingNumber");
 
                     b.Property<double>("Longitude");
 

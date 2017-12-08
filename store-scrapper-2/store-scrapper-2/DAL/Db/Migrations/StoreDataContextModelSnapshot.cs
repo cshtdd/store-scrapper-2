@@ -3,18 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using store_scrapper_2.DAL.Db;
 using System;
 
-namespace store_scrapper_2.Migrations
+namespace store_scrapper_2.DAL.Db.Migrations
 {
     [DbContext(typeof(StoreDataContext))]
-    [Migration("20171208213349_RemoveListingNumber")]
-    partial class RemoveListingNumber
+    partial class StoreDataContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

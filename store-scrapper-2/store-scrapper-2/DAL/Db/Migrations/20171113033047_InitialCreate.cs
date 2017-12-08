@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
 
-namespace store_scrapper_2.Migrations
+namespace store_scrapper_2.DAL.Db.Migrations
 {
     public partial class InitialCreate : Migration
     {
