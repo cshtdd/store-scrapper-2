@@ -19,7 +19,6 @@ namespace store_scrapper_2_int_Tests.Utils
       IsRestricted = true,
       Latitude = 12,
       Longitude = 16,
-      ListingNumber = 3,
       OrderingUrl = $"{storeNumber}the ordering",
       PostalCode = $"{storeNumber}12345",
       State = $"{storeNumber}fl",

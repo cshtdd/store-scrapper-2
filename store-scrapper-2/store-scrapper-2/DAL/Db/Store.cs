@@ -1,4 +1,4 @@
-﻿namespace store_scrapper_2
+﻿namespace store_scrapper_2.DAL.Db
 {
   public class Store
   {
@@ -22,7 +22,6 @@
     public string TimeZoneId { get; set; }
     public int CurrentUtcOffset { get; set; }
 
-    public int ListingNumber { get; set; }
     public string OrderingUrl { get; set; }
     public string CateringUrl { get; set; }
   }

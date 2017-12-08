@@ -70,7 +70,6 @@ namespace store_scrapper_2_Tests.DataTransmission
       response.TimeZoneId.Should().Be("America/Detroit");
       response.CurrentUtcOffset.Should().Be(1);
 
-      response.ListingNumber.Should().Be(1);
       response.OrderingUrl.Should().Be("http://order.subway.com/Stores/Redirect.aspx?s=11111&sa=0&f=r");
       response.CateringUrl.Should().Be("http://order.subway.com/Stores/Redirect.aspx?s=11111&sa=0&f=c");
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace store_scrapper_2.DAL
+namespace store_scrapper_2.DAL.Db
 {
   public class StoreDataContext : DbContext
   {

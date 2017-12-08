@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
-using store_scrapper_2.DAL;
+using store_scrapper_2.DAL.Db;
 
 namespace store_scrapper_2.Migrations
 {
@@ -19,7 +19,7 @@ namespace store_scrapper_2.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
-            modelBuilder.Entity("store_scrapper_2.DAL.Store", b =>
+            modelBuilder.Entity("store_scrapper_2.DAL.Db.Store", b =>
                 {
                     b.Property<int>("StoreId")
                         .ValueGeneratedOnAdd();

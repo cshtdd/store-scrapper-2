@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.DAL.Db;
 
 namespace store_scrapper_2.Configuration
 {

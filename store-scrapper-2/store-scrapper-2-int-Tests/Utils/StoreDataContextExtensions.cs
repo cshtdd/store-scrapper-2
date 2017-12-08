@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DataTransmission;
-using store_scrapper_2.DAL;
+using store_scrapper_2.DAL.Db;
 using store_scrapper_2.Model;
 
 namespace store_scrapper_2_int_Tests.Utils

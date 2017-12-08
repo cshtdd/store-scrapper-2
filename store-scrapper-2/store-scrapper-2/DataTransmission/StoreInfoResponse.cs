@@ -23,7 +23,6 @@ namespace store_scrapper_2.DataTransmission
     public string TimeZoneId { get; set; }
     public int CurrentUtcOffset { get; set; }
 
-    public int ListingNumber { get; set; }
     public string OrderingUrl { get; set; }
     public string CateringUrl { get; set; }
 
@@ -54,8 +53,7 @@ namespace store_scrapper_2.DataTransmission
         Longitude = storeData.Geo.Longitude,
         TimeZoneId = storeData.Geo.TimeZoneId,
         CurrentUtcOffset = storeData.Geo.CurrentUtcOffset,
-        
-        ListingNumber = storeData.ListingNumber,
+
         OrderingUrl = storeData.OrderingUrl,
         CateringUrl = storeData.CateringUrl
       };

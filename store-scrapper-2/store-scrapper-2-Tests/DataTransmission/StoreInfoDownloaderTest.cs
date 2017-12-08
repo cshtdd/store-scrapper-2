@@ -42,7 +42,6 @@ namespace store_scrapper_2_Tests.DataTransmission
       response.Longitude.Should().Be(67);
       response.TimeZoneId.Should().Be("67789-4GMT");
 
-      response.ListingNumber.Should().Be(12);
       response.CateringUrl.Should().Be("67789-4the catering");
       response.OrderingUrl.Should().Be("67789-4the ordering");
     }

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.DAL.Db;
 using store_scrapper_2.Model;
 
 namespace store_scrapper_2_int_Tests.Utils
@@ -20,7 +20,6 @@ namespace store_scrapper_2_int_Tests.Utils
       sender.IsRestricted.Should().Be(response.IsRestricted);
       sender.Latitude.Should().Be(response.Latitude);
       sender.Longitude.Should().Be(response.Longitude);
-      sender.ListingNumber.Should().Be(response.ListingNumber);
       sender.OrderingUrl.Should().Be(response.OrderingUrl);
       sender.PostalCode.Should().Be(response.PostalCode);
       sender.State.Should().Be(response.State);
