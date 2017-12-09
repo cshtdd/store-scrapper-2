@@ -19,13 +19,15 @@ namespace store_scrapper_2
       
       Logger.Info($"Launching Program with args={string.Join(",", args)}");
 
+      var zipCode = new ZipCode(args[0]);
+
       await InitializeAsync();
-      await CreateSingleStoreProcessor().ProcessAsync(new ZipCode(args[0]));
+      await CreateProcessor().ProcessAsync(zipCode);
       
       Logger.Info("Ending program");
     }
 
-    private static SingleStoreProcessor CreateSingleStoreProcessor() => IocContainer.Resolve<SingleStoreProcessor>();
+    private static SingleZipCodeProcessor CreateProcessor() => IocContainer.Resolve<SingleZipCodeProcessor>();
 
     private static IPersistenceInitializer CreatePersistenceInitializer() =>
       IocContainer.Resolve<IPersistenceInitializer>();

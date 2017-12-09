@@ -9,7 +9,7 @@ using Xunit;
 
 namespace store_scrapper_2_Tests.Services
 {
-  public class SingleStoreProcessorTest
+  public class SingleZipCodeProcessorTest
   {
     [Fact]
     public async void DownloadsAndPersistsTheStoreData()
@@ -25,7 +25,7 @@ namespace store_scrapper_2_Tests.Services
       var persistor = Substitute.For<ISingleStorePersistor>();
       
       
-      await new SingleStoreProcessor(downloader, persistor)
+      await new SingleZipCodeProcessor(downloader, persistor)
         .ProcessAsync(new ZipCode("55555"));
 
       

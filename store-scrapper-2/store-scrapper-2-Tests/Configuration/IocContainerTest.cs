@@ -17,7 +17,7 @@ namespace store_scrapper_2_Tests.Configuration
     [Fact]
     public void CanResolve()
     {
-      IocContainer.Resolve<SingleStoreProcessor>().Should().NotBeNull();
+      IocContainer.Resolve<SingleZipCodeProcessor>().Should().NotBeNull();
       IocContainer.Resolve<IPersistenceInitializer>().Should().NotBeNull();
     }
 
