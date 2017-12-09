@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Linq;
+using System.Net;
 using store_scrapper_2.DataTransmission.Serialization;
 
 namespace store_scrapper_2.DataTransmission
@@ -7,7 +9,20 @@ namespace store_scrapper_2.DataTransmission
   {
     public string Zip { get; }
 
-    public ZipCode(string zip) => Zip = zip;
+    public ZipCode(string zip)
+    {
+      if ((zip ?? string.Empty).Length != 5)
+      {
+        throw new ArgumentException($"Invalid {nameof(zip)} length");
+      }
+
+      if (!zip.ToCharArray().All(char.IsDigit))
+      {
+        throw new ArgumentException($"NonNumeric {nameof(zip)} found");        
+      }
+      
+      Zip = zip;
+    }
 
     public string ToUrl()
     {

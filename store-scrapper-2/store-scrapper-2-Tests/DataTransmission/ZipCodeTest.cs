@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using store_scrapper_2.DataTransmission;
-using store_scrapper_2.Model;
 using Xunit;
 
 namespace store_scrapper_2_Tests.DataTransmission
@@ -25,6 +25,28 @@ namespace store_scrapper_2_Tests.DataTransmission
         .ToString()
         .Should()
         .Be("33123");
+    }
+
+    [Theory]
+    [InlineData("123456")]
+    [InlineData("1234")]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("a-&%B")]
+    [InlineData("1233A")]
+    public void CannotBeConstructedOutOfInvalidValues(string zipCode)
+    {
+      ArgumentException throwError = null;
+      try
+      {
+        new ZipCode(zipCode);
+      }
+      catch (ArgumentException ex)
+      {
+        throwError = ex;
+      }
+
+      throwError.Should().NotBeNull($"{zipCode} should have caused an error");
     }
   }
 }
