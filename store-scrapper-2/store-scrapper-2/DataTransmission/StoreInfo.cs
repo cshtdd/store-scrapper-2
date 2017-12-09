@@ -1,4 +1,5 @@
-﻿using store_scrapper_2.Model;
+﻿using System;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2.DataTransmission
 {
@@ -24,6 +25,8 @@ namespace store_scrapper_2.DataTransmission
     public string OrderingUrl { get; set; }
     public string CateringUrl { get; set; }
 
+    public DateTime UpdateTimeUtc { get; set; }
+    
     public static StoreInfo Create(StoreInfoData storeData) => new StoreInfo
     {
       StoreNumber = storeData.LocationId.ToStoreNumber(),
@@ -44,7 +47,9 @@ namespace store_scrapper_2.DataTransmission
       CurrentUtcOffset = storeData.Geo.CurrentUtcOffset,
 
       OrderingUrl = storeData.OrderingUrl,
-      CateringUrl = storeData.CateringUrl
+      CateringUrl = storeData.CateringUrl,
+      
+      UpdateTimeUtc = DateTime.UtcNow
     };
 
     public override string ToString() => $"{nameof(StoreInfo)} {StoreNumber}";

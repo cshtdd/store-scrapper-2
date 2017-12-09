@@ -1,4 +1,6 @@
-﻿namespace store_scrapper_2.DAL.Db
+﻿using System;
+
+namespace store_scrapper_2.DAL.Db
 {
   public class Store
   {
@@ -24,5 +26,7 @@
 
     public string OrderingUrl { get; set; }
     public string CateringUrl { get; set; }
+    
+    public DateTime? UpdateTimeUtc { get; set; }
   }
 }

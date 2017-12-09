@@ -11,9 +11,10 @@ using System;
 namespace store_scrapper_2.DAL.Db.Migrations
 {
     [DbContext(typeof(StoreDataContext))]
-    partial class StoreDataContextModelSnapshot : ModelSnapshot
+    [Migration("20171209174640_AddUpdatedTimeUtcToStores")]
+    partial class AddUpdatedTimeUtcToStores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
