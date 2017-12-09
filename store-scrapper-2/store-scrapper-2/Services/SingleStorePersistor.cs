@@ -12,7 +12,7 @@ namespace store_scrapper_2.Services
 
     public async Task PersistAsync(StoreInfo storeInfo)
     {
-      Logger.Info($"Saving Response; storeNumber={storeInfo.StoreNumber};");
+      Logger.Info($"Saving Store; storeNumber={storeInfo.StoreNumber};");
       var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
 
       if (shouldUpdateExistingStore)
