@@ -24,7 +24,7 @@ namespace store_scrapper_2_Tests.DataTransmission
       new ZipCode("33123")
         .ToString()
         .Should()
-        .Be("ZipCode 33123");
+        .Be("33123");
     }
   }
 }

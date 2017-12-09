@@ -11,7 +11,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
     public void CanBeConvertedToJson()
     {
       var expected = @"{
-        ""InputText"": ""AAAA"",
+        ""InputText"": """",
 
         ""GeoCode"": {
           ""Latitude"": 0,
@@ -34,7 +34,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
         ""Paging"":
         {
           ""StartIndex"": 1,
-          ""PageSize"": 30
+          ""PageSize"": 50
         },
 
         ""ConsumerParameters"":
@@ -46,16 +46,16 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
           ""template"": """",
           ""rtl"": false,
           ""clientId"": ""11"",
-          ""key"": ""chipotle""
+          ""key"": ""not_so_secret""
         },
 
         ""Filters"": [],
-        ""LocationType"": 3
+        ""LocationType"": 1
       }".Split()
         .Select(_ => _.Trim())
         .Aggregate((a, b) => a + b);
 
-      new StoreLocatorQuery("AAAA", "33123", 3, "11", "chipotle", 30)
+      new StoreLocatorQuery("33123", "11", "not_so_secret")
         .ToJson()
         .Should()
         .Be(expected);

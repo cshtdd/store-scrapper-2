@@ -11,7 +11,7 @@ namespace store_scrapper_2.DataTransmission
 
     public string ToUrl()
     {
-      var q = new StoreLocatorQuery(string.Empty, $"{Zip}", 1, "17", "SUBWAY_PROD", 50);
+      var q = new StoreLocatorQuery(Zip, "17", "SUBWAY_PROD");
       var qJson = q.ToJson();
       var qUrl = WebUtility.UrlEncode(qJson);
 
@@ -20,6 +20,6 @@ namespace store_scrapper_2.DataTransmission
       return $"{endpoint}?q={qUrl}";
     }
     
-    public override string ToString() => $"{nameof(ZipCode)} {Zip}";
+    public override string ToString() => Zip;
   }
 }
