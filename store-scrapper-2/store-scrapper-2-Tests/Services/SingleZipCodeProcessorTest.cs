@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
-using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Services;
 using Xunit;
@@ -23,15 +21,16 @@ namespace store_scrapper_2_Tests.Services
         }));
 
       var persistor = Substitute.For<ISingleStorePersistor>();
-      
-      
+
+
+      var zipCode = new ZipCode("55555", 17, 45);
       await new SingleZipCodeProcessor(downloader, persistor)
-        .ProcessAsync(new ZipCode("55555", 17, 45));
+        .ProcessAsync(zipCode);
 
       
       await downloader
         .Received(1)
-        .DownloadAsync(Arg.Is<ZipCode>(_ => _.Zip == "55555" && _.Latitude == 17 && _.Longitude == 45));
+        .DownloadAsync(Arg.Is(zipCode));
 
       
       await persistor
