@@ -14,17 +14,29 @@ namespace store_scrapper_2.DataTransmission
 
     public ZipCode(string zip, decimal latitude, decimal longitude)
     {
-      if ((zip ?? string.Empty).Length != 5)
+      var zipCode = zip ?? string.Empty;
+      
+      if (zipCode.Length != 5)
       {
         throw new ArgumentException($"Invalid {nameof(zip)} length");
       }
 
-      if (!zip.ToCharArray().All(char.IsDigit))
+      if (!zipCode.ToCharArray().All(char.IsDigit))
       {
         throw new ArgumentException($"NonNumeric {nameof(zip)} found");        
       }
+
+      if (latitude < -90m || latitude > 90m)
+      {
+        throw new ArgumentException($"OutOfRange {nameof(latitude)} found");
+      }
+
+      if (longitude < -180m || longitude > 180m)
+      {        
+        throw new ArgumentException($"OutOfRange {nameof(longitude)} found");
+      }
       
-      Zip = zip;
+      Zip = zipCode;
       Latitude = latitude;
       Longitude = longitude;
     }

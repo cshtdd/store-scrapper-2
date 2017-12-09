@@ -19,7 +19,7 @@ namespace store_scrapper_2.Services
 
     public async Task ProcessAsync(ZipCode zipCode)
     {     
-      Logger.Info($"Processing; zipCode={zipCode};");
+      Logger.Info($"Processing; {zipCode}");
 
       Logger.Info("Downloading Stores;");
       var stores = await _downloader.DownloadAsync(zipCode);
@@ -29,7 +29,7 @@ namespace store_scrapper_2.Services
         await _singleStorePersistor.PersistAsync(store);
       }
 
-      Logger.Info($"Processing; zipCode={zipCode}; Result=true;");
+      Logger.Info($"Processing; {zipCode} Result=true;");
     }
   }
 }

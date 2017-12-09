@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using NSubstitute.ExceptionExtensions;
 using store_scrapper_2.DataTransmission;
 using Xunit;
 
@@ -36,17 +37,36 @@ namespace store_scrapper_2_Tests.DataTransmission
     [InlineData("1233A")]
     public void CannotBeConstructedOutOfInvalidValues(string zipCode)
     {
-      ArgumentException throwError = null;
-      try
+      ((Action) (() =>
       {
         new ZipCode(zipCode, -23.45m, 67.89m);
-      }
-      catch (ArgumentException ex)
-      {
-        throwError = ex;
-      }
+      })).ShouldThrow<ArgumentException>($"{zipCode} should have caused an error");
+    }
 
-      throwError.Should().NotBeNull($"{zipCode} should have caused an error");
+    [Theory]
+    [InlineData(90.01)]
+    [InlineData(-90.01)]
+    [InlineData(-91)]
+    [InlineData(91)]
+    public void CannotBeConstructedOutOfInvalidLatitude(decimal latitude)
+    {
+      ((Action) (() =>
+      {
+        new ZipCode("33123", latitude, 67.89m);
+      })).ShouldThrow<ArgumentException>($"{latitude} should have caused an error");
+    }
+    
+    [Theory]
+    [InlineData(180.01)]
+    [InlineData(-180.01)]
+    [InlineData(-181)]
+    [InlineData(181)]
+    public void CannotBeConstructedOutOfInvalidLongitude(decimal longitude)
+    {
+      ((Action) (() =>
+      {
+        new ZipCode("33123", -12.34m, longitude);
+      })).ShouldThrow<ArgumentException>($"{longitude} should have caused an error");
     }
   }
 }
