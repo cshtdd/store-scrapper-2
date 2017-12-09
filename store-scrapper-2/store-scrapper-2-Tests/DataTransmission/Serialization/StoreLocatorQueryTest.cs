@@ -14,8 +14,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
         ""InputText"": """",
 
         ""GeoCode"": {
-          ""Latitude"": 0,
-          ""Longitude"": 0,
+          ""Latitude"": 23.34123456,
+          ""Longitude"": 56.78,
           ""Accuracy"": null,
           ""CountryCode"": null,
           ""RegionCode"": null,
@@ -55,7 +55,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
         .Select(_ => _.Trim())
         .Aggregate((a, b) => a + b);
 
-      new StoreLocatorQuery("33123", "11", "not_so_secret")
+      new StoreLocatorQuery("33123", "11", "not_so_secret", 23.34123456m, 56.78m)
         .ToJson()
         .Should()
         .Be(expected);

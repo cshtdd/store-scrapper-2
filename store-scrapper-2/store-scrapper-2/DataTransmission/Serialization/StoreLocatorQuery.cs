@@ -21,11 +21,13 @@ namespace store_scrapper_2.DataTransmission.Serialization
     [DataMember(Order = 5)]
     public int LocationType { get; set; } = 1;
 
-    public StoreLocatorQuery(string zipCode, string clientId, string key)
+    public StoreLocatorQuery(string zipCode, string clientId, string key, decimal latitude, decimal longitude)
     {
       GeoCode = new GeoCode
       {
-        PostalCode = zipCode
+        PostalCode = zipCode,
+        Latitude = latitude,
+        Longitude = longitude
       };
       ConsumerParameters = new ConsumerParameters
       {

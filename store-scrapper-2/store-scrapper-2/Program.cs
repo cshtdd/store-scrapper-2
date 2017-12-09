@@ -19,7 +19,10 @@ namespace store_scrapper_2
       
       Logger.Info($"Launching Program with args={string.Join(",", args)}");
 
-      var zipCode = new ZipCode(args[0]);
+      var zip = args[0];
+      var latitude = decimal.Parse(args[1]);
+      var longitude = decimal.Parse(args[2]);
+      var zipCode = new ZipCode(zip, latitude, longitude);
 
       await InitializeAsync();
       await CreateProcessor().ProcessAsync(zipCode);

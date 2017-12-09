@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace store_scrapper_2.DataTransmission.Serialization.QueryParameters
 {
@@ -6,9 +7,10 @@ namespace store_scrapper_2.DataTransmission.Serialization.QueryParameters
   public class GeoCode
   {
     [DataMember(Order = 0)]
-    public int Latitude { get; set; }    
+    public decimal Latitude { get; set; }
     [DataMember(Order = 1)]
-    public int Longitude { get; set; }
+    public decimal Longitude { get; set; }
+    
     [DataMember(Order = 2)]
     public int? Accuracy { get; set; }
     [DataMember(Order = 3)]

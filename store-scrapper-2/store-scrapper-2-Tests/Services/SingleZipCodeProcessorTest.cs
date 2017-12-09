@@ -26,12 +26,12 @@ namespace store_scrapper_2_Tests.Services
       
       
       await new SingleZipCodeProcessor(downloader, persistor)
-        .ProcessAsync(new ZipCode("55555"));
+        .ProcessAsync(new ZipCode("55555", 17, 45));
 
       
       await downloader
         .Received(1)
-        .DownloadAsync(Arg.Is<ZipCode>(_ => _.Zip == "55555"));
+        .DownloadAsync(Arg.Is<ZipCode>(_ => _.Zip == "55555" && _.Latitude == 17 && _.Longitude == 45));
 
       
       await persistor

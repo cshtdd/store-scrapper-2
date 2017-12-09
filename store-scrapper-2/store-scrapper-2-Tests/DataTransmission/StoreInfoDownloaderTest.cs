@@ -14,7 +14,7 @@ namespace store_scrapper_2_Tests.DataTransmission
     [Fact]
     public async void DownloadsTheFirstStoreInfoFromTheStoreLocator()
     {
-      var zipCode = new ZipCode("33009");
+      var zipCode = new ZipCode("33009", 12.23m, 45.67m);
       var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");
 
       var urlDownloader = Substitute.For<IUrlDownloader>();
