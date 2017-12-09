@@ -10,9 +10,9 @@ namespace store_scrapper_2.DataTransmission.Serialization.QueryParameters
     [DataMember(Order = 1)]
     public int Longitude { get; set; }
     [DataMember(Order = 2)]
-    public int Accuracy { get; set; }
+    public int? Accuracy { get; set; }
     [DataMember(Order = 3)]
-    public string CountryCode { get; set; } = string.Empty;
+    public string CountryCode { get; set; }
     [DataMember(Order = 4)]
     public string RegionCode { get; set; }
     [DataMember(Order = 5)]

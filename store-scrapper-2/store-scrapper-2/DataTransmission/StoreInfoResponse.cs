@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using store_scrapper_2.DataTransmission.Serialization;
-using store_scrapper_2.Model;
+﻿using store_scrapper_2.Model;
 
 namespace store_scrapper_2.DataTransmission
 {
@@ -26,15 +24,8 @@ namespace store_scrapper_2.DataTransmission
     public string OrderingUrl { get; set; }
     public string CateringUrl { get; set; }
 
-    public static StoreInfoResponse Parse(string responseText)
+    public static StoreInfoResponse Create(StoreInfoData storeData)
     {
-      var json = responseText
-        .TrimStart('(')
-        .TrimEnd(')');
-      
-      var response = GenericJsonSerializer.FromJson<StoresLocatorResponse>(json);
-      var storeData = response.ResultData.First();
-      
       return new StoreInfoResponse
       {
         StoreNumber = storeData.LocationId.ToStoreNumber(),

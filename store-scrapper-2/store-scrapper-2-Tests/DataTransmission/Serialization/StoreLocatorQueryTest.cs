@@ -16,10 +16,10 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
         ""GeoCode"": {
           ""Latitude"": 0,
           ""Longitude"": 0,
-          ""Accuracy"": 0,
-          ""CountryCode"": """",
+          ""Accuracy"": null,
+          ""CountryCode"": null,
           ""RegionCode"": null,
-          ""PostalCode"": null,
+          ""PostalCode"": ""33123"",
           ""City"": null,
           ""LocalityType"": null
         },
@@ -34,7 +34,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
         ""Paging"":
         {
           ""StartIndex"": 1,
-          ""PageSize"": 10
+          ""PageSize"": 30
         },
 
         ""ConsumerParameters"":
@@ -55,7 +55,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Serialization
         .Select(_ => _.Trim())
         .Aggregate((a, b) => a + b);
 
-      new StoreLocatorQuery("AAAA", 3, "11", "chipotle")
+      new StoreLocatorQuery("AAAA", "33123", 3, "11", "chipotle", 30)
         .ToJson()
         .Should()
         .Be(expected);

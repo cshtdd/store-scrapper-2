@@ -15,7 +15,7 @@ namespace store_scrapper_2_Tests.Services
     public async void DownloadsAndPersistsTheStoreData()
     {
       var downloader = Substitute.For<IStoreInfoDownloader>();
-      downloader.DownloadAsync(Arg.Any<StoreInfoRequest>())
+      downloader.DownloadAsync(Arg.Any<ZipCode>())
         .Returns(Task.FromResult((IEnumerable<StoreInfoResponse>) new []
         {
           new StoreInfoResponse{ StoreNumber = "55555-3" },
@@ -26,15 +26,17 @@ namespace store_scrapper_2_Tests.Services
       
       
       await new SingleStoreProcessor(downloader, persistor)
-        .ProcessAsync("55555-3");
+        .ProcessAsync(new ZipCode("55555"));
 
       
       await downloader
         .Received(1)
-        .DownloadAsync(Arg.Is<StoreInfoRequest>(_ => _.StoreNumber == "55555-3"));
+        .DownloadAsync(Arg.Is<ZipCode>(_ => _.Zip == "55555"));
 
       
-      persistor.Received(2).PersistAsync(Arg.Any<StoreInfoResponse>());
+      await persistor
+        .Received(2)
+        .PersistAsync(Arg.Any<StoreInfoResponse>());
 
       await persistor
         .Received(1)

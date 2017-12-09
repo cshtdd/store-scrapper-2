@@ -17,18 +17,19 @@ namespace store_scrapper_2.Services
       _singleStorePersistor = singleStorePersistor;
     }
 
-    public async Task ProcessAsync(StoreNumber storeNumber)
+    public async Task ProcessAsync(ZipCode zipCode)
     {     
-      Logger.Info($"Processing; fullStoreNumber={storeNumber};");
-      var storeInfoRequest = new StoreInfoRequest(storeNumber);
+      Logger.Info($"Processing; ZipCode={zipCode};");
 
-      Logger.Info("Downloading Stores;");     
-      var stores = await _downloader.DownloadAsync(storeInfoRequest);
+      Logger.Info("Downloading Stores;");
+      var stores = await _downloader.DownloadAsync(zipCode);
 
       foreach (var store in stores)
       {
         await _singleStorePersistor.PersistAsync(store);
       }
+
+      Logger.Info($"Processing; ZipCode={zipCode}; Result=true;");
     }
   }
 }

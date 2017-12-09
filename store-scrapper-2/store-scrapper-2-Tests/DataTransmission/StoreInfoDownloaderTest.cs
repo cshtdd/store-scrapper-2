@@ -14,38 +14,53 @@ namespace store_scrapper_2_Tests.DataTransmission
     [Fact]
     public async void DownloadsTheFirstStoreInfoFromTheStoreLocator()
     {
-      var request = new StoreInfoRequest("77777-2");
+      var zipCode = new ZipCode("33009");
       var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");
 
       var urlDownloader = Substitute.For<IUrlDownloader>();
-      urlDownloader.DownloadAsync(request.ToUrl())
+      urlDownloader.DownloadAsync(zipCode.ToUrl())
         .Returns(Task.FromResult(seededResponse));
 
-      
-      var responses = await new StoreInfoDownloader(urlDownloader)
-        .DownloadAsync(request);
-      var response = responses.First();
 
-      
-      response.StoreNumber.Should().Be(new StoreNumber("67789-4"));
-      response.IsRestricted.Should().BeTrue();
-      
-      response.Address1.Should().Be("67789-4addr1");
-      response.Address2.Should().Be("67789-4addr2");
-      response.Address3.Should().Be("67789-4addr3");
-      response.City.Should().Be("67789-4city1");
-      response.CountryCode.Should().Be("67789-4us");
-      response.CountryCode3.Should().Be("67789-4us3");
-      response.PostalCode.Should().Be("67789-412345");
-      response.State.Should().Be("67789-4ny");
-      response.CurrentUtcOffset.Should().Be(5);
-      
-      response.Latitude.Should().Be(34);
-      response.Longitude.Should().Be(67);
-      response.TimeZoneId.Should().Be("67789-4GMT");
+      var responses = (await new StoreInfoDownloader(urlDownloader)
+        .DownloadAsync(zipCode))
+        .ToList();
 
-      response.CateringUrl.Should().Be("67789-4the catering");
-      response.OrderingUrl.Should().Be("67789-4the ordering");
+      responses.Count.Should().Be(2);
+    
+      responses[0].StoreNumber.Should().Be(new StoreNumber("67789-4"));
+      responses[0].IsRestricted.Should().BeTrue();
+      responses[0].Address1.Should().Be("67789-4addr1");
+      responses[0].Address2.Should().Be("67789-4addr2");
+      responses[0].Address3.Should().Be("67789-4addr3");
+      responses[0].City.Should().Be("67789-4city1");
+      responses[0].CountryCode.Should().Be("67789-4us");
+      responses[0].CountryCode3.Should().Be("67789-4us3");
+      responses[0].PostalCode.Should().Be("67789-412345");
+      responses[0].State.Should().Be("67789-4ny");
+      responses[0].CurrentUtcOffset.Should().Be(5);
+      responses[0].Latitude.Should().Be(34);
+      responses[0].Longitude.Should().Be(67);
+      responses[0].TimeZoneId.Should().Be("67789-4GMT");
+      responses[0].CateringUrl.Should().Be("67789-4the catering");
+      responses[0].OrderingUrl.Should().Be("67789-4the ordering");
+      
+      responses[1].StoreNumber.Should().Be(new StoreNumber("77785-1"));
+      responses[1].IsRestricted.Should().BeTrue();
+      responses[1].Address1.Should().Be("77785-1addr1");
+      responses[1].Address2.Should().Be("77785-1addr2");
+      responses[1].Address3.Should().Be("77785-1addr3");
+      responses[1].City.Should().Be("77785-1city1");
+      responses[1].CountryCode.Should().Be("77785-1us");
+      responses[1].CountryCode3.Should().Be("77785-1us3");
+      responses[1].PostalCode.Should().Be("77785-112345");
+      responses[1].State.Should().Be("77785-1ny");
+      responses[1].CurrentUtcOffset.Should().Be(5);
+      responses[1].Latitude.Should().Be(34);
+      responses[1].Longitude.Should().Be(67);
+      responses[1].TimeZoneId.Should().Be("77785-1GMT");
+      responses[1].CateringUrl.Should().Be("77785-1the catering");
+      responses[1].OrderingUrl.Should().Be("77785-1the ordering");
     }
   }
 }

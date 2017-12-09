@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using store_scrapper_2.DataTransmission.Serialization;
 
 namespace store_scrapper_2.DataTransmission
 {
@@ -12,13 +14,18 @@ namespace store_scrapper_2.DataTransmission
       _urlDownloader = urlDownloader;
     }
 
-    public async Task<IEnumerable<StoreInfoResponse>> DownloadAsync(StoreInfoRequest request)
+    public async Task<IEnumerable<StoreInfoResponse>> DownloadAsync(ZipCode request)
     {
       var responseJson = await _urlDownloader.DownloadAsync(request.ToUrl());
-      return new []
-      {
-        StoreInfoResponse.Parse(responseJson)
-      };
+      
+      var json = responseJson
+        .TrimStart('(')
+        .TrimEnd(')');
+
+      return GenericJsonSerializer.FromJson<StoresLocatorResponse>(json)
+        .ResultData
+        .Select(StoreInfoResponse.Create)
+        .ToArray();
     }
   }
 }
