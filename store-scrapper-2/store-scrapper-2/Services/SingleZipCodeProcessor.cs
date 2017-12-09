@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
-using store_scrapper_2.Model;
 
 namespace store_scrapper_2.Services
 {
@@ -22,12 +22,11 @@ namespace store_scrapper_2.Services
       Logger.Info($"Processing; {zipCode}");
 
       Logger.Info("Downloading Stores;");
-      var stores = await _downloader.DownloadAsync(zipCode);
+      var stores = (await _downloader.DownloadAsync(zipCode)).ToArray();
+      Logger.Info($"Stores Data Downloaded; storesCount={stores.Length}");
 
-      foreach (var store in stores)
-      {
-        await _singleStorePersistor.PersistAsync(store);
-      }
+      var persistStoresTasks = stores.Select(_singleStorePersistor.PersistAsync);
+      await Task.WhenAll(persistStoresTasks);
 
       Logger.Info($"Processing; {zipCode} Result=true;");
     }

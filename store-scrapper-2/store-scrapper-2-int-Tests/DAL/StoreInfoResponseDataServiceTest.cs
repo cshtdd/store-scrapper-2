@@ -37,25 +37,20 @@ namespace store_scrapper_2_int_Tests.DAL
         context.Stores.Should().BeEmpty();
       }
       
-      foreach (var response in responses)
-      {
-        await dataService.CreateNewAsync(response);
-      }
+      await Task.WhenAll(responses.Select(dataService.CreateNewAsync));
       
       using (var context = ContextFactory.Create())
       {
         context.Stores.Count().Should().Be(responses.Count);
 
-        foreach (var response in responses)
-        {
-          await context.ShouldContainStoreEquivalentToAsync(response);
-        }
+        await Task.WhenAll(responses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
 
-      foreach (var response in responses)
-      {
-        (await dataService.ContainsStoreAsync(response.StoreNumber)).Should().BeTrue();
-      }
+      Task.WhenAll(responses.Select(_ => dataService.ContainsStoreAsync(_.StoreNumber)))
+        .Result
+        .All(_ => _)
+        .Should()
+        .BeTrue();
 
       (await dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
     }
