@@ -49,7 +49,7 @@ namespace store_scrapper_2_Tests.DataTransmission
 
     [Theory]
     [InlineData("123456")]
-    [InlineData("1234")]
+    [InlineData("12")]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("a-&%B")]

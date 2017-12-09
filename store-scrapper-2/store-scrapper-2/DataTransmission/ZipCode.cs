@@ -16,7 +16,7 @@ namespace store_scrapper_2.DataTransmission
     {
       var zipCode = zip ?? string.Empty;
       
-      if (zipCode.Length != 5)
+      if (zipCode.Length < 3 || zipCode.Length > 5)
       {
         throw new ArgumentException($"Invalid {nameof(zip)} length");
       }
