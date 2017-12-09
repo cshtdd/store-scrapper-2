@@ -16,10 +16,10 @@ namespace store_scrapper_2_Tests.Services
     {
       var downloader = Substitute.For<IStoreInfoDownloader>();
       downloader.DownloadAsync(Arg.Any<ZipCode>())
-        .Returns(Task.FromResult((IEnumerable<StoreInfoResponse>) new []
+        .Returns(Task.FromResult((IEnumerable<StoreInfo>) new []
         {
-          new StoreInfoResponse{ StoreNumber = "55555-3" },
-          new StoreInfoResponse{ StoreNumber = "66666-7" }
+          new StoreInfo{ StoreNumber = "55555-3" },
+          new StoreInfo{ StoreNumber = "66666-7" }
         }));
 
       var persistor = Substitute.For<ISingleStorePersistor>();
@@ -36,15 +36,15 @@ namespace store_scrapper_2_Tests.Services
       
       await persistor
         .Received(2)
-        .PersistAsync(Arg.Any<StoreInfoResponse>());
+        .PersistAsync(Arg.Any<StoreInfo>());
 
       await persistor
         .Received(1)
-        .PersistAsync(Arg.Is<StoreInfoResponse>(_ => _.StoreNumber == "55555-3"));
+        .PersistAsync(Arg.Is<StoreInfo>(_ => _.StoreNumber == "55555-3"));
 
       await persistor
         .Received(1)
-        .PersistAsync(Arg.Is<StoreInfoResponse>(_ => _.StoreNumber == "66666-7"));
+        .PersistAsync(Arg.Is<StoreInfo>(_ => _.StoreNumber == "66666-7"));
     }
   }
 }

@@ -14,9 +14,9 @@ namespace store_scrapper_2.DataTransmission
       _urlDownloader = urlDownloader;
     }
 
-    public async Task<IEnumerable<StoreInfoResponse>> DownloadAsync(ZipCode request)
+    public async Task<IEnumerable<StoreInfo>> DownloadAsync(ZipCode zipCode)
     {
-      var responseJson = await _urlDownloader.DownloadAsync(request.ToUrl());
+      var responseJson = await _urlDownloader.DownloadAsync(zipCode.ToUrl());
       
       var json = responseJson
         .TrimStart('(')
@@ -24,7 +24,7 @@ namespace store_scrapper_2.DataTransmission
 
       return GenericJsonSerializer.FromJson<StoresLocatorResponse>(json)
         .ResultData
-        .Select(StoreInfoResponse.Create)
+        .Select(StoreInfo.Create)
         .ToArray();
     }
   }

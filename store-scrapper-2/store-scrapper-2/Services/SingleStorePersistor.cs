@@ -10,20 +10,20 @@ namespace store_scrapper_2.Services
 
     public SingleStorePersistor(IStoreInfoResponseDataService dataService) => _dataService = dataService;
 
-    public async Task PersistAsync(StoreInfoResponse store)
+    public async Task PersistAsync(StoreInfo storeInfo)
     {
-      Logger.Info($"Saving Response; storeNumber={store.StoreNumber};");
-      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(store.StoreNumber);
+      Logger.Info($"Saving Response; storeNumber={storeInfo.StoreNumber};");
+      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
 
       if (shouldUpdateExistingStore)
       {
-        Logger.Info($"Updating Existing Store; storeNumber={store.StoreNumber};");
-        await _dataService.UpdateAsync(store);
+        Logger.Info($"Updating Existing Store; storeNumber={storeInfo.StoreNumber};");
+        await _dataService.UpdateAsync(storeInfo);
       }
       else
       {
-        Logger.Info($"Creating new Store; storeNumber={store.StoreNumber};");
-        await _dataService.CreateNewAsync(store);
+        Logger.Info($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
+        await _dataService.CreateNewAsync(storeInfo);
       }
     }
   }

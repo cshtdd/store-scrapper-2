@@ -30,35 +30,35 @@ namespace store_scrapper_2
       }
     }
 
-    public async Task CreateNewAsync(StoreInfoResponse response)
+    public async Task CreateNewAsync(StoreInfo storeInfo)
     {
-      var storeAlreadyExists = await ContainsStoreAsync(response.StoreNumber);
+      var storeAlreadyExists = await ContainsStoreAsync(storeInfo.StoreNumber);
       if (storeAlreadyExists)
       {
         throw new InvalidOperationException("Store already exists");
       }
       
-      var storeInfo = Mapper.Map<Store>(response);
+      var store = Mapper.Map<Store>(storeInfo);
       
       using (var db = _contextFactory.Create())
       {
-        db.Stores.Add(storeInfo);
+        db.Stores.Add(store);
         
         await SaveContextChangesAsync(db);
       }
     }
 
-    public async Task UpdateAsync(StoreInfoResponse response)
+    public async Task UpdateAsync(StoreInfo storeInfo)
     {
       using (var db = _contextFactory.Create())
       {
-        var storeInfo = await db.Stores
-          .Where(_ => response.StoreNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber))
+        var existingStore = await db.Stores
+          .Where(_ => storeInfo.StoreNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber))
           .FirstAsync();
 
-        var updatedStoreInfo = Mapper.Map(response, storeInfo);
+        var updatedStore = Mapper.Map(storeInfo, existingStore);
 
-        db.Entry(updatedStoreInfo).State = EntityState.Modified;
+        db.Entry(updatedStore).State = EntityState.Modified;
         
         await SaveContextChangesAsync(db);
       }

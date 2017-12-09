@@ -25,7 +25,7 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       await new PersistenceInitializer(ContextFactory).InitializeAsync();
 
-      var responses = new List<StoreInfoResponse>
+      var responses = new List<StoreInfo>
       {
         StoreInfoResponseFactory.Create("11111-3"),
         StoreInfoResponseFactory.Create("22222-3"),
@@ -123,10 +123,10 @@ namespace store_scrapper_2_int_Tests.DAL
       thrownException.Should().NotBeNull();
     }
 
-    private static StoreInfoResponse CreateUpdatedResponse(StoreInfoResponse originalResponse)
+    private static StoreInfo CreateUpdatedResponse(StoreInfo original)
     {
       var updatedResponse = StoreInfoResponseFactory.Create("00000-0");
-      updatedResponse.StoreNumber = originalResponse.StoreNumber;
+      updatedResponse.StoreNumber = original.StoreNumber;
       return updatedResponse;
     }
   }

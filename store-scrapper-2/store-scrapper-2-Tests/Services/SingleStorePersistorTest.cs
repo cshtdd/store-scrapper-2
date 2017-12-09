@@ -9,7 +9,7 @@ namespace store_scrapper_2_Tests.Services
 {
   public class SingleStorePersistorTest
   {
-    private readonly StoreInfoResponse _storeInfo = new StoreInfoResponse
+    private readonly StoreInfo _storeInfo = new StoreInfo
     {
       StoreNumber = "77754-4",
       Address1 = "seeded address"

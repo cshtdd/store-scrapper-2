@@ -20,7 +20,7 @@ namespace store_scrapper_2.Configuration
     {
       public DalMappingProfile()
       {
-        CreateMap<StoreInfoResponse, Store>()
+        CreateMap<StoreInfo, Store>()
           .ForMember(dest => dest.StoreId, mi => mi.Ignore())
           .ForMember(dest => dest.StoreNumber, mi => mi.MapFrom(src => src.StoreNumber.Store.ToString()))
           .ForMember(dest => dest.SatelliteNumber, mi => mi.MapFrom(src => src.StoreNumber.Satellite.ToString()));

@@ -7,7 +7,7 @@ namespace store_scrapper_2
   public interface IStoreInfoResponseDataService
   {
     Task<bool> ContainsStoreAsync(StoreNumber storeNumber);
-    Task CreateNewAsync(StoreInfoResponse response);
-    Task UpdateAsync(StoreInfoResponse response);
+    Task CreateNewAsync(StoreInfo storeInfo);
+    Task UpdateAsync(StoreInfo storeInfo);
   }
 }

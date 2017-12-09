@@ -7,7 +7,7 @@ namespace store_scrapper_2_int_Tests.Utils
 {
   public static class StoreExtensions
   {
-    public static void ShouldBeEquivalentTo(this Store sender, StoreInfoResponse response)
+    public static void ShouldBeEquivalentTo(this Store sender, StoreInfo response)
     {
       sender.Address1.Should().BeEquivalentTo(response.Address1);
       sender.Address2.Should().BeEquivalentTo(response.Address2);

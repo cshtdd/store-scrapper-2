@@ -5,6 +5,6 @@ namespace store_scrapper_2.Services
 {
   public interface ISingleStorePersistor
   {
-    Task PersistAsync(StoreInfoResponse store);
+    Task PersistAsync(StoreInfo storeInfo);
   }
 }

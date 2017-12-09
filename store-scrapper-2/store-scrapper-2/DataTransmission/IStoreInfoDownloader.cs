@@ -5,6 +5,6 @@ namespace store_scrapper_2.DataTransmission
 {
   public interface IStoreInfoDownloader
   {
-    Task<IEnumerable<StoreInfoResponse>> DownloadAsync(ZipCode request);
+    Task<IEnumerable<StoreInfo>> DownloadAsync(ZipCode zipCode);
   }
 }

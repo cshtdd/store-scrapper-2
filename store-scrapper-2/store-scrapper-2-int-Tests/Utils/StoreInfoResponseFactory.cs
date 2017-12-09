@@ -5,7 +5,7 @@ namespace store_scrapper_2_int_Tests.Utils
 {
   public static class StoreInfoResponseFactory
   {
-    public static StoreInfoResponse Create(StoreNumber storeNumber) => new StoreInfoResponse
+    public static StoreInfo Create(StoreNumber storeNumber) => new StoreInfo
     {
       StoreNumber = storeNumber,
       Address1 = $"{storeNumber}addr1",
