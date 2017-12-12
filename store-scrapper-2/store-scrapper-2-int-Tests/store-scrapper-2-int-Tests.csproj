@@ -17,5 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.TEST.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="zips.TEST.csv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@ namespace store_scrapper_2_int_Tests.DAL
       using (var context = ContextFactory.Create())
       {
         var zipCodesCount = await context.Zips.CountAsync();
-        zipCodesCount.Should().BeInRange(40000, 45000);
+        zipCodesCount.Should().Be(13);
 
         var uniqueZipCodesCount = await context.Zips
           .Select(_ => _.ZipCode)

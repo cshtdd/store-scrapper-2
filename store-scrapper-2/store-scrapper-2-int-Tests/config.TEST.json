@@ -1,5 +1,8 @@
-﻿{
-  "StoresDb": {
-    "ConnectionString": "Server=localhost;Database=test_stores"
+﻿{  
+  "ConnectionStrings": {
+    "StoresDb": "Server=localhost;Database=test_stores"
+  },
+  "Seeds": {
+    "ZipsFilename": "zips.TEST.csv"
   }
 }

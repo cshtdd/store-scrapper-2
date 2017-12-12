@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CsvHelper;
+using store_scrapper_2.Configuration;
 using store_scrapper_2.DAL;
 using store_scrapper_2.DAL.Db;
 
@@ -11,17 +11,20 @@ namespace store_scrapper_2
   public class ZipCodesSeeder
   {
     private readonly IStoreDataContextFactory _contextFactory;
+    private readonly IConfigurationReader _configurationReader;
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public ZipCodesSeeder(IStoreDataContextFactory contextFactory)
+    public ZipCodesSeeder(IStoreDataContextFactory contextFactory, IConfigurationReader configurationReader)
     {
       _contextFactory = contextFactory;
+      _configurationReader = configurationReader;
     }
     
     public async Task SeedAsync()
     {
       await ClearZipCodesAsync();
-      await LoadZipCodesFromCsvAsync("zips.csv");
+      var seedFilename = _configurationReader.Read(ConfigurationKeys.SeedsZipsFilename);
+      await LoadZipCodesFromCsvAsync(seedFilename);
     }
 
     private async Task LoadZipCodesFromCsvAsync(string filename)

@@ -2,6 +2,7 @@
 {
   public static class ConfigurationKeys
   {
-    public const string ConnectionString = "StoresDb:ConnectionString";
+    public const string ConnectionStringsStoresDb = "ConnectionStrings:StoresDb";
+    public static string SeedsZipsFilename = "Seeds:ZipsFilename";
   }
 }
