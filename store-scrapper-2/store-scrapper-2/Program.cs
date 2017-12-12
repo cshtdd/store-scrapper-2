@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using log4net;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission;
-using store_scrapper_2.Model;
 using store_scrapper_2.Services;
 
 namespace store_scrapper_2

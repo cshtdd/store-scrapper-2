@@ -1,9 +1,10 @@
-﻿namespace store_scrapper_2.DAL.Db
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace store_scrapper_2.DAL.Db
 {
   public class Zip
   {
-    public int ZipId { get; set; }
-    
+    [Key]
     public string ZipCode { get; set; }
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }

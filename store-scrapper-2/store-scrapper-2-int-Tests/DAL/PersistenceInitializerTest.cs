@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2;
@@ -22,6 +23,24 @@ namespace store_scrapper_2_int_Tests.DAL
       using (var context = ContextFactory.Create())
       {
         context.Database.GetPendingMigrations().Should().BeEmpty();
+      }
+    }
+
+    [Fact]
+    public async Task SeedsTheZipCodes()
+    {
+      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+
+      using (var context = ContextFactory.Create())
+      {
+        var zipCodesCount = await context.Zips.CountAsync();
+        zipCodesCount.Should().BeInRange(40000, 45000);
+
+        var uniqueZipCodesCount = await context.Zips
+          .Select(_ => _.ZipCode)
+          .Distinct()
+          .CountAsync();
+        uniqueZipCodesCount.Should().Be(zipCodesCount);
       }
     }
   }
