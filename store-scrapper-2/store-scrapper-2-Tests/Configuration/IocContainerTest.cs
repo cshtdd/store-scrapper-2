@@ -19,7 +19,6 @@ namespace store_scrapper_2_Tests.Configuration
     {
       IocContainer.Resolve<SingleZipCodeProcessor>().Should().NotBeNull();
       IocContainer.Resolve<IPersistenceInitializer>().Should().NotBeNull();
-      IocContainer.Resolve<IConnectionStringReader>().Should().NotBeNull();
     }
 
     [Fact]
