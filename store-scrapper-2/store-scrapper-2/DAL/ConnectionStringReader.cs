@@ -1,23 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using store_scrapper_2.Configuration;
 
 namespace store_scrapper_2.DAL
 {
   public class ConnectionStringReader : IConnectionStringReader
   {
-    public string EnvironmentName { get; }
+    private readonly IConfigurationReader _configurationReader;
 
-    public ConnectionStringReader() => EnvironmentName = "PROD";
-    public ConnectionStringReader(string environmentName) => EnvironmentName = environmentName;
+    public ConnectionStringReader(IConfigurationReader configurationReader) => _configurationReader = configurationReader;
 
-    public string Read()
-    {
-      var builder = new ConfigurationBuilder()
-        .AddJsonFile("config.json", true)
-        .AddJsonFile($"config.{EnvironmentName}.json", true)
-        .AddEnvironmentVariables();
-      var configuration = builder.Build();
-
-      return configuration["StoresDb:ConnectionString"];
-    }
+    public string Read() => _configurationReader.Read("StoresDb:ConnectionString");
   }
 }

@@ -19,12 +19,13 @@ namespace store_scrapper_2_Tests.Configuration
     {
       IocContainer.Resolve<SingleZipCodeProcessor>().Should().NotBeNull();
       IocContainer.Resolve<IPersistenceInitializer>().Should().NotBeNull();
+      IocContainer.Resolve<IConnectionStringReader>().Should().NotBeNull();
     }
 
     [Fact]
-    public void CorrectlyResolvesTheConnectionStringReader()
+    public void CorrectlyResolvesTheConnectionConfigurationReader()
     {
-      ((ConnectionStringReader) IocContainer.Resolve<IConnectionStringReader>()).EnvironmentName.Should().Be("PROD");
+      ((ConfigurationReader) IocContainer.Resolve<IConfigurationReader>()).EnvironmentName.Should().Be("PROD");
     }
 
     [Fact]

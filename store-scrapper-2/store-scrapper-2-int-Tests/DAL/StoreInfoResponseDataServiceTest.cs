@@ -23,7 +23,7 @@ namespace store_scrapper_2_int_Tests.DAL
     [Fact]
     public async Task SavesANewResponse()
     {
-      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+      await CreatePersistenceInitializer().InitializeAsync();
 
       var responses = new List<StoreInfo>
       {
@@ -58,7 +58,7 @@ namespace store_scrapper_2_int_Tests.DAL
     [Fact]
     public async Task UpdatesAnExistingResponse()
     {
-      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+      await CreatePersistenceInitializer().InitializeAsync();
 
       var originalResponse = StoreInfoResponseFactory.Create("11111-3");
 
@@ -81,7 +81,7 @@ namespace store_scrapper_2_int_Tests.DAL
     [Fact]
     public async Task CannotInsertTheSameItemTwice()
     {
-      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+      await CreatePersistenceInitializer().InitializeAsync();
    
       var response = StoreInfoResponseFactory.Create("11111-3");
 
@@ -102,7 +102,7 @@ namespace store_scrapper_2_int_Tests.DAL
     [Fact]
     public async Task CannotUpdateANonExistingStore()
     {
-      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+      await CreatePersistenceInitializer().InitializeAsync();
 
       var response = StoreInfoResponseFactory.Create("11111-3");
 

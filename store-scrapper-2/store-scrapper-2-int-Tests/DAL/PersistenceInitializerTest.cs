@@ -18,7 +18,7 @@ namespace store_scrapper_2_int_Tests.DAL
         context.Database.GetPendingMigrations().Should().NotBeEmpty();
       }
 
-      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+      await CreatePersistenceInitializer().InitializeAsync();
 
       using (var context = ContextFactory.Create())
       {
@@ -29,7 +29,7 @@ namespace store_scrapper_2_int_Tests.DAL
     [Fact]
     public async Task SeedsTheZipCodes()
     {
-      await new PersistenceInitializer(ContextFactory).InitializeAsync();
+      await CreatePersistenceInitializer().InitializeAsync();
 
       using (var context = ContextFactory.Create())
       {
