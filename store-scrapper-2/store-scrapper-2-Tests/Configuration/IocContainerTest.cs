@@ -18,7 +18,8 @@ namespace store_scrapper_2_Tests.Configuration
     [Fact]
     public void CanResolve()
     {
-      IocContainer.Resolve<SingleZipCodeProcessor>().Should().NotBeNull();
+      IocContainer.Resolve<IMultipleZipCodeProcessor>().Should().NotBeNull();
+      IocContainer.Resolve<ISingleZipCodeProcessor>().Should().NotBeNull();
       IocContainer.Resolve<IPersistenceInitializer>().Should().NotBeNull();
       IocContainer.Resolve<IZipCodeUrlSerializer>().Should().NotBeNull();      
       IocContainer.Resolve<IStoreInfoResponseDataService>().Should().NotBeNull();

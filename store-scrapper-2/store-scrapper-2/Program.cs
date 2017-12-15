@@ -19,6 +19,7 @@ namespace store_scrapper_2
 
       var zip = args[0];
       await InitializeAsync();
+      
       var zipCode = await CreateZipCodeDataService().ReadAsync(zip);
       await CreateProcessor().ProcessAsync(zipCode);
       
@@ -26,7 +27,7 @@ namespace store_scrapper_2
     }
 
     private static IZipCodeDataService CreateZipCodeDataService() => IocContainer.Resolve<IZipCodeDataService>(); 
-    private static SingleZipCodeProcessor CreateProcessor() => IocContainer.Resolve<SingleZipCodeProcessor>();
+    private static ISingleZipCodeProcessor CreateProcessor() => IocContainer.Resolve<SingleZipCodeProcessor>();
     private static IPersistenceInitializer CreatePersistenceInitializer() =>
       IocContainer.Resolve<IPersistenceInitializer>();
 

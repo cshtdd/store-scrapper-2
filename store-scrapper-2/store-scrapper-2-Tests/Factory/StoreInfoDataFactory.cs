@@ -41,6 +41,5 @@ namespace store_scrapper_2_Tests.Factory
         OrderingUrl = $"{fullStoreNumber}the ordering"
       };
     }
-
   }
 }

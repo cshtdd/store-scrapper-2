@@ -5,7 +5,7 @@ using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2.Services
 {
-  public class SingleZipCodeProcessor
+  public class SingleZipCodeProcessor : ISingleZipCodeProcessor
   {
     private readonly IStoreInfoDownloader _downloader;
     private readonly ISingleStorePersistor _singleStorePersistor;
