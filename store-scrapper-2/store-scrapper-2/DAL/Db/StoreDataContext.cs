@@ -12,5 +12,11 @@ namespace store_scrapper_2.DAL.Db
     public DbSet<Zip> Zips { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql(_connectionString);
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Store>()
+        .HasIndex(_ => new { _.StoreNumber, _.SatelliteNumber });
+    }
   }
 }

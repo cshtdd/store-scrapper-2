@@ -11,9 +11,10 @@ using System;
 namespace store_scrapper_2.DAL.Db.Migrations
 {
     [DbContext(typeof(StoreDataContext))]
-    partial class StoreDataContextModelSnapshot : ModelSnapshot
+    [Migration("20171215042406_CreateStoreNumberIndex")]
+    partial class CreateStoreNumberIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
