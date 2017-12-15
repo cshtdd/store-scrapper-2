@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using store_scrapper_2.Configuration;
@@ -17,17 +18,18 @@ namespace store_scrapper_2
       
       Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
 
-      var zip = args[0];
       await InitializeAsync();
+
+      var zipCodeDataService = CreateZipCodeDataService();
+      var zipCodes = await Task.WhenAll(args.Select(zipCodeDataService.ReadAsync));
       
-      var zipCode = await CreateZipCodeDataService().ReadAsync(zip);
-      await CreateProcessor().ProcessAsync(zipCode);
+      await CreateProcessor().ProcessAsync(zipCodes);
       
       Logger.Info("Ending program");
     }
 
     private static IZipCodeDataService CreateZipCodeDataService() => IocContainer.Resolve<IZipCodeDataService>(); 
-    private static ISingleZipCodeProcessor CreateProcessor() => IocContainer.Resolve<SingleZipCodeProcessor>();
+    private static IMultipleZipCodeProcessor CreateProcessor() => IocContainer.Resolve<IMultipleZipCodeProcessor>();
     private static IPersistenceInitializer CreatePersistenceInitializer() =>
       IocContainer.Resolve<IPersistenceInitializer>();
 
