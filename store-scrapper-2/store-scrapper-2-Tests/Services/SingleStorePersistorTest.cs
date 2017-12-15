@@ -18,7 +18,7 @@ namespace store_scrapper_2_Tests.Services
     private readonly IStoreInfoResponseDataService _dataService = Substitute.For<IStoreInfoResponseDataService>();
 
     [Fact]
-    public async void InsertsTheStoreDataIfItIsNew()
+    public async Task InsertsTheStoreDataIfItIsNew()
     {
       _dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(false));
       
@@ -30,7 +30,7 @@ namespace store_scrapper_2_Tests.Services
     }
     
     [Fact]
-    public async void UpdatesTheStoreDataIfItAlreadyExists()
+    public async Task UpdatesTheStoreDataIfItAlreadyExists()
     {
       _dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(true));
       

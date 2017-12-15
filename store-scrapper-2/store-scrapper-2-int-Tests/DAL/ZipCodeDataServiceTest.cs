@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using store_scrapper_2.Model;
 using store_scrapper_2;
@@ -17,7 +18,7 @@ namespace store_scrapper_2_int_Tests.DAL
     }
 
     [Fact]
-    public async void FindsTheDataForTheZipcode()
+    public async Task FindsTheDataForTheZipcode()
     {
       await CreatePersistenceInitializer().InitializeAsync();
       

@@ -11,7 +11,7 @@ namespace store_scrapper_2_Tests.Services
   public class SingleZipCodeProcessorTest
   {
     [Fact]
-    public async void DownloadsAndPersistsTheStoreData()
+    public async Task DownloadsAndPersistsTheStoreData()
     {
       var downloader = Substitute.For<IStoreInfoDownloader>();
       downloader.DownloadAsync(Arg.Any<ZipCode>())

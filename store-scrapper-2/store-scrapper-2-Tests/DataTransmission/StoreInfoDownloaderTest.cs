@@ -12,7 +12,7 @@ namespace store_scrapper_2_Tests.DataTransmission
   public class StoreInfoDownloaderTest
   {
     [Fact]
-    public async void DownloadsTheFirstStoreInfoFromTheStoreLocator()
+    public async Task DownloadsTheFirstStoreInfoFromTheStoreLocator()
     {
       var zipCode = new ZipCode("33009", 12.23m, 45.67m);
       var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");

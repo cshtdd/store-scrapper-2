@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.Model;
@@ -11,7 +12,7 @@ namespace store_scrapper_2_Tests.Services
   public class MultipleZipCodeProcessorTest
   {
     [Fact]
-    public async void ProcessesAllTheZipCodes()
+    public async Task ProcessesAllTheZipCodes()
     {
       var processedZipCodes = new List<string>();
       var seededInputs = new[]
