@@ -16,7 +16,7 @@ namespace store_scrapper_2
     {
       Logging.Initialize();
       
-      Logger.Info($"Launching Program with args={string.Join(",", args)}");
+      Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
 
       var zip = args[0];
       var latitude = decimal.Parse(args[1]);

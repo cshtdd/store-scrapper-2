@@ -12,8 +12,9 @@ namespace store_scrapper_2
 {
   public class StoreInfoResponseDataService : IStoreInfoResponseDataService
   {
-    private readonly IStoreDataContextFactory _contextFactory;
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    private readonly IStoreDataContextFactory _contextFactory;
 
     public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory)
     {
@@ -68,7 +69,7 @@ namespace store_scrapper_2
     {
       var changedEntries = await db.SaveChangesAsync();
 
-      Logger.Debug($"SaveContextChanges; changedEntries={changedEntries}");
+      Logger.Debug($"SaveContextChangesAsync; {nameof(changedEntries)}={changedEntries}");
 
       if (changedEntries == 0)
       {
