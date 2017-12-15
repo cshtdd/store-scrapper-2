@@ -20,16 +20,16 @@ namespace store_scrapper_2.Services
 
     public async Task ProcessAsync(ZipCode zipCode)
     {     
-      Logger.Info($"Processing; {zipCode}");
+      Logger.Info($"Processing; zipCode={zipCode.Zip};");
 
-      Logger.Info("Downloading Stores;");
+      Logger.Info($"Downloading Stores; zipCode={zipCode.Zip};");
       var stores = (await _downloader.DownloadAsync(zipCode)).ToArray();
-      Logger.Info($"Stores Data Downloaded; storesCount={stores.Length}");
+      Logger.Info($"Stores Data Downloaded; storesCount={stores.Length}; zipCode={zipCode.Zip};");
 
       var persistStoresTasks = stores.Select(_singleStorePersistor.PersistAsync);
       await Task.WhenAll(persistStoresTasks);
 
-      Logger.Info($"Processing; {zipCode} Result=true;");
+      Logger.Info($"Processing; {zipCode} Result=true; zipCode={zipCode.Zip};");
     }
   }
 }
