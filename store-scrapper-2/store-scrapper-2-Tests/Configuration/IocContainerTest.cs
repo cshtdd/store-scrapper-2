@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using store_scrapper_2;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
 using store_scrapper_2.Services;
 using Xunit;
@@ -19,6 +20,9 @@ namespace store_scrapper_2_Tests.Configuration
     {
       IocContainer.Resolve<SingleZipCodeProcessor>().Should().NotBeNull();
       IocContainer.Resolve<IPersistenceInitializer>().Should().NotBeNull();
+      IocContainer.Resolve<IZipCodeUrlSerializer>().Should().NotBeNull();      
+      IocContainer.Resolve<IStoreInfoResponseDataService>().Should().NotBeNull();
+      IocContainer.Resolve<IZipCodeDataService>().Should().NotBeNull();
     }
 
     [Fact]
