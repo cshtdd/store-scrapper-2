@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 using store_scrapper_2.DAL;
 using store_scrapper_2.DAL.Db;
 

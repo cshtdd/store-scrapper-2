@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
-using System.Runtime.Serialization.Json;
-using store_scrapper_2.DataTransmission.Serialization;
 
-namespace store_scrapper_2.DataTransmission
+namespace store_scrapper_2.Model
 {
   public struct ZipCode
   {
@@ -39,17 +36,6 @@ namespace store_scrapper_2.DataTransmission
       Zip = zipCode;
       Latitude = latitude;
       Longitude = longitude;
-    }
-
-    public string ToUrl()
-    {
-      var q = new StoreLocatorQuery(Zip, "17", "SUBWAY_PROD", Latitude, Longitude);
-      var qJson = q.ToJson(new DataContractJsonSerializerSettings());
-      var qUrl = WebUtility.UrlEncode(qJson);
-
-      const string endpoint = "https://locator-svc.subway.com/v2//GetLocations.ashx";
-
-      return $"{endpoint}?q={qUrl}";
     }
     
     public override string ToString() => $"Zip={Zip}; Latitude={Latitude:F8}; Longitude={Longitude:F8};";

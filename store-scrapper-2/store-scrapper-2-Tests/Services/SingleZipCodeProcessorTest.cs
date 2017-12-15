@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NSubstitute;
+using store_scrapper_2.Model;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Services;
 using Xunit;

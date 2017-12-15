@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
-using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Model;
+using store_scrapper_2.DataTransmission;
 using store_scrapper_2_Tests.Factory;
 using Xunit;
 
@@ -17,12 +17,16 @@ namespace store_scrapper_2_Tests.DataTransmission
       var zipCode = new ZipCode("33009", 12.23m, 45.67m);
       var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");
 
+      var urlSerializer = Substitute.For<IZipCodeUrlSerializer>();
+      urlSerializer.ToUrl(zipCode)
+        .Returns("the converted url");
+      
       var urlDownloader = Substitute.For<IUrlDownloader>();
-      urlDownloader.DownloadAsync(zipCode.ToUrl())
+      urlDownloader.DownloadAsync("the converted url")
         .Returns(Task.FromResult(seededResponse));
 
 
-      var responses = (await new StoreInfoDownloader(urlDownloader)
+      var responses = (await new StoreInfoDownloader(urlDownloader, urlSerializer)
         .DownloadAsync(zipCode))
         .ToList();
 

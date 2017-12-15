@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using store_scrapper_2.Model;
 using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2.Services
