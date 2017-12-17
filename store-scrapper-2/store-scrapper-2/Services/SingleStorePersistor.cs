@@ -17,12 +17,12 @@ namespace store_scrapper_2.Services
 
       if (shouldUpdateExistingStore)
       {
-        Logger.Info($"Updating Existing Store; storeNumber={storeInfo.StoreNumber};");
+        Logger.Debug($"Updating Existing Store; storeNumber={storeInfo.StoreNumber};");
         await _dataService.UpdateAsync(storeInfo);
       }
       else
       {
-        Logger.Info($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
+        Logger.Debug($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
         await _dataService.CreateNewAsync(storeInfo);
       }
     }

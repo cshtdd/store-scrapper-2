@@ -33,9 +33,10 @@ namespace store_scrapper_2.Services
       
       foreach (var zipCodes in batches)
       {
-        Logger.Info($"Processing Batch; {nameof(batchIndex)}={batchIndex}; batchesCount={batches.Length};");       
+        var zipCodesArray = zipCodes.ToArray();
+        Logger.Info($"Processing Batch; {nameof(batchIndex)}={batchIndex}; batchesCount={batches.Length}; batchSize={zipCodesArray.Length}");       
         
-        await _multipleZipCodeProcessor.ProcessAsync(zipCodes);
+        await _multipleZipCodeProcessor.ProcessAsync(zipCodesArray);
         await _delaySimulator.Delay();
         
         batchIndex++;
