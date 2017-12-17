@@ -6,7 +6,7 @@
     "ZipsFilename": "zips.csv"
   },
   "ZipCodes": {
-    "BatchSize": "5",
-    "DelayMs": "5000"
+    "BatchSize": "1",
+    "DelayMs": "1000"
   }
 }
