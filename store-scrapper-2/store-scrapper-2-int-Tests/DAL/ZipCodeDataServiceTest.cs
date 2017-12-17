@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using store_scrapper_2.Model;
@@ -40,6 +41,16 @@ namespace store_scrapper_2_int_Tests.DAL
         thrownException = ex;
       }
       thrownException.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ReadsAllTheZipCodes()
+    {
+      await CreatePersistenceInitializer().InitializeAsync();
+
+      var zips = (await _dataService.AllAsync()).ToList();
+
+      zips.Count.Should().Be(13);
     }
   }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.Model;
 using store_scrapper_2.DAL;
@@ -25,6 +27,14 @@ namespace store_scrapper_2
 
         var zip = await db.Zips.FirstAsync(_ => _.ZipCode == zipCode);
         return zip.ToZipCode();
+      }
+    }
+
+    public async Task<IEnumerable<ZipCode>> AllAsync()
+    {
+      using (var db = _contextFactory.Create())
+      {
+        return await db.Zips.Select(_ => _.ToZipCode()).ToArrayAsync();
       }
     }
   }
