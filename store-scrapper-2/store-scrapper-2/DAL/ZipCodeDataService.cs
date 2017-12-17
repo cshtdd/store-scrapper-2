@@ -35,11 +35,25 @@ namespace store_scrapper_2
     {
       using (var db = _contextFactory.Create())
       {
+        Logger.Debug("AllAsync;");
+
         return await db.Zips.Select(_ => new ZipCodeInfo
         {
           ZipCode = _.ToZipCode(),
           UpdateTimeUtc = _.UpdateTimeUtc ?? DateTime.MinValue
         }).ToArrayAsync();
+      }
+    }
+
+    public async Task UpdateZipCodeAsync(string zipCode)
+    {
+      using (var db = _contextFactory.Create())
+      {
+        Logger.Debug($"UpdateZipCodeAsync; {nameof(zipCode)}={zipCode}");
+
+        var zip = db.Zips.First(_ => _.ZipCode == zipCode);
+        zip.UpdateTimeUtc = DateTime.UtcNow;
+        await db.SaveChangesAsync();
       }
     }
   }

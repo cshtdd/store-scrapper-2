@@ -69,5 +69,37 @@ namespace store_scrapper_2_int_Tests.DAL
         .Should()
         .BeTrue();
     }
+
+    [Fact]
+    public async Task UpdatesTheZipCode()
+    {
+      await CreatePersistenceInitializer().InitializeAsync();
+
+      (await _dataService.AllAsync())
+        .First(_ => _.ZipCode.Zip == "601")
+        .UpdateTimeUtc
+        .Should()
+        .Be(DateTime.MinValue);
+      
+      (await _dataService.AllAsync())
+        .First(_ => _.ZipCode.Zip == "605")
+        .UpdateTimeUtc
+        .Should()
+        .Be(DateTime.MinValue);
+
+      await _dataService.UpdateZipCodeAsync("601");
+
+      (await _dataService.AllAsync())
+        .First(_ => _.ZipCode.Zip == "601")
+        .UpdateTimeUtc
+        .Should()
+        .BeCloseTo(DateTime.UtcNow, 1000);
+      
+      (await _dataService.AllAsync())
+        .First(_ => _.ZipCode.Zip == "605")
+        .UpdateTimeUtc
+        .Should()
+        .Be(DateTime.MinValue);
+    }
   }
 }
