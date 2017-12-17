@@ -6,6 +6,6 @@ namespace store_scrapper_2.Services
 {
   public interface IZipCodeBatchesReader
   {
-    Task<IEnumerable<IEnumerable<ZipCode>>> ReadAllAsync(int batchSize = 10);
+    Task<IEnumerable<IEnumerable<ZipCode>>> ReadAllAsync();
   }
 }

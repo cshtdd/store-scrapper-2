@@ -4,5 +4,8 @@
   },
   "Seeds": {
     "ZipsFilename": "zips.csv"
+  },
+  "ZipCodes": {
+    "BatchSize": "3"
   }
 }

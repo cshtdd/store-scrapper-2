@@ -3,6 +3,7 @@
   public static class ConfigurationKeys
   {
     public const string ConnectionStringsStoresDb = "ConnectionStrings:StoresDb";
-    public static string SeedsZipsFilename = "Seeds:ZipsFilename";
+    public const string SeedsZipsFilename = "Seeds:ZipsFilename";
+    public const string ZipCodesBatchSize = "ZipCodes:BatchSize";
   }
 }

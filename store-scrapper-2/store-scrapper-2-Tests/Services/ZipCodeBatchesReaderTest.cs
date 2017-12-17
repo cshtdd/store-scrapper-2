@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2;
+using store_scrapper_2.Configuration;
 using store_scrapper_2.Services;
 using store_scrapper_2_Tests.Factory;
 using Xunit;
@@ -14,6 +15,10 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task ReadsAllTheZipCodesInBatches()
     {
+      var configurationReader = Substitute.For<IConfigurationReader>();
+      configurationReader.Read(ConfigurationKeys.ZipCodesBatchSize)
+        .Returns("4");
+      
       var dataService = Substitute.For<IZipCodeDataService>();
       dataService.AllAsync().ReturnsForAnyArgs(new[]
       {
@@ -29,7 +34,8 @@ namespace store_scrapper_2_Tests.Services
         ZipCodeFactory.Create("99999") 
       });
 
-      var batches = (await new ZipCodeBatchesReader(dataService).ReadAllAsync(4)).ToArray();
+      var reader = new ZipCodeBatchesReader(dataService, configurationReader);
+      var batches = (await reader.ReadAllAsync()).ToArray();
 
       batches.Length.Should().Be(3);
       batches
