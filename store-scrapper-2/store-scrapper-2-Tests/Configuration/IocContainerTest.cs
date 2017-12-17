@@ -24,6 +24,7 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IZipCodeUrlSerializer>().Should().NotBeNull();      
       IocContainer.Resolve<IStoreInfoResponseDataService>().Should().NotBeNull();
       IocContainer.Resolve<IZipCodeDataService>().Should().NotBeNull();
+      IocContainer.Resolve<IZipCodeBatchesReader>().Should().NotBeNull();
     }
 
     [Fact]
