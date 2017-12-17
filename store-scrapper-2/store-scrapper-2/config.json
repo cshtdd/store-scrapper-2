@@ -7,6 +7,6 @@
   },
   "ZipCodes": {
     "BatchSize": "1",
-    "DelayMs": "1000"
+    "DelayMs": "500"
   }
 }
