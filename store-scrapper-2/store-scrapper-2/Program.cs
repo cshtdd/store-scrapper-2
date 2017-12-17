@@ -19,17 +19,12 @@ namespace store_scrapper_2
       Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
 
       await InitializeAsync();
-
-      var zipCodeDataService = CreateZipCodeDataService();
-      var zipCodes = await Task.WhenAll(args.Select(zipCodeDataService.ReadAsync));
-      
-      await CreateProcessor().ProcessAsync(zipCodes);
+      await CreateProcessor().ProcessAsync();
       
       Logger.Info("Ending program");
     }
 
-    private static IZipCodeDataService CreateZipCodeDataService() => IocContainer.Resolve<IZipCodeDataService>(); 
-    private static IMultipleZipCodeProcessor CreateProcessor() => IocContainer.Resolve<IMultipleZipCodeProcessor>();
+    private static IAllZipCodesProcessor CreateProcessor() => IocContainer.Resolve<IAllZipCodesProcessor>();
     private static IPersistenceInitializer CreatePersistenceInitializer() =>
       IocContainer.Resolve<IPersistenceInitializer>();
 
