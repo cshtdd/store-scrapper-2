@@ -15,6 +15,8 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task ProcessesAllTheZipCodes()
     {
+      var delaySimulator = Substitute.For<IBatchDelaySimulator>();
+      
       var batchesReader = Substitute.For<IZipCodeBatchesReader>();
       batchesReader.ReadAllAsync().ReturnsForAnyArgs(new IEnumerable<ZipCode>[]
       {
@@ -28,7 +30,7 @@ namespace store_scrapper_2_Tests.Services
       processor.WhenForAnyArgs(_ => _.ProcessAsync(Arg.Any<IEnumerable<ZipCode>>()))
         .Do(_ => processedZipCodes.AddRange(((IEnumerable<ZipCode>)_[0]).Select(z => z.Zip)));
 
-      await new AllZipCodesProcessor(batchesReader, processor).ProcessAsync();
+      await new AllZipCodesProcessor(batchesReader, processor, delaySimulator).ProcessAsync();
 
       processedZipCodes.Sort();
         
@@ -42,6 +44,8 @@ namespace store_scrapper_2_Tests.Services
           "33333",
           "44444"
         });
+
+      await delaySimulator.Received(3).Delay();
     }
   }
 }
