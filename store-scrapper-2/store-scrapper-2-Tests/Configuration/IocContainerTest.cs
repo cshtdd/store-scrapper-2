@@ -26,6 +26,7 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IZipCodeDataService>().Should().NotBeNull();
       IocContainer.Resolve<IZipCodeBatchesReader>().Should().NotBeNull();
       IocContainer.Resolve<IAllZipCodesProcessor>().Should().NotBeNull();
+      IocContainer.Resolve<IBatchDelaySimulator>().Should().NotBeNull();
     }
 
     [Fact]
