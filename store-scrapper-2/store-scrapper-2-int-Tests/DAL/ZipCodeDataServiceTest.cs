@@ -51,6 +51,23 @@ namespace store_scrapper_2_int_Tests.DAL
       var zips = (await _dataService.AllAsync()).ToList();
 
       zips.Count.Should().Be(13);
+      
+      zips.Select(_ => _.ZipCode.Zip)
+        .Distinct()
+        .Count()
+        .Should()
+        .Be(13);
+      
+      zips.Select(_ => _.UpdateTimeUtc)
+        .Distinct()
+        .Count()
+        .Should()
+        .Be(1);
+
+      zips.Select(_ => _.UpdateTimeUtc)
+        .All(_ => _ == DateTime.MinValue)
+        .Should()
+        .BeTrue();
     }
   }
 }

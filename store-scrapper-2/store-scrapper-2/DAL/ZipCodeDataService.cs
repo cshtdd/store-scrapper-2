@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -30,11 +31,15 @@ namespace store_scrapper_2
       }
     }
 
-    public async Task<IEnumerable<ZipCode>> AllAsync()
+    public async Task<IEnumerable<ZipCodeInfo>> AllAsync()
     {
       using (var db = _contextFactory.Create())
       {
-        return await db.Zips.Select(_ => _.ToZipCode()).ToArrayAsync();
+        return await db.Zips.Select(_ => new ZipCodeInfo
+        {
+          ZipCode = _.ToZipCode(),
+          UpdateTimeUtc = _.UpdateTimeUtc ?? DateTime.MinValue
+        }).ToArrayAsync();
       }
     }
   }

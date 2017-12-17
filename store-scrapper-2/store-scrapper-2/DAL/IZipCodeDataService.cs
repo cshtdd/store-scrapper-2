@@ -7,6 +7,6 @@ namespace store_scrapper_2
   public interface IZipCodeDataService
   {
     Task<ZipCode> ReadAsync(string zipCode);
-    Task<IEnumerable<ZipCode>> AllAsync();
+    Task<IEnumerable<ZipCodeInfo>> AllAsync();
   }
 }

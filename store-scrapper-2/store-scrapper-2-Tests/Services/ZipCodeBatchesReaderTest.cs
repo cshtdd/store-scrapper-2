@@ -22,16 +22,16 @@ namespace store_scrapper_2_Tests.Services
       var dataService = Substitute.For<IZipCodeDataService>();
       dataService.AllAsync().ReturnsForAnyArgs(new[]
       {
-        ZipCodeFactory.Create("00000"), 
-        ZipCodeFactory.Create("11111"), 
-        ZipCodeFactory.Create("22222"), 
-        ZipCodeFactory.Create("33333"), 
-        ZipCodeFactory.Create("44444"), 
-        ZipCodeFactory.Create("55555"), 
-        ZipCodeFactory.Create("66666"), 
-        ZipCodeFactory.Create("77777"), 
-        ZipCodeFactory.Create("88888"), 
-        ZipCodeFactory.Create("99999") 
+        ZipCodeInfoFactory.Create("00000"),
+        ZipCodeInfoFactory.Create("11111"), 
+        ZipCodeInfoFactory.Create("22222"), 
+        ZipCodeInfoFactory.Create("33333"), 
+        ZipCodeInfoFactory.Create("44444"), 
+        ZipCodeInfoFactory.Create("55555"), 
+        ZipCodeInfoFactory.Create("66666"), 
+        ZipCodeInfoFactory.Create("77777"), 
+        ZipCodeInfoFactory.Create("88888"), 
+        ZipCodeInfoFactory.Create("99999") 
       });
 
       var reader = new ZipCodeBatchesReader(dataService, configurationReader);

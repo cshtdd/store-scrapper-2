@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.Model;
@@ -19,7 +20,9 @@ namespace store_scrapper_2.Services
     public async Task<IEnumerable<IEnumerable<ZipCode>>> ReadAllAsync()
     {
       var batchSize = int.Parse(_configurationReader.Read(ConfigurationKeys.ZipCodesBatchSize));
-      return (await _zipCodeDataService.AllAsync()).ToBatches(batchSize);
+      return (await _zipCodeDataService.AllAsync())
+        .Select(_ => _.ZipCode)
+        .ToBatches(batchSize);
     }
   }
 }
