@@ -21,6 +21,7 @@ namespace store_scrapper_2.Services
     {
       var batchSize = int.Parse(_configurationReader.Read(ConfigurationKeys.ZipCodesBatchSize));
       return (await _zipCodeDataService.AllAsync())
+        .OrderBy(_ => _.UpdateTimeUtc)
         .Select(_ => _.ZipCode)
         .ToBatches(batchSize);
     }
