@@ -28,6 +28,7 @@ namespace store_scrapper_2.Configuration
       _configuration = builder.Build();
     }
 
-    public string Read(string key) => _configuration[key];
+    public string ReadString(string key) => _configuration[key];
+    public int ReadInt(string key) => int.Parse(ReadString(key));
   }
 }

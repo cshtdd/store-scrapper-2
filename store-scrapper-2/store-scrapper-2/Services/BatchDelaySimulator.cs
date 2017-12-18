@@ -15,7 +15,7 @@ namespace store_scrapper_2.Services
 
     public async Task Delay()
     {
-      var delayMs = int.Parse(_configurationReader.Read(ConfigurationKeys.ZipCodesDelayMs));
+      var delayMs = _configurationReader.ReadInt(ConfigurationKeys.ZipCodesDelayMs);
       Logger.Debug($"Sleeping...; {nameof(delayMs)}={delayMs};");
       await Task.Delay(delayMs);
     }

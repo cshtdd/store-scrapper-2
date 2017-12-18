@@ -11,7 +11,7 @@ namespace store_scrapper_2.DAL
     public StoreDataContextFactory(IConfigurationReader configurationReader)
     {
       _configurationReader = configurationReader;
-      ConnectionString = _configurationReader.Read(ConfigurationKeys.ConnectionStringsStoresDb);
+      ConnectionString = _configurationReader.ReadString(ConfigurationKeys.ConnectionStringsStoresDb);
     }
 
     public StoreDataContext Create() => new StoreDataContext(ConnectionString);

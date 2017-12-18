@@ -19,7 +19,7 @@ namespace store_scrapper_2.Services
 
     public async Task<IEnumerable<IEnumerable<ZipCode>>> ReadAllAsync()
     {
-      var batchSize = int.Parse(_configurationReader.Read(ConfigurationKeys.ZipCodesBatchSize));
+      var batchSize = _configurationReader.ReadInt(ConfigurationKeys.ZipCodesBatchSize);
       return (await _zipCodeDataService.AllAsync())
         .OrderBy(_ => _.UpdateTimeUtc)
         .Select(_ => _.ZipCode)

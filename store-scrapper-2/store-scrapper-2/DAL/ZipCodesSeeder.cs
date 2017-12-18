@@ -35,7 +35,7 @@ namespace store_scrapper_2
       }
       
       await ClearZipCodesAsync();
-      var seedFilename = _configurationReader.Read(ConfigurationKeys.SeedsZipsFilename);
+      var seedFilename = _configurationReader.ReadString(ConfigurationKeys.SeedsZipsFilename);
       await LoadZipCodesFromCsvAsync(seedFilename);
     }
 

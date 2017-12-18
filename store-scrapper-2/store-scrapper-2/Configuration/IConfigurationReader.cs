@@ -2,6 +2,7 @@
 {
   public interface IConfigurationReader
   {
-    string Read(string key);
+    string ReadString(string key);
+    int ReadInt(string key);
   }
 }
