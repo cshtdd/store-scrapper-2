@@ -7,12 +7,7 @@ namespace store_scrapper_2.Configuration
     private IConfigurationRoot _configuration;
     public string EnvironmentName { get; }
 
-    public ConfigurationReader()
-    {
-      EnvironmentName = "PROD";
-      BuildConfiguration();
-    }
-
+    public ConfigurationReader() : this("PROD") { }
     public ConfigurationReader(string environmentName)
     {
       EnvironmentName = environmentName;
@@ -30,5 +25,6 @@ namespace store_scrapper_2.Configuration
 
     public string ReadString(string key) => _configuration[key];
     public int ReadInt(string key) => int.Parse(ReadString(key));
+    public bool ReadBool(string key) => bool.Parse(ReadString(key));
   }
 }

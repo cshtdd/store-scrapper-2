@@ -4,5 +4,6 @@
   {
     string ReadString(string key);
     int ReadInt(string key);
+    bool ReadBool(string key);
   }
 }
