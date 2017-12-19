@@ -15,21 +15,7 @@ namespace store_scrapper_2
 
     private readonly IStoreDataContextFactory _contextFactory;
 
-    public ZipCodeDataService(IStoreDataContextFactory contextFactory)
-    {
-      _contextFactory = contextFactory;
-    }
-
-    public async Task<ZipCode> ReadAsync(string zipCode)
-    {
-      using (var db = _contextFactory.Create())
-      {
-        Logger.Debug($"ReadAsync; {nameof(zipCode)}={zipCode}");
-
-        var zip = await db.Zips.FirstAsync(_ => _.ZipCode == zipCode);
-        return zip.ToZipCode();
-      }
-    }
+    public ZipCodeDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
     public async Task<IEnumerable<ZipCodeInfo>> AllAsync()
     {

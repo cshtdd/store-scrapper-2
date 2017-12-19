@@ -19,31 +19,6 @@ namespace store_scrapper_2_int_Tests.DAL
     }
 
     [Fact]
-    public async Task FindsTheDataForTheZipcode()
-    {
-      await CreatePersistenceInitializer().InitializeAsync();
-      
-      (await _dataService.ReadAsync("601"))
-        .Should()
-        .Be(new ZipCode("601", 18.16m, -66.72m));
-      
-      (await _dataService.ReadAsync("605"))
-        .Should()
-        .Be(new ZipCode("605", 18.43m, -67.15m));
-      
-      InvalidOperationException thrownException = null;
-      try
-      {
-        await _dataService.ReadAsync("00000");
-      }
-      catch (InvalidOperationException ex)
-      {
-        thrownException = ex;
-      }
-      thrownException.Should().NotBeNull();
-    }
-
-    [Fact]
     public async Task ReadsAllTheZipCodes()
     {
       await CreatePersistenceInitializer().InitializeAsync();
