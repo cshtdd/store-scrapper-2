@@ -31,22 +31,31 @@ namespace store_scrapper_2.Services
     
     public async Task ProcessAsync()
     {
+      do
+      {
+        await ProcessAllBatchesAsync();
+      } while (_configurationReader.ReadBool(ConfigurationKeys.ZipCodesRunContinuosly));
+    }
+
+    private async Task ProcessAllBatchesAsync()
+    {
       var maxBatchesCountSetting = _configurationReader.ReadInt(ConfigurationKeys.ZipCodesMaxBatchCount);
 
       var batches = await ReadBatchesArray(maxBatchesCountSetting);
-        
+
       Logger.Info($"ProcessAsync Started; batchesCount={batches.Length}; maxBatchesCount={maxBatchesCountSetting};");
 
       var batchIndex = 0;
-      
+
       foreach (var zipCodes in batches)
       {
         var zipCodesArray = zipCodes.ToArray();
-        Logger.Info($"Processing Batch; {nameof(batchIndex)}={batchIndex}; batchesCount={batches.Length}; batchSize={zipCodesArray.Length}");       
-        
+        Logger.Info(
+          $"Processing Batch; {nameof(batchIndex)}={batchIndex}; batchesCount={batches.Length}; batchSize={zipCodesArray.Length}");
+
         await _multipleZipCodeProcessor.ProcessAsync(zipCodesArray);
         await _delaySimulator.Delay();
-        
+
         batchIndex++;
       }
 

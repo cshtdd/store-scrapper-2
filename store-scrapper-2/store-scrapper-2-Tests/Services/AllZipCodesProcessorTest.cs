@@ -37,6 +37,7 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task ProcessesAllTheZipCodes()
     {
+      _configurationReader.ReadBool(ConfigurationKeys.ZipCodesRunContinuosly).Returns(false);
       _configurationReader.ReadInt(ConfigurationKeys.ZipCodesMaxBatchCount).Returns(0);
       _zipCodeBatchesReader.ReadAllAsync().ReturnsForAnyArgs(new IEnumerable<ZipCode>[]
       {
@@ -65,6 +66,7 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task ProcessesTheMaximumNumberOfZipCodes()
     {
+      _configurationReader.ReadBool(ConfigurationKeys.ZipCodesRunContinuosly).Returns(false);
       _configurationReader.ReadInt(ConfigurationKeys.ZipCodesMaxBatchCount).Returns(2);
       _zipCodeBatchesReader.ReadAllAsync().ReturnsForAnyArgs(new IEnumerable<ZipCode>[]
       {
