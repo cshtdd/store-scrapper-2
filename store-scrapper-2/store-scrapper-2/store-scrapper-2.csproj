@@ -24,5 +24,6 @@
   <ItemGroup>
     <None Include="config.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="zips.csv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="log4net.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
