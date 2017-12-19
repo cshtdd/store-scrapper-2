@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using store_scrapper_2.Configuration;
@@ -14,13 +15,21 @@ namespace store_scrapper_2
     public static async Task Main(string[] args)
     {
       Logging.Initialize(Logging.ConfigurationSource.File);
-      
-      Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
 
-      await InitializeAsync();
-      await CreateProcessor().ProcessAsync();
-      
-      Logger.Info("Ending program");
+      try
+      {
+        Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
+
+        await InitializeAsync();
+        await CreateProcessor().ProcessAsync();
+
+        Logger.Info("Ending program; success=true;");
+      }
+      catch (Exception ex)
+      {
+        Logger.Error("Ending program; success=false;", ex);
+        throw;
+      }
     }
 
     private static IAllZipCodesProcessor CreateProcessor() => IocContainer.Resolve<IAllZipCodesProcessor>();
