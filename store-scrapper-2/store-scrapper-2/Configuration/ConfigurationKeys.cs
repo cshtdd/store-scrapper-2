@@ -6,7 +6,7 @@
     public const string SeedsZipsFilename = "Seeds:ZipsFilename";
     public const string ZipCodesBatchSize = "ZipCodes:BatchSize";
     public const string ZipCodesDelayMs = "ZipCodes:DelayMs";
-    public const string ZipCodesMaxCount = "ZipCodes:MaxCount";
+    public const string ZipCodesMaxBatchCount = "ZipCodes:MaxBatchCount";
     public const string ZipCodesRunContinuosly = "ZipCodes:RunContinuosly";
   }
 }
