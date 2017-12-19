@@ -7,6 +7,8 @@
   },
   "ZipCodes": {
     "BatchSize": "1",
-    "DelayMs": "500"
+    "DelayMs": "500",
+    "MaxCount": "0",
+    "RunContinuosly": "false"
   }
 }
