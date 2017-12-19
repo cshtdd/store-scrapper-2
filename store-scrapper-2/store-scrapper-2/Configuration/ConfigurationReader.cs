@@ -24,7 +24,24 @@ namespace store_scrapper_2.Configuration
     }
 
     public string ReadString(string key) => _configuration[key];
-    public int ReadInt(string key) => int.Parse(ReadString(key));
-    public bool ReadBool(string key) => bool.Parse(ReadString(key));
+    public int ReadInt(string key, int defaultValue = 0)
+    {
+      var valueStr = ReadString(key);
+      if (!int.TryParse(valueStr, out var result))
+      {
+        return defaultValue;
+      }
+      return result;
+    }
+
+    public bool ReadBool(string key, bool defaultValue = false)
+    {
+      var valueStr = ReadString(key);
+      if (!bool.TryParse(valueStr, out var result))
+      {
+        return defaultValue;
+      }
+      return result;
+    }
   }
 }

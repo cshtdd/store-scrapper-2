@@ -62,6 +62,33 @@ namespace store_scrapper_2_Tests.Services
 
       await _batchDelaySimulator.Received(3).Delay();
     }
+    
+    [Fact]
+    public async Task ProcessesAllTheZipCodesWhenConfigurationKeysAreNotSet()
+    {
+      _zipCodeBatchesReader.ReadAllAsync().ReturnsForAnyArgs(new IEnumerable<ZipCode>[]
+      {
+        new [] { ZipCodeFactory.Create("00000"), ZipCodeFactory.Create("11111") },
+        new [] { ZipCodeFactory.Create("22222"), ZipCodeFactory.Create("33333") },
+        new [] { ZipCodeFactory.Create("44444") }
+      });
+
+      await _allZipCodesProcessor.ProcessAsync();
+
+      _processedZipCodes.Sort();
+      _processedZipCodes
+        .ToArray()
+        .ShouldBeEquivalentTo(new []
+        {
+          "00000",
+          "11111",
+          "22222",
+          "33333",
+          "44444"
+        });
+
+      await _batchDelaySimulator.Received(3).Delay();
+    }
 
     [Fact]
     public async Task ProcessesTheMaximumNumberOfZipCodes()
