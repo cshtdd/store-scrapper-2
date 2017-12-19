@@ -15,6 +15,15 @@
 
     public override string ToString() => $"{Store}-{Satellite}";
 
+    public override bool Equals(object obj)
+    {
+      var that = (StoreNumber) obj;
+      return Store == that.Store &&
+        Satellite == that.Satellite;
+    }
+
+    public override int GetHashCode() => ToString().GetHashCode();
+
     public static bool operator == (StoreNumber number1, StoreNumber number2) => number1.Equals(number2);
     public static bool operator != (StoreNumber number1, StoreNumber number2) => !(number1 == number2);
     
