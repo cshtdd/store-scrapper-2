@@ -7,6 +7,7 @@ RUN dotnet restore
 
 # copy everything else and build
 COPY . ./
+RUN mv ./log4net.prod.config ./log4net.config 
 RUN dotnet publish -c Release -o out
 
 # build runtime image
