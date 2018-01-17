@@ -11,7 +11,7 @@ RUN mv ./log4net.prod.config ./log4net.config
 RUN dotnet publish -c Release -o out
 
 # build runtime image
-FROM microsoft/dotnet:2.0.0-runtime-stretch-arm32v7
+FROM microsoft/dotnet:2.0-runtime
 WORKDIR /app
 COPY --from=build-env /app/out ./
 ENTRYPOINT ["dotnet", "store-scrapper-2.dll"]
