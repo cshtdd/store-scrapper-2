@@ -8,5 +8,6 @@
     public const string ZipCodesDelayMs = "ZipCodes:DelayMs";
     public const string ZipCodesMaxBatchCount = "ZipCodes:MaxBatchCount";
     public const string ZipCodesRunContinuosly = "ZipCodes:RunContinuosly";
+    public const string StoresWriteCacheExpirationMs = "Stores:WriteCacheExpirationMs";
   }
 }
