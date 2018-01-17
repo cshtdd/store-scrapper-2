@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 using store_scrapper_2;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission;
@@ -33,6 +34,16 @@ namespace store_scrapper_2_Tests.Configuration
     public void CorrectlyResolvesTheConnectionConfigurationReader()
     {
       ((ConfigurationReader) IocContainer.Resolve<IConfigurationReader>()).EnvironmentName.Should().Be("PROD");
+    }
+
+    [Fact]
+    public void CorrectlyResolvesTheMemoryCacheAsASingleton()
+    {
+      IocContainer.Resolve<IMemoryCache>().Should().NotBeNull();
+      (IocContainer.Resolve<IMemoryCache>() as MemoryCache).Should().NotBeNull();
+      var a = IocContainer.Resolve<IMemoryCache>();
+      var b = IocContainer.Resolve<IMemoryCache>();
+      (a == b).Should().BeTrue();
     }
 
     [Fact]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace store_scrapper_2.Configuration
 {
@@ -51,6 +52,11 @@ namespace store_scrapper_2.Configuration
         .Where(_ => true)
         .AsImplementedInterfaces();
 
+      builder.RegisterType<MemoryCache>()
+        .As<IMemoryCache>()
+        .SingleInstance()
+        .WithParameter("optionsAccessor", new MemoryCacheOptions());
+      
       return builder.Build();
     }
 
