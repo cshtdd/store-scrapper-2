@@ -34,6 +34,16 @@ namespace store_scrapper_2.Configuration
       return result;
     }
 
+    public uint ReadUInt(string key, uint defaultValue = 0)
+    {
+      var valueStr = ReadString(key);
+      if (!uint.TryParse(valueStr, out var result))
+      {
+        return defaultValue;
+      }
+      return result;
+    }
+
     public bool ReadBool(string key, bool defaultValue = false)
     {
       var valueStr = ReadString(key);
