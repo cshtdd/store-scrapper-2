@@ -29,6 +29,7 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IAllZipCodesProcessor>().Should().NotBeNull();
       IocContainer.Resolve<IBatchDelaySimulator>().Should().NotBeNull();
       IocContainer.Resolve<ICacheWithExpiration>().Should().NotBeNull();
+      IocContainer.Resolve<IStorePersistenceCalculator>().Should().NotBeNull();
     }
 
     [Fact]
