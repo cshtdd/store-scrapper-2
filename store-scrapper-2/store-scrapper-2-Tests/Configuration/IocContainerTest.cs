@@ -30,6 +30,9 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IBatchDelaySimulator>().Should().NotBeNull();
       IocContainer.Resolve<ICacheWithExpiration>().Should().NotBeNull();
       IocContainer.Resolve<IStorePersistenceCalculator>().Should().NotBeNull();
+
+      ValidateSingletonRegistration<IMemoryCache>();
+      ValidateSingletonRegistration<IExistingStoresReader>();
     }
 
     [Fact]
@@ -39,23 +42,9 @@ namespace store_scrapper_2_Tests.Configuration
     }
 
     [Fact]
-    public void CorrectlyResolvesTheMemoryCacheAsASingleton()
+    public void CorrectlyResolvesTheMemoryCacheAsMemoryCache()
     {
-      IocContainer.Resolve<IMemoryCache>().Should().NotBeNull();
       (IocContainer.Resolve<IMemoryCache>() as MemoryCache).Should().NotBeNull();
-      var a = IocContainer.Resolve<IMemoryCache>();
-      var b = IocContainer.Resolve<IMemoryCache>();
-      (a == b).Should().BeTrue();
-    }
-
-    [Fact]
-    public void CorrectlyResolvesTheExistingStoreReaderAsASingleton()
-    {
-      IocContainer.Resolve<IExistingStoresReader>().Should().NotBeNull();
- 
-      var a = IocContainer.Resolve<IExistingStoresReader>();
-      var b = IocContainer.Resolve<IExistingStoresReader>();
-      (a == b).Should().BeTrue();
     }
     
     [Fact]
@@ -67,6 +56,13 @@ namespace store_scrapper_2_Tests.Configuration
       
       ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Contains("Server=localhost").Should().BeTrue();
       ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Contains("Database=stores").Should().BeTrue();
+    }
+
+    private static void ValidateSingletonRegistration<T>()  
+    {
+      var a = IocContainer.Resolve<T>();
+      var b = IocContainer.Resolve<T>();
+      a.Equals(b).Should().BeTrue();
     }
   }
 }
