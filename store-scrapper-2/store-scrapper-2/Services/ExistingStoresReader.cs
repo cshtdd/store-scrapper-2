@@ -32,7 +32,7 @@ namespace store_scrapper_2.Services
       _isInitialized = true;
     }
 
-    public bool ContainsStores(StoreNumber storeNumber)
+    public bool ContainsStore(StoreNumber storeNumber)
     {
       if (!_isInitialized)
       {

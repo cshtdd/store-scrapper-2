@@ -6,6 +6,6 @@ namespace store_scrapper_2.Services
   public interface IExistingStoresReader
   {
     Task InitializeAsync();
-    bool ContainsStores(StoreNumber storeNumber);
+    bool ContainsStore(StoreNumber storeNumber);
   }
 }

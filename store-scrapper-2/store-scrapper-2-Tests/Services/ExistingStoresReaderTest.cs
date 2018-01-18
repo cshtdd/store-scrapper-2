@@ -44,7 +44,7 @@ namespace store_scrapper_2_Tests.Services
     {
       ((Action)(() =>
       {
-        _reader.ContainsStores("11111-1");
+        _reader.ContainsStore("11111-1");
       })).ShouldThrow<InvalidOperationException>();
     }
 
@@ -59,9 +59,9 @@ namespace store_scrapper_2_Tests.Services
       });
       await _reader.InitializeAsync();
 
-      _reader.ContainsStores("99999-1").Should().BeFalse();
-      _reader.ContainsStores("11111-1").Should().BeTrue();
-      _reader.ContainsStores("22222-1").Should().BeTrue();
+      _reader.ContainsStore("99999-1").Should().BeFalse();
+      _reader.ContainsStore("11111-1").Should().BeTrue();
+      _reader.ContainsStore("22222-1").Should().BeTrue();
     }
   }
 }
