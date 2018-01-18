@@ -18,13 +18,21 @@ namespace store_scrapper_2_Tests.Services
 
     private readonly IStoreInfoResponseDataService _dataService = Substitute.For<IStoreInfoResponseDataService>();
     private readonly IStorePersistenceCalculator _persistenceCalculator = Substitute.For<IStorePersistenceCalculator>();
-    
+    private readonly IExistingStoresReader _existingStoresReader = Substitute.For<IExistingStoresReader>();
+
+    private readonly ISingleStorePersistor _singleStorePersistor;
+
+    public SingleStorePersistorTest()
+    {
+      _singleStorePersistor = new SingleStorePersistor(_dataService, _persistenceCalculator, _existingStoresReader);
+    }
+
     [Fact]
     public async Task InsertsTheStoreDataIfItIsNew()
     {
       _dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(false));
       
-      await new SingleStorePersistor(_dataService, _persistenceCalculator).PersistAsync(_storeInfo);
+      await _singleStorePersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .Received(1)
@@ -39,7 +47,7 @@ namespace store_scrapper_2_Tests.Services
     {
       _dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(true));
       
-      await new SingleStorePersistor(_dataService, _persistenceCalculator).PersistAsync(_storeInfo);
+      await _singleStorePersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .Received(1)
@@ -54,7 +62,7 @@ namespace store_scrapper_2_Tests.Services
     {
       _persistenceCalculator.WasPersistedRecently("77754-4").Returns(true);
       
-      await new SingleStorePersistor(_dataService, _persistenceCalculator).PersistAsync(_storeInfo);
+      await _singleStorePersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .DidNotReceiveWithAnyArgs()
@@ -68,6 +76,9 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .DidNotReceiveWithAnyArgs()
         .PreventFuturePersistence(Arg.Any<StoreNumber>());
+      _existingStoresReader
+        .DidNotReceiveWithAnyArgs()
+        .ContainsStores(Arg.Any<StoreNumber>());
     }
   }
 }

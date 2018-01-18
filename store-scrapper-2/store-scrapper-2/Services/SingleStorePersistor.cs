@@ -7,12 +7,15 @@ namespace store_scrapper_2.Services
   {
     private readonly IStoreInfoResponseDataService _dataService;
     private readonly IStorePersistenceCalculator _persistenceCalculator;
+    private readonly IExistingStoresReader _existingStoresReader;
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public SingleStorePersistor(IStoreInfoResponseDataService dataService, IStorePersistenceCalculator persistenceCalculator)
+    public SingleStorePersistor(IStoreInfoResponseDataService dataService,
+      IStorePersistenceCalculator persistenceCalculator, IExistingStoresReader existingStoresReader)
     {
       _dataService = dataService;
       _persistenceCalculator = persistenceCalculator;
+      _existingStoresReader = existingStoresReader;
     }
 
     public async Task PersistAsync(StoreInfo storeInfo)
