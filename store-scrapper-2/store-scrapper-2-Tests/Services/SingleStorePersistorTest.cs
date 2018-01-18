@@ -58,6 +58,24 @@ namespace store_scrapper_2_Tests.Services
     }
     
     [Fact]
+    public async Task UpdatesTheStoreDataIfItExistedOnStartup()
+    {
+      _existingStoresReader.ContainsStore("77754-4").Returns(true);
+      
+      await _singleStorePersistor.PersistAsync(_storeInfo);
+
+      await _dataService
+        .Received(1)
+        .UpdateAsync(Arg.Is(_storeInfo));
+      await _dataService
+        .DidNotReceiveWithAnyArgs()
+        .ContainsStoreAsync(Arg.Any<StoreNumber>());
+      _persistenceCalculator
+        .Received(1)
+        .PreventFuturePersistence("77754-4");
+    }
+    
+    [Fact]
     public async Task DoesNotDoAnyDataOperationWhenTheStoreWasPersistedRecently()
     {
       _persistenceCalculator.WasPersistedRecently("77754-4").Returns(true);
@@ -78,7 +96,7 @@ namespace store_scrapper_2_Tests.Services
         .PreventFuturePersistence(Arg.Any<StoreNumber>());
       _existingStoresReader
         .DidNotReceiveWithAnyArgs()
-        .ContainsStores(Arg.Any<StoreNumber>());
+        .ContainsStore(Arg.Any<StoreNumber>());
     }
   }
 }

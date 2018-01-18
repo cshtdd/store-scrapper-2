@@ -26,26 +26,39 @@ namespace store_scrapper_2.Services
         return;
       }
 
-      await SaveStoreAsync(storeInfo);
+      if (_existingStoresReader.ContainsStore(storeInfo.StoreNumber))
+      {
+        await UpdateStoreInfoAsync(storeInfo);
+      }
+      else
+      {
+        await SaveStoreAsync(storeInfo);       
+      }
+
       _persistenceCalculator.PreventFuturePersistence(storeInfo.StoreNumber);
     }
 
     private async Task SaveStoreAsync(StoreInfo storeInfo)
     {
       Logger.Info($"Saving Store; storeNumber={storeInfo.StoreNumber};");
-
+      
       var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
 
       if (shouldUpdateExistingStore)
       {
-        Logger.Debug($"Updating Existing Store; storeNumber={storeInfo.StoreNumber};");
-        await _dataService.UpdateAsync(storeInfo);
+        await UpdateStoreInfoAsync(storeInfo);
       }
       else
       {
         Logger.Debug($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
         await _dataService.CreateNewAsync(storeInfo);
       }
+    }
+
+    private async Task UpdateStoreInfoAsync(StoreInfo storeInfo)
+    {
+      Logger.Debug($"Updating Existing Store; storeNumber={storeInfo.StoreNumber};");
+      await _dataService.UpdateAsync(storeInfo);
     }
   }
 }
