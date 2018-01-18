@@ -21,7 +21,7 @@ namespace store_scrapper_2
         Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
 
         await InitializeAsync();
-        await CreateProcessor().ProcessAsync();
+        await IocContainer.Resolve<IAllZipCodesProcessor>().ProcessAsync();
 
         Logger.Info("Ending program; success=true;");
       }
@@ -32,15 +32,12 @@ namespace store_scrapper_2
       }
     }
 
-    private static IAllZipCodesProcessor CreateProcessor() => IocContainer.Resolve<IAllZipCodesProcessor>();
-    private static IPersistenceInitializer CreatePersistenceInitializer() =>
-      IocContainer.Resolve<IPersistenceInitializer>();
-
     private static async Task InitializeAsync()
     {
       IocContainer.Initialize();
       Mappings.Configure();
-      await CreatePersistenceInitializer().InitializeAsync();
+      await IocContainer.Resolve<IPersistenceInitializer>().InitializeAsync();
+      await IocContainer.Resolve<IExistingStoresReader>().InitializeAsync();
     }
   }
 }
