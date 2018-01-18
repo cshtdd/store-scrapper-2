@@ -10,6 +10,6 @@
     "DelayMs": "500"
   },
   "Stores": {
-    "WriteCacheExpirationMs": "1800000"
+    "WriteCacheExpirationMs": "14400000"
   }  
 }
