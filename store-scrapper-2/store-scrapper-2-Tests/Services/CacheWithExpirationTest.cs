@@ -26,5 +26,23 @@ namespace store_scrapper_2_Tests.Services
       cache.Contains("key1").Should().BeFalse();
       cache.Contains("key2").Should().BeFalse();
     }
+
+    [Fact]
+    public void TheSameKeyCanBeAddedTwice()
+    {
+      cache.Contains("key1").Should().BeFalse();
+
+      cache.Add("key1", 5);
+
+      cache.Contains("key1").Should().BeTrue();
+
+      cache.Add("key1", 5);
+
+      cache.Contains("key1").Should().BeTrue();
+      
+      Thread.Sleep(10);
+
+      cache.Contains("key1").Should().BeFalse();
+    }
   }
 }
