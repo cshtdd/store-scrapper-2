@@ -16,8 +16,8 @@ namespace store_scrapper_2_Tests.Services
     public async Task ReadsAllTheZipCodesInBatches()
     {
       var configurationReader = Substitute.For<IConfigurationReader>();
-      configurationReader.ReadInt(ConfigurationKeys.ZipCodesBatchSize)
-        .Returns(4);
+      configurationReader.ReadUInt(ConfigurationKeys.ZipCodesBatchSize)
+        .Returns(4u);
       
       var dataService = Substitute.For<IZipCodeDataService>();
       dataService.AllAsync().ReturnsForAnyArgs(new[]
