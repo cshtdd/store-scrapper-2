@@ -7,6 +7,8 @@ namespace store_scrapper_2.Services
 {
   public class ExistingStoresReader : IExistingStoresReader
   {
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    
     private readonly IStoreInfoResponseDataService _dataService;
     private volatile bool _isInitialized;
     private readonly HashSet<string> _storeNumbersCache = new HashSet<string>();
@@ -24,6 +26,9 @@ namespace store_scrapper_2.Services
       {
         _storeNumbersCache.Add(storeNumber.ToString());
       }
+      
+      Logger.Info($"InitializeAsync; existingStoresCount={_storeNumbersCache.Count};");
+  
       _isInitialized = true;
     }
 
@@ -34,7 +39,11 @@ namespace store_scrapper_2.Services
         throw new InvalidOperationException("ContainsStore; reason=NotInitialized;");       
       }
 
-      return _storeNumbersCache.Contains(storeNumber.ToString());
+      var result = _storeNumbersCache.Contains(storeNumber.ToString());
+      
+      Logger.Debug($"ContainsStore; {nameof(storeNumber)}={storeNumber}; {nameof(result)}={result};");     
+      
+      return result;
     }
   }
 }
