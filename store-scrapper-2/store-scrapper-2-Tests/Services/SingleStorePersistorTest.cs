@@ -40,6 +40,9 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
+      _existingStoresReader
+        .Received(1)
+        .ContainsStore("77754-4");
     }
     
     [Fact]
@@ -55,6 +58,9 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
+      _existingStoresReader
+        .Received(1)
+        .ContainsStore("77754-4");
     }
     
     [Fact]
@@ -73,6 +79,9 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
+      _existingStoresReader
+        .Received(1)
+        .ContainsStore("77754-4");
     }
     
     [Fact]
