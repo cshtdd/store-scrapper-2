@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.Extensions.Caching.Memory;
+using store_scrapper_2.Services;
 
 namespace store_scrapper_2.Configuration
 {
@@ -56,6 +57,10 @@ namespace store_scrapper_2.Configuration
         .As<IMemoryCache>()
         .SingleInstance()
         .WithParameter("optionsAccessor", new MemoryCacheOptions());
+
+      builder.RegisterType<ExistingStoresReader>()
+        .As<IExistingStoresReader>()
+        .SingleInstance();
       
       return builder.Build();
     }

@@ -49,6 +49,16 @@ namespace store_scrapper_2_Tests.Configuration
     }
 
     [Fact]
+    public void CorrectlyResolvesTheExistingStoreReaderAsASingleton()
+    {
+      IocContainer.Resolve<IExistingStoresReader>().Should().NotBeNull();
+ 
+      var a = IocContainer.Resolve<IExistingStoresReader>();
+      var b = IocContainer.Resolve<IExistingStoresReader>();
+      (a == b).Should().BeTrue();
+    }
+    
+    [Fact]
     public void CorrectlyBuildsStoreDataContextFactories()
     {
       var storeDataContextFactory = IocContainer.Resolve<IStoreDataContextFactory>();
