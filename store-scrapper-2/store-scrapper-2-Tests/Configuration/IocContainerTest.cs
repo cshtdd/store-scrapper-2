@@ -55,8 +55,8 @@ namespace store_scrapper_2_Tests.Configuration
       
       storeDataContextFactory.Should().NotBeNull();
       
-      ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Should().Contain("Server=localhost");
-      ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Should().Contain("Database=stores");
+      ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Contains("Server=localhost").Should().BeTrue();
+      ((StoreDataContextFactory) storeDataContextFactory).ConnectionString.Contains("Database=stores").Should().BeTrue();
     }
   }
 }
