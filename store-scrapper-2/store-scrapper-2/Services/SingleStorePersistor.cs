@@ -25,15 +25,8 @@ namespace store_scrapper_2.Services
         Logger.Debug($"Skipping recently processed Stored; storeNumber={storeInfo.StoreNumber};");        
         return;
       }
-
-      if (_existingStoresReader.ContainsStore(storeInfo.StoreNumber))
-      {
-        await UpdateStoreInfoAsync(storeInfo);
-      }
-      else
-      {
-        await SaveStoreAsync(storeInfo);       
-      }
+      
+      await SaveStoreAsync(storeInfo);
 
       _persistenceCalculator.PreventFuturePersistence(storeInfo.StoreNumber);
     }
@@ -41,18 +34,32 @@ namespace store_scrapper_2.Services
     private async Task SaveStoreAsync(StoreInfo storeInfo)
     {
       Logger.Info($"Saving Store; storeNumber={storeInfo.StoreNumber};");
-      
-      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
 
+      var shouldUpdateExistingStore = await ShouldUpdateStore(storeInfo);
       if (shouldUpdateExistingStore)
       {
         await UpdateStoreInfoAsync(storeInfo);
       }
       else
       {
-        Logger.Debug($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
-        await _dataService.CreateNewAsync(storeInfo);
+        await CreateStoreInfo(storeInfo);       
       }
+    }
+
+    private async Task<bool> ShouldUpdateStore(StoreInfo storeInfo)
+    {
+      if (_existingStoresReader.ContainsStore(storeInfo.StoreNumber))
+      {
+        return true;
+      }
+      
+      return await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
+    }
+    
+    private async Task CreateStoreInfo(StoreInfo storeInfo)
+    {
+      Logger.Debug($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
+      await _dataService.CreateNewAsync(storeInfo);
     }
 
     private async Task UpdateStoreInfoAsync(StoreInfo storeInfo)
