@@ -19,6 +19,24 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       dataService = new StoreInfoResponseDataService(ContextFactory);
     }
+
+    [Fact]
+    public async Task ReadsAllTheExistingStoreNumbers()
+    {
+      await CreatePersistenceInitializer().InitializeAsync();
+
+      var seededStoreNumbers = StoreNumberFactory.Create(30).ToArray();
+
+      await Task.WhenAll(
+        seededStoreNumbers
+          .Select(StoreInfoResponseFactory.Create)
+          .Select(dataService.CreateNewAsync)
+        );
+
+      var existingStores = (await dataService.AllStoreNumbersAsync()).ToArray();
+
+      existingStores.Should().BeEquivalentTo(seededStoreNumbers);
+    }
     
     [Fact]
     public async Task SavesANewResponse()
