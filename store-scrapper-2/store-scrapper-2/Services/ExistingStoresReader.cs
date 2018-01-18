@@ -5,9 +5,13 @@ namespace store_scrapper_2.Services
 {
   public class ExistingStoresReader : IExistingStoresReader
   {
-    public Task InitializeAsync()
+    private readonly IStoreInfoResponseDataService _dataService;
+
+    public ExistingStoresReader(IStoreInfoResponseDataService dataService) => _dataService = dataService;
+
+    public async Task InitializeAsync()
     {
-      throw new System.NotImplementedException();
+      await _dataService.AllStoreNumbersAsync();
     }
 
     public bool ContainsStores(StoreNumber storeNumber)
