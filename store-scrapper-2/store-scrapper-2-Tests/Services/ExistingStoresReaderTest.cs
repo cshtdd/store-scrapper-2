@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2;
+using store_scrapper_2.Model;
 using store_scrapper_2.Services;
 using Xunit;
 
@@ -36,6 +37,31 @@ namespace store_scrapper_2_Tests.Services
       {
         await _reader.InitializeAsync();
       })).ShouldThrow<InvalidOperationException>(); 
+    }
+
+    [Fact]
+    public void ContainsStoreFailsWhenNotInitialized()
+    {
+      ((Action)(() =>
+      {
+        _reader.ContainsStores("11111-1");
+      })).ShouldThrow<InvalidOperationException>();
+    }
+
+    [Fact]
+    public async Task FindsTheExistingStores()
+    {
+      _dataService.AllStoreNumbersAsync().Returns(new StoreNumber[]
+      {
+        "11111-1",
+        "22222-1",
+        "33333-1"
+      });
+      await _reader.InitializeAsync();
+
+      _reader.ContainsStores("99999-1").Should().BeFalse();
+      _reader.ContainsStores("11111-1").Should().BeTrue();
+      _reader.ContainsStores("22222-1").Should().BeTrue();
     }
   }
 }
