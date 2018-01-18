@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2;
 using store_scrapper_2.Services;
@@ -24,6 +26,16 @@ namespace store_scrapper_2_Tests.Services
       await _reader.InitializeAsync();
 
       await _dataService.Received(1).AllStoreNumbersAsync();
+    }
+
+    [Fact]
+    public async Task CannotBeInitializedMultipleTimes()
+    {
+      await _reader.InitializeAsync();
+      ((Func<Task>) (async () =>
+      {
+        await _reader.InitializeAsync();
+      })).ShouldThrow<InvalidOperationException>(); 
     }
   }
 }
