@@ -7,7 +7,7 @@
   },
   "ZipCodes": {
     "BatchSize": "1",
-    "DelayMs": "500"
+    "DelayMs": "1500"
   },
   "Stores": {
     "WriteCacheExpirationMs": "14400000"
