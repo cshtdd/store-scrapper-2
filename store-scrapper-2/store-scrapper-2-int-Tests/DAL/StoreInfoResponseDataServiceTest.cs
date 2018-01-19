@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
-using store_scrapper_2.Model;
 using store_scrapper_2_int_Tests.Utils;
 using Xunit;
 
@@ -15,29 +14,8 @@ namespace store_scrapper_2_int_Tests.DAL
   {
     private readonly StoreInfoResponseDataService dataService;
 
-    public StoreInfoResponseDataServiceTest()
-    {
-      dataService = new StoreInfoResponseDataService(ContextFactory);
-    }
+    public StoreInfoResponseDataServiceTest() => dataService = new StoreInfoResponseDataService(ContextFactory);
 
-    [Fact]
-    public async Task ReadsAllTheExistingStoreNumbers()
-    {
-      await CreatePersistenceInitializer().InitializeAsync();
-
-      var seededStoreNumbers = StoreNumberFactory.Create(30).ToArray();
-
-      await Task.WhenAll(
-        seededStoreNumbers
-          .Select(StoreInfoResponseFactory.Create)
-          .Select(dataService.CreateNewAsync)
-        );
-
-      var existingStores = (await dataService.AllStoreNumbersAsync()).ToArray();
-
-      existingStores.Should().BeEquivalentTo(seededStoreNumbers);
-    }
-    
     [Fact]
     public async Task SavesANewResponse()
     {

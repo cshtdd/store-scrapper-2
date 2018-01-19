@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,20 +16,7 @@ namespace store_scrapper_2
 
     private readonly IStoreDataContextFactory _contextFactory;
 
-    public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory)
-    {
-      _contextFactory = contextFactory;
-    }
-
-    public async Task<IEnumerable<StoreNumber>> AllStoreNumbersAsync()
-    {
-      using (var db = _contextFactory.Create())
-      {
-        return await db.Stores
-          .Select(_ => new StoreNumber(_.StoreNumber, _.SatelliteNumber))
-          .ToArrayAsync();
-      }
-    }
+    public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
     public async Task<bool> ContainsStoreAsync(StoreNumber storeNumber)
     {

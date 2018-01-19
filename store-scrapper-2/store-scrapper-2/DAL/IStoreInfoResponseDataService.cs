@@ -7,7 +7,6 @@ namespace store_scrapper_2
 {
   public interface IStoreInfoResponseDataService
   {
-    Task<IEnumerable<StoreNumber>> AllStoreNumbersAsync();
     Task<bool> ContainsStoreAsync(StoreNumber storeNumber);
     Task CreateNewAsync(StoreInfo storeInfo);
     Task UpdateAsync(StoreInfo storeInfo);
