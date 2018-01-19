@@ -13,10 +13,10 @@ namespace store_scrapper_2
     Task UpdateAsync(IEnumerable<StoreInfo> storeInfo);
     
     [Obsolete]
-    Task<bool> ContainsStoreAsync(StoreNumber storeNumber);   
+    Task<bool> ContainsStoreAsync(StoreNumber storeNumbers);   
     [Obsolete]
-    Task CreateNewAsync(StoreInfo storeInfo);
+    Task CreateNewAsync(StoreInfo stores);
     [Obsolete]
-    Task UpdateAsync(StoreInfo storeInfo);
+    Task UpdateAsync(StoreInfo stores);
   }
 }

@@ -18,6 +18,7 @@ namespace store_scrapper_2_int_Tests.DAL
     public StoreInfoResponseDataServiceTest() => dataService = new StoreInfoResponseDataService(ContextFactory);
 
     [Fact]
+    [Obsolete]
     public async Task SavesANewResponse()
     {
       await CreatePersistenceInitializer().InitializeAsync();
@@ -52,6 +53,41 @@ namespace store_scrapper_2_int_Tests.DAL
       (await dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
     }
 
+    [Fact]
+    public async Task SavesNewResponses()
+    {
+      await CreatePersistenceInitializer().InitializeAsync();
+
+      var responses = new List<StoreInfo>
+      {
+        StoreInfoResponseFactory.Create("11111-3"),
+        StoreInfoResponseFactory.Create("22222-3"),
+        StoreInfoResponseFactory.Create("33333-3")
+      };
+
+      using (var context = ContextFactory.Create())
+      {
+        context.Stores.Should().BeEmpty();
+      }
+      
+      await dataService.CreateNewAsync(responses);
+      
+      using (var context = ContextFactory.Create())
+      {
+        context.Stores.Count().Should().Be(responses.Count);
+
+        await Task.WhenAll(responses.Select(context.ShouldContainStoreEquivalentToAsync));
+      }
+
+      Task.WhenAll(responses.Select(_ => dataService.ContainsStoreAsync(_.StoreNumber)))
+        .Result
+        .All(_ => _)
+        .Should()
+        .BeTrue();
+
+      (await dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
+    }
+    
     [Fact]
     public async Task UpdatesAnExistingResponse()
     {

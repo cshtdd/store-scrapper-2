@@ -19,17 +19,22 @@ namespace store_scrapper_2
 
     public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
-    public Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storeNumber)
+    public Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storeNumbers)
     {
       throw new NotImplementedException();
     }
 
-    public Task CreateNewAsync(IEnumerable<StoreInfo> storeInfo)
+    public async Task CreateNewAsync(IEnumerable<StoreInfo> stores)
     {
-      throw new NotImplementedException();
+      using (var db = _contextFactory.Create())
+      {
+        var newDbStores = stores.Select(_ => Mapper.Map<Store>(_));
+        await db.Stores.AddRangeAsync(newDbStores);
+        await SaveContextChangesAsync(db);
+      }
     }
 
-    public Task UpdateAsync(IEnumerable<StoreInfo> storeInfo)
+    public Task UpdateAsync(IEnumerable<StoreInfo> stores)
     {
       throw new NotImplementedException();
     }
