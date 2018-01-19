@@ -83,16 +83,10 @@ namespace store_scrapper_2_int_Tests.DAL
 
       await dataService.CreateNewAsync(response);
 
-      InvalidOperationException thrownException = null;
-      try
+      ((Func<Task>) (async () =>
       {
         await dataService.CreateNewAsync(response);
-      }
-      catch (InvalidOperationException ex)
-      {
-        thrownException = ex;
-      }
-      thrownException.Should().NotBeNull();
+      })).Should().Throw<InvalidOperationException>();
     }
 
     [Fact]
@@ -101,17 +95,11 @@ namespace store_scrapper_2_int_Tests.DAL
       await CreatePersistenceInitializer().InitializeAsync();
 
       var response = StoreInfoResponseFactory.Create("11111-3");
-
-      InvalidOperationException thrownException = null;
-      try
+      
+      ((Func<Task>) (async () =>
       {
         await dataService.UpdateAsync(response);
-      }
-      catch (InvalidOperationException ex)
-      {
-        thrownException = ex;
-      }
-      thrownException.Should().NotBeNull();
+      })).Should().Throw<InvalidOperationException>();
     }
 
     private static StoreInfo CreateUpdatedResponse(StoreInfo original)
