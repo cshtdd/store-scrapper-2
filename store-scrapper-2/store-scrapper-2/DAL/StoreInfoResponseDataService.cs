@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,6 +18,21 @@ namespace store_scrapper_2
     private readonly IStoreDataContextFactory _contextFactory;
 
     public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
+
+    public Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storeNumber)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Task CreateNewAsync(IEnumerable<StoreInfo> storeInfo)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Task UpdateAsync(IEnumerable<StoreInfo> storeInfo)
+    {
+      throw new NotImplementedException();
+    }
 
     public async Task<bool> ContainsStoreAsync(StoreNumber storeNumber)
     {
