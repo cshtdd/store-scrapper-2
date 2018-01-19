@@ -14,9 +14,9 @@ namespace store_scrapper_2_int_Tests.DAL
 {
   public class StoreInfoResponseDataServiceTest : DatabaseTest
   {
-    private readonly StoreInfoResponseDataService dataService;
+    private readonly StoreInfoResponseDataService _dataService;
 
-    public StoreInfoResponseDataServiceTest() => dataService = new StoreInfoResponseDataService(ContextFactory);
+    public StoreInfoResponseDataServiceTest() => _dataService = new StoreInfoResponseDataService(ContextFactory);
 
     [Fact]
     [Obsolete]
@@ -36,7 +36,7 @@ namespace store_scrapper_2_int_Tests.DAL
         context.Stores.Should().BeEmpty();
       }
       
-      await Task.WhenAll(responses.Select(dataService.CreateNewAsync));
+      await Task.WhenAll(responses.Select(_dataService.CreateNewAsync));
       
       using (var context = ContextFactory.Create())
       {
@@ -45,13 +45,13 @@ namespace store_scrapper_2_int_Tests.DAL
         await Task.WhenAll(responses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
 
-      Task.WhenAll(responses.Select(_ => dataService.ContainsStoreAsync(_.StoreNumber)))
+      Task.WhenAll(responses.Select(_ => _dataService.ContainsStoreAsync(_.StoreNumber)))
         .Result
         .All(_ => _)
         .Should()
         .BeTrue();
 
-      (await dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
+      (await _dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
     }
 
     [Fact]
@@ -71,7 +71,7 @@ namespace store_scrapper_2_int_Tests.DAL
         context.Stores.Should().BeEmpty();
       }
       
-      await dataService.CreateNewAsync(responses);
+      await _dataService.CreateNewAsync(responses);
       
       using (var context = ContextFactory.Create())
       {
@@ -80,13 +80,13 @@ namespace store_scrapper_2_int_Tests.DAL
         await Task.WhenAll(responses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
 
-      Task.WhenAll(responses.Select(_ => dataService.ContainsStoreAsync(_.StoreNumber)))
+      Task.WhenAll(responses.Select(_ => _dataService.ContainsStoreAsync(_.StoreNumber)))
         .Result
         .All(_ => _)
         .Should()
         .BeTrue();
 
-      (await dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
+      (await _dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
     }
     
     [Fact]
@@ -97,13 +97,13 @@ namespace store_scrapper_2_int_Tests.DAL
 
       var originalResponse = StoreInfoResponseFactory.Create("11111-3");
 
-      await dataService.CreateNewAsync(originalResponse);
-      (await dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
+      await _dataService.CreateNewAsync(originalResponse);
+      (await _dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
       
       var updatedResponse = CreateUpdatedResponse(originalResponse);
 
-      await dataService.UpdateAsync(updatedResponse);
-      (await dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
+      await _dataService.UpdateAsync(updatedResponse);
+      (await _dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
       
       using (var context = ContextFactory.Create())
       {
@@ -124,7 +124,7 @@ namespace store_scrapper_2_int_Tests.DAL
         .ToArray();
       
       
-      await dataService.CreateNewAsync(originalResponses);
+      await _dataService.CreateNewAsync(originalResponses);
       (await ContainsAllStores(originalResponses)).Should().BeTrue();
       
       
@@ -133,7 +133,7 @@ namespace store_scrapper_2_int_Tests.DAL
         .ToArray();
 
       
-      await dataService.UpdateAsync(updatedResponses);
+      await _dataService.UpdateAsync(updatedResponses);
       (await ContainsAllStores(updatedResponses)).Should().BeTrue();
 
       
@@ -151,11 +151,11 @@ namespace store_scrapper_2_int_Tests.DAL
    
       var response = StoreInfoResponseFactory.Create("11111-3");
 
-      await dataService.CreateNewAsync(response);
+      await _dataService.CreateNewAsync(response);
 
       ((Func<Task>) (async () =>
       {
-        await dataService.CreateNewAsync(response);
+        await _dataService.CreateNewAsync(response);
       })).Should().Throw<DbUpdateException>();
     }
 
@@ -168,7 +168,7 @@ namespace store_scrapper_2_int_Tests.DAL
       
       ((Func<Task>) (async () =>
       {
-        await dataService.UpdateAsync(response);
+        await _dataService.UpdateAsync(response);
       })).Should().Throw<InvalidOperationException>();
     }
 
@@ -184,6 +184,6 @@ namespace store_scrapper_2_int_Tests.DAL
       await ContainsAllStoreNumbers(stores.Select(_ => _.StoreNumber));
 
     private async Task<bool> ContainsAllStoreNumbers(IEnumerable<StoreNumber> storeNumbers) => 
-      (await Task.WhenAll(storeNumbers.Select(dataService.ContainsStoreAsync))).All(_ => _);
+      (await Task.WhenAll(storeNumbers.Select(_dataService.ContainsStoreAsync))).All(_ => _);
   }
 }
