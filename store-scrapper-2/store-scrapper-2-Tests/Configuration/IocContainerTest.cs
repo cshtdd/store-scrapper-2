@@ -32,7 +32,6 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IStorePersistenceCalculator>().Should().NotBeNull();
 
       ValidateSingletonRegistration<IMemoryCache>();
-      ValidateSingletonRegistration<IExistingStoresReader>();
     }
 
     [Fact]

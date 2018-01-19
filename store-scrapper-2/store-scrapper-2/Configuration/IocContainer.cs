@@ -58,10 +58,6 @@ namespace store_scrapper_2.Configuration
         .SingleInstance()
         .WithParameter("optionsAccessor", new MemoryCacheOptions());
 
-      builder.RegisterType<ExistingStoresReader>()
-        .As<IExistingStoresReader>()
-        .SingleInstance();
-      
       return builder.Build();
     }
 

@@ -7,15 +7,13 @@ namespace store_scrapper_2.Services
   {
     private readonly IStoreInfoResponseDataService _dataService;
     private readonly IStorePersistenceCalculator _persistenceCalculator;
-    private readonly IExistingStoresReader _existingStoresReader;
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     public SingleStorePersistor(IStoreInfoResponseDataService dataService,
-      IStorePersistenceCalculator persistenceCalculator, IExistingStoresReader existingStoresReader)
+      IStorePersistenceCalculator persistenceCalculator)
     {
       _dataService = dataService;
       _persistenceCalculator = persistenceCalculator;
-      _existingStoresReader = existingStoresReader;
     }
 
     public async Task PersistAsync(StoreInfo storeInfo)
@@ -35,7 +33,7 @@ namespace store_scrapper_2.Services
     {
       Logger.Info($"Saving Store; storeNumber={storeInfo.StoreNumber};");
 
-      var shouldUpdateExistingStore = await ShouldUpdateStore(storeInfo);
+      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
       if (shouldUpdateExistingStore)
       {
         await UpdateStoreInfoAsync(storeInfo);
@@ -46,16 +44,6 @@ namespace store_scrapper_2.Services
       }
     }
 
-    private async Task<bool> ShouldUpdateStore(StoreInfo storeInfo)
-    {
-      if (_existingStoresReader.ContainsStore(storeInfo.StoreNumber))
-      {
-        return true;
-      }
-      
-      return await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
-    }
-    
     private async Task CreateStoreInfo(StoreInfo storeInfo)
     {
       Logger.Debug($"Creating new Store; storeNumber={storeInfo.StoreNumber};");

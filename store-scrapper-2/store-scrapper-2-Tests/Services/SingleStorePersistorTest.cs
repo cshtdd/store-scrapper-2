@@ -18,14 +18,10 @@ namespace store_scrapper_2_Tests.Services
 
     private readonly IStoreInfoResponseDataService _dataService = Substitute.For<IStoreInfoResponseDataService>();
     private readonly IStorePersistenceCalculator _persistenceCalculator = Substitute.For<IStorePersistenceCalculator>();
-    private readonly IExistingStoresReader _existingStoresReader = Substitute.For<IExistingStoresReader>();
 
     private readonly ISingleStorePersistor _singleStorePersistor;
 
-    public SingleStorePersistorTest()
-    {
-      _singleStorePersistor = new SingleStorePersistor(_dataService, _persistenceCalculator, _existingStoresReader);
-    }
+    public SingleStorePersistorTest() => _singleStorePersistor = new SingleStorePersistor(_dataService, _persistenceCalculator);
 
     [Fact]
     public async Task InsertsTheStoreDataIfItIsNew()
@@ -40,9 +36,6 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
-      _existingStoresReader
-        .Received(1)
-        .ContainsStore("77754-4");
     }
     
     [Fact]
@@ -58,30 +51,6 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
-      _existingStoresReader
-        .Received(1)
-        .ContainsStore("77754-4");
-    }
-    
-    [Fact]
-    public async Task UpdatesTheStoreDataIfItExistedOnStartup()
-    {
-      _existingStoresReader.ContainsStore("77754-4").Returns(true);
-      
-      await _singleStorePersistor.PersistAsync(_storeInfo);
-
-      await _dataService
-        .Received(1)
-        .UpdateAsync(Arg.Is(_storeInfo));
-      await _dataService
-        .DidNotReceiveWithAnyArgs()
-        .ContainsStoreAsync(Arg.Any<StoreNumber>());
-      _persistenceCalculator
-        .Received(1)
-        .PreventFuturePersistence("77754-4");
-      _existingStoresReader
-        .Received(1)
-        .ContainsStore("77754-4");
     }
     
     [Fact]
@@ -103,9 +72,6 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .DidNotReceiveWithAnyArgs()
         .PreventFuturePersistence(Arg.Any<StoreNumber>());
-      _existingStoresReader
-        .DidNotReceiveWithAnyArgs()
-        .ContainsStore(Arg.Any<StoreNumber>());
     }
   }
 }

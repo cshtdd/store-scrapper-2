@@ -37,7 +37,6 @@ namespace store_scrapper_2
       IocContainer.Initialize();
       Mappings.Configure();
       await IocContainer.Resolve<IPersistenceInitializer>().InitializeAsync();
-      await IocContainer.Resolve<IExistingStoresReader>().InitializeAsync();
     }
   }
 }
