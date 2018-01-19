@@ -4,8 +4,6 @@ namespace store_scrapper_2.DAL.Db
 {
   public class Store
   {
-    public int StoreId { get; set; }
-    
     public string StoreNumber { get; set; }
     public string SatelliteNumber { get; set; }
     public bool IsRestricted { get; set; }

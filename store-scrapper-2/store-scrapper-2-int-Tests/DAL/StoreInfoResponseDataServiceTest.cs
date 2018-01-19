@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2_int_Tests.Utils;
@@ -86,7 +87,7 @@ namespace store_scrapper_2_int_Tests.DAL
       ((Func<Task>) (async () =>
       {
         await dataService.CreateNewAsync(response);
-      })).Should().Throw<InvalidOperationException>();
+      })).Should().Throw<DbUpdateException>();
     }
 
     [Fact]

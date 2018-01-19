@@ -16,6 +16,8 @@ namespace store_scrapper_2.DAL.Db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<Store>()
+        .HasKey(_ => new { _.StoreNumber, _.SatelliteNumber });
+      modelBuilder.Entity<Store>()
         .HasIndex(_ => new { _.StoreNumber, _.SatelliteNumber });
     }
   }
