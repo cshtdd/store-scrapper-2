@@ -34,9 +34,25 @@ namespace store_scrapper_2
       }
     }
 
-    public Task UpdateAsync(IEnumerable<StoreInfo> stores)
+    public async Task UpdateAsync(IEnumerable<StoreInfo> storesEnumerableParam)
     {
-      throw new NotImplementedException();
+      using (var db = _contextFactory.Create())
+      {
+        var stores = storesEnumerableParam.ToArray();
+        var storeNumbers = stores.Select(_ => _.StoreNumber).ToArray();
+        
+        var updatedDbStores = await db.Stores
+          .Where(_ => _.ExistsIn(storeNumbers))
+          .Select(_ => _.UpdateFrom(stores))
+          .ToArrayAsync();
+
+        foreach (var entity in updatedDbStores)
+        {
+          db.Entry(entity).State = EntityState.Modified;
+        }
+        
+        await SaveContextChangesAsync(db);
+      }
     }
 
     public async Task<bool> ContainsStoreAsync(StoreNumber storeNumber)
@@ -89,4 +105,25 @@ namespace store_scrapper_2
       }
     }
   }
+
+  internal static class StoreExtensions
+  {
+    internal static bool ExistsIn(this Store sender, IEnumerable<StoreNumber> list)
+    {
+      var senderStoreNumber = new StoreNumber(sender.StoreNumber, sender.SatelliteNumber);
+      return list.Contains(senderStoreNumber);
+    }
+
+    internal static Store UpdateFrom(this Store sender, IEnumerable<StoreInfo> list)
+    {
+      var source = sender.FindIn(list);
+      return Mapper.Map(source, sender);
+    }
+    
+    private static StoreInfo FindIn(this Store sender, IEnumerable<StoreInfo> list)
+    {
+      var senderStoreNumber = new StoreNumber(sender.StoreNumber, sender.SatelliteNumber);
+      return list.First(_ => _.StoreNumber == senderStoreNumber);
+    }
+  } 
 }

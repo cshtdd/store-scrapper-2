@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Model;
 using store_scrapper_2_int_Tests.Utils;
 using Xunit;
 
@@ -89,6 +90,7 @@ namespace store_scrapper_2_int_Tests.DAL
     }
     
     [Fact]
+    [Obsolete]
     public async Task UpdatesAnExistingResponse()
     {
       await CreatePersistenceInitializer().InitializeAsync();
@@ -108,6 +110,37 @@ namespace store_scrapper_2_int_Tests.DAL
         context.Stores.Count().Should().Be(1);
 
         await context.ShouldContainStoreEquivalentToAsync(updatedResponse);
+      }
+    }
+    
+    [Fact]
+    public async Task UpdatesExistingResponses()
+    {
+      await CreatePersistenceInitializer().InitializeAsync();
+
+      var originalResponses = StoreNumberFactory
+        .Create(5)
+        .Select(StoreInfoResponseFactory.Create)
+        .ToArray();
+      
+      
+      await dataService.CreateNewAsync(originalResponses);
+      (await ContainsAllStores(originalResponses)).Should().BeTrue();
+      
+      
+      var updatedResponses = originalResponses
+        .Select(CreateUpdatedResponse)
+        .ToArray();
+
+      
+      await dataService.UpdateAsync(updatedResponses);
+      (await ContainsAllStores(updatedResponses)).Should().BeTrue();
+
+      
+      using (var context = ContextFactory.Create())
+      {
+        context.Stores.Count().Should().Be(5);
+        await Task.WhenAll(updatedResponses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
     }
 
@@ -141,9 +174,16 @@ namespace store_scrapper_2_int_Tests.DAL
 
     private static StoreInfo CreateUpdatedResponse(StoreInfo original)
     {
-      var updatedResponse = StoreInfoResponseFactory.Create("00000-0");
-      updatedResponse.StoreNumber = original.StoreNumber;
+      var updatedResponse = StoreInfoResponseFactory.Create(original.StoreNumber);
+      updatedResponse.Address1 = Guid.NewGuid().ToString();
+      updatedResponse.Address2 = Guid.NewGuid().ToString();
       return updatedResponse;
     }
+
+    private async Task<bool> ContainsAllStores(IEnumerable<StoreInfo> stores) => 
+      await ContainsAllStoreNumbers(stores.Select(_ => _.StoreNumber));
+
+    private async Task<bool> ContainsAllStoreNumbers(IEnumerable<StoreNumber> storeNumbers) => 
+      (await Task.WhenAll(storeNumbers.Select(dataService.ContainsStoreAsync))).All(_ => _);
   }
 }
