@@ -3,6 +3,7 @@
   public static class ConfigurationKeys
   {
     public const string ConnectionStringsStoresDb = "ConnectionStrings:StoresDb";
+    public const string EfLogEnabled = "Ef:LogEnabled";
     public const string SeedsZipsFilename = "Seeds:ZipsFilename";
     public const string ZipCodesBatchSize = "ZipCodes:BatchSize";
     public const string ZipCodesDelayMs = "ZipCodes:DelayMs";

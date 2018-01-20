@@ -5,15 +5,15 @@ namespace store_scrapper_2.DAL
 {
   public class StoreDataContextFactory : IStoreDataContextFactory
   {
-    private readonly IConfigurationReader _configurationReader;
     public string ConnectionString { get; }
+    public bool LoggingEnabled { get; }
 
     public StoreDataContextFactory(IConfigurationReader configurationReader)
     {
-      _configurationReader = configurationReader;
-      ConnectionString = _configurationReader.ReadString(ConfigurationKeys.ConnectionStringsStoresDb);
+      ConnectionString = configurationReader.ReadString(ConfigurationKeys.ConnectionStringsStoresDb);
+      LoggingEnabled = configurationReader.ReadBool(ConfigurationKeys.EfLogEnabled);
     }
 
-    public StoreDataContext Create() => new StoreDataContext(ConnectionString);
+    public StoreDataContext Create() => new StoreDataContext(ConnectionString, LoggingEnabled);
   }
 }
