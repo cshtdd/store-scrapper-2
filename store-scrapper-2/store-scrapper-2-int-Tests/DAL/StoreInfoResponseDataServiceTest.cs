@@ -118,28 +118,26 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       await CreatePersistenceInitializer().InitializeAsync();
 
-      var originalResponses = StoreNumberFactory
-        .Create(5)
+      var seededResponses = StoreNumberFactory
+        .Create(50)
         .Select(StoreInfoResponseFactory.Create)
         .ToArray();
-      
-      
-      await _dataService.CreateNewAsync(originalResponses);
-      (await ContainsAllStores(originalResponses)).Should().BeTrue();
+      await _dataService.CreateNewAsync(seededResponses);
+      (await ContainsAllStores(seededResponses)).Should().BeTrue();
+
+      var originalResponses = seededResponses.Take(5);
       
       
       var updatedResponses = originalResponses
         .Select(CreateUpdatedResponse)
-        .ToArray();
-
-      
+        .ToArray();     
       await _dataService.UpdateAsync(updatedResponses);
       (await ContainsAllStores(updatedResponses)).Should().BeTrue();
 
       
       using (var context = ContextFactory.Create())
       {
-        context.Stores.Count().Should().Be(5);
+        context.Stores.Count().Should().Be(50);
         await Task.WhenAll(updatedResponses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
     }
