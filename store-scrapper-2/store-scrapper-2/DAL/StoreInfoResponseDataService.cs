@@ -40,11 +40,20 @@ namespace store_scrapper_2
       {
         var stores = storesEnumerableParam.ToArray();
         var storeNumbers = stores.Select(_ => _.StoreNumber).ToArray();
-        
-        var updatedDbStores = await db.Stores
+
+        var optimizedStoreNumbers = storeNumbers
+          .Select(_ => _.Store)
+          .Select(_ => _.ToString())
+          .ToArray();
+
+        var almostAccurateDbStoresList = await db.Stores
+          .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
+          .ToArrayAsync();
+               
+        var updatedDbStores = almostAccurateDbStoresList
           .Where(_ => _.ExistsIn(storeNumbers))
           .Select(_ => _.UpdateFrom(stores))
-          .ToArrayAsync();
+          .ToArray();
 
         foreach (var entity in updatedDbStores)
         {
