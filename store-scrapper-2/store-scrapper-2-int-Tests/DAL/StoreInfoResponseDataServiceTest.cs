@@ -147,14 +147,35 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       await CreatePersistenceInitializer().InitializeAsync();
    
-      var response = StoreInfoResponseFactory.Create("11111-3");
+      var response1 = StoreInfoResponseFactory.Create("11111-3");
+      var response2 = StoreInfoResponseFactory.Create("11111-3");
 
-      await _dataService.CreateNewAsync(response);
+      await _dataService.CreateNewAsync(response1);
 
       ((Func<Task>) (async () =>
       {
-        await _dataService.CreateNewAsync(response);
+        await _dataService.CreateNewAsync(response1);
       })).Should().Throw<DbUpdateException>();
+
+      ((Func<Task>) (async () =>
+      {
+        await _dataService.CreateNewAsync(response2);
+      })).Should().Throw<DbUpdateException>();
+
+      ((Func<Task>) (async () =>
+      {
+        await _dataService.CreateNewAsync(new [] { response1 });
+      })).Should().Throw<DbUpdateException>();
+
+      ((Func<Task>) (async () =>
+      {
+        await _dataService.CreateNewAsync(new [] { response2 });
+      })).Should().Throw<DbUpdateException>();
+
+      ((Func<Task>) (async () =>
+      {
+        await _dataService.CreateNewAsync(new [] { response1, response2 });
+      })).Should().Throw<InvalidOperationException>();
     }
 
     [Fact]
