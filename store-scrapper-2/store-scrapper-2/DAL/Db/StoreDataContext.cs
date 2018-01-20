@@ -22,8 +22,13 @@ namespace store_scrapper_2.DAL.Db
       optionsBuilder.UseNpgsql(_connectionString);
     }
 
-    private void ConfigureLogging(DbContextOptionsBuilder optionsBuilder) => 
-      optionsBuilder.UseLoggerFactory(DataContextLoggerProvider.CreateFactory(_loggingEnabled));
+    private void ConfigureLogging(DbContextOptionsBuilder optionsBuilder)
+    {
+      if (_loggingEnabled)
+      {
+        optionsBuilder.UseLoggerFactory(DataContextLoggerProvider.CreateFactory());        
+      }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
