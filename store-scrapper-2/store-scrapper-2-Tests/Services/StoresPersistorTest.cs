@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
@@ -6,6 +7,7 @@ using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Model;
 using store_scrapper_2.Services;
+using store_scrapper_2_Tests.Factory;
 using Xunit;
 
 namespace store_scrapper_2_Tests.Services
@@ -82,6 +84,28 @@ namespace store_scrapper_2_Tests.Services
       _persistenceCalculator
         .DidNotReceiveWithAnyArgs()
         .PreventFuturePersistence(Arg.Any<StoreNumber>());
+    }
+
+    [Fact]
+    public async Task OnlyTriesToPersistThoseStoresThatHaveNotBeenRecentlyPersisted()
+    {
+      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
+      var existingNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
+      var newNumbers = allStoreNumbers.Except(existingNumbers).ToArray();
+      
+      var allStores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
+      
+      foreach (var storeNumber in existingNumbers)
+      {
+        _persistenceCalculator.WasPersistedRecently(storeNumber).Returns(true);
+      }
+
+      await _storesPersistor.PersistAsync(allStores);
+
+      foreach (var storeNumber in allStoreNumbers)
+      {
+        _persistenceCalculator.Received(1).WasPersistedRecently(storeNumber);
+      }
     }
   }
 }

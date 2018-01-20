@@ -31,9 +31,11 @@ namespace store_scrapper_2.Services
       _persistenceCalculator.PreventFuturePersistence(storeInfo.StoreNumber);
     }
 
-    public Task PersistAsync(IEnumerable<StoreInfo> stores)
+    public async Task PersistAsync(IEnumerable<StoreInfo> allStores)
     {
-      throw new System.NotImplementedException();
+      var storesToPersist = allStores
+        .Where(_ => !_persistenceCalculator.WasPersistedRecently(_.StoreNumber))
+        .ToArray();
     }
 
     private async Task SaveStoreAsync(StoreInfo storeInfo)
