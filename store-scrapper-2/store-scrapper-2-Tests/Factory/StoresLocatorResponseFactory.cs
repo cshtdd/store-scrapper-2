@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using store_scrapper_2.DataTransmission.Serialization;
+using store_scrapper_2.Model;
 
 namespace store_scrapper_2_Tests.Factory
 {
   public static class StoresLocatorResponseFactory
   {
-    public static string Create(params string[] storeNumbers)
+    public static string Create(params StoreNumber[] storeNumbers)
     {
       var seededStoreLocatorResponse = new StoresLocatorResponse
       {
