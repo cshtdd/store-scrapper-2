@@ -1,9 +1,9 @@
 ﻿using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Model;
 
-namespace store_scrapper_2_int_Tests.Utils
+namespace store_scrapper_2_Tests.Factory
 {
-  public static class StoreInfoResponseFactory
+  public static class StoreInfoFactory
   {
     public static StoreInfo Create(StoreNumber storeNumber) => new StoreInfo
     {

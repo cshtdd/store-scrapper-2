@@ -28,7 +28,7 @@ namespace store_scrapper_2_int_Tests.DAL
         .Create(5)
         .ToArray();
       var responses = storeNumbers
-        .Select(StoreInfoResponseFactory.Create)
+        .Select(StoreInfoFactory.Create)
         .ToArray();
 
       StoresTableShouldBeEmpty();
@@ -66,7 +66,7 @@ namespace store_scrapper_2_int_Tests.DAL
 
       var seededResponses = StoreNumberFactory
         .Create(50)
-        .Select(StoreInfoResponseFactory.Create)
+        .Select(StoreInfoFactory.Create)
         .ToArray();
       await _dataService.CreateNewAsync(seededResponses);
       (await ContainsAllStores(seededResponses)).Should().BeTrue();
@@ -95,8 +95,8 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       await CreatePersistenceInitializer().InitializeAsync();
    
-      var response1 = StoreInfoResponseFactory.Create("11111-3");
-      var response2 = StoreInfoResponseFactory.Create("11111-3");
+      var response1 = StoreInfoFactory.Create("11111-3");
+      var response2 = StoreInfoFactory.Create("11111-3");
 
       await _dataService.CreateNewAsync(new [] { response1 });
 
@@ -123,12 +123,12 @@ namespace store_scrapper_2_int_Tests.DAL
 
       await _dataService.CreateNewAsync(new []
       {
-        StoreInfoResponseFactory.Create("11111-3"),
-        StoreInfoResponseFactory.Create("22222-3"),
-        StoreInfoResponseFactory.Create("33333-3")
+        StoreInfoFactory.Create("11111-3"),
+        StoreInfoFactory.Create("22222-3"),
+        StoreInfoFactory.Create("33333-3")
       });
 
-      var response = StoreInfoResponseFactory.Create("55555-3");
+      var response = StoreInfoFactory.Create("55555-3");
         
       ((Func<Task>) (async () =>
       {
@@ -137,13 +137,13 @@ namespace store_scrapper_2_int_Tests.DAL
       
       ((Func<Task>) (async () =>
       {
-        await _dataService.UpdateAsync(new [] { response, StoreInfoResponseFactory.Create("22222-3") });
+        await _dataService.UpdateAsync(new [] { response, StoreInfoFactory.Create("22222-3") });
       })).Should().Throw<InvalidOperationException>();
     }
     
     private static StoreInfo CreateUpdatedResponse(StoreInfo original)
     {
-      var updatedResponse = StoreInfoResponseFactory.Create(original.StoreNumber);
+      var updatedResponse = StoreInfoFactory.Create(original.StoreNumber);
       updatedResponse.Address1 = Guid.NewGuid().ToString();
       updatedResponse.Address2 = Guid.NewGuid().ToString();
       return updatedResponse;
