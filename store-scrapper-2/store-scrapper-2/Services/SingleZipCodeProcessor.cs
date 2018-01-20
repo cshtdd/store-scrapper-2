@@ -8,18 +8,18 @@ namespace store_scrapper_2.Services
   public class SingleZipCodeProcessor : ISingleZipCodeProcessor
   {
     private readonly IStoreInfoDownloader _downloader;
-    private readonly ISingleStorePersistor _singleStorePersistor;
+    private readonly IStoresPersistor _storesPersistor;
     private readonly IZipCodeDataService _zipCodeDataService;
 
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     public SingleZipCodeProcessor(
       IStoreInfoDownloader downloader,
-      ISingleStorePersistor singleStorePersistor,
+      IStoresPersistor storesPersistor,
       IZipCodeDataService zipCodeDataService)
     {
       _downloader = downloader;
-      _singleStorePersistor = singleStorePersistor;
+      _storesPersistor = storesPersistor;
       _zipCodeDataService = zipCodeDataService;
     }
 
@@ -31,7 +31,7 @@ namespace store_scrapper_2.Services
       var stores = (await _downloader.DownloadAsync(zipCode)).ToArray();
       Logger.Debug($"Stores Data Downloaded; storesCount={stores.Length}; zipCode={zipCode.Zip};");
 
-      var persistStoresTasks = stores.Select(_singleStorePersistor.PersistAsync);
+      var persistStoresTasks = stores.Select(_storesPersistor.PersistAsync);
       await Task.WhenAll(persistStoresTasks);
 
       await _zipCodeDataService.UpdateZipCodeAsync(zipCode.Zip);

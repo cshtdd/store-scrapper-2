@@ -22,7 +22,7 @@ namespace store_scrapper_2_Tests.Services
           new StoreInfo{ StoreNumber = "66666-7" }
         }));
 
-      var persistor = Substitute.For<ISingleStorePersistor>();
+      var persistor = Substitute.For<IStoresPersistor>();
       var zipCodeDataService = Substitute.For<IZipCodeDataService>();
 
 

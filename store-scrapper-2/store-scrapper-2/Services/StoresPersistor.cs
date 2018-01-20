@@ -1,16 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2.Services
 {
-  public class SingleStorePersistor : ISingleStorePersistor
+  public class StoresPersistor : IStoresPersistor
   {
     private readonly IStoreInfoResponseDataService _dataService;
     private readonly IStorePersistenceCalculator _persistenceCalculator;
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public SingleStorePersistor(IStoreInfoResponseDataService dataService,
+    public StoresPersistor(IStoreInfoResponseDataService dataService,
       IStorePersistenceCalculator persistenceCalculator)
     {
       _dataService = dataService;
@@ -28,6 +29,11 @@ namespace store_scrapper_2.Services
       await SaveStoreAsync(storeInfo);
 
       _persistenceCalculator.PreventFuturePersistence(storeInfo.StoreNumber);
+    }
+
+    public Task PersistAsync(IEnumerable<StoreInfo> stores)
+    {
+      throw new System.NotImplementedException();
     }
 
     private async Task SaveStoreAsync(StoreInfo storeInfo)

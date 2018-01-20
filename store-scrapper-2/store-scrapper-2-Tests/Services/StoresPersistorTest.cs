@@ -10,7 +10,7 @@ using Xunit;
 
 namespace store_scrapper_2_Tests.Services
 {
-  public class SingleStorePersistorTest
+  public class StoresPersistorTest
   {
     private readonly StoreInfo _storeInfo = new StoreInfo
     {
@@ -21,9 +21,9 @@ namespace store_scrapper_2_Tests.Services
     private readonly IStoreInfoResponseDataService _dataService = Substitute.For<IStoreInfoResponseDataService>();
     private readonly IStorePersistenceCalculator _persistenceCalculator = Substitute.For<IStorePersistenceCalculator>();
 
-    private readonly ISingleStorePersistor _singleStorePersistor;
+    private readonly IStoresPersistor _storesPersistor;
 
-    public SingleStorePersistorTest() => _singleStorePersistor = new SingleStorePersistor(_dataService, _persistenceCalculator);
+    public StoresPersistorTest() => _storesPersistor = new StoresPersistor(_dataService, _persistenceCalculator);
 
     [Fact]
     public async Task InsertsTheStoreDataIfItIsNew()
@@ -32,7 +32,7 @@ namespace store_scrapper_2_Tests.Services
           Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(new StoreNumber[] {"77754-4"}))
       ).Returns(Task.FromResult<IEnumerable<StoreNumber>>(new StoreNumber[]{}));
       
-      await _singleStorePersistor.PersistAsync(_storeInfo);
+      await _storesPersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .Received(1)
@@ -49,7 +49,7 @@ namespace store_scrapper_2_Tests.Services
         Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(new StoreNumber[] {"77754-4"}))
       ).Returns(Task.FromResult<IEnumerable<StoreNumber>>(new StoreNumber[]{"77754-4"}));
       
-      await _singleStorePersistor.PersistAsync(_storeInfo);
+      await _storesPersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .Received(1)
@@ -64,7 +64,7 @@ namespace store_scrapper_2_Tests.Services
     {
       _persistenceCalculator.WasPersistedRecently("77754-4").Returns(true);
       
-      await _singleStorePersistor.PersistAsync(_storeInfo);
+      await _storesPersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .DidNotReceiveWithAnyArgs()
