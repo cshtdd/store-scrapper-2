@@ -19,9 +19,29 @@ namespace store_scrapper_2
 
     public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
-    public Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storeNumbers)
+    public async Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storesNumbersEnumerableParam)
     {
-      throw new NotImplementedException();
+      using (var db = _contextFactory.Create())
+      {
+        var storeNumbers = storesNumbersEnumerableParam
+          .ToArray();
+        
+        var optimizedStoreNumbers = storeNumbers
+          .Select(_ => _.Store)
+          .Select(_ => _.ToString())
+          .ToArray();
+        
+        var almostAccurateDbStoreNumbersList = await db.Stores
+          .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
+          .Select(_ => _.ReadStoreNumber())
+          .ToArrayAsync();
+        
+        var dbStoresNumbers = almostAccurateDbStoreNumbersList
+          .Where(storeNumbers.Contains)
+          .ToArray();
+
+        return dbStoresNumbers;
+      }
     }
 
     public async Task CreateNewAsync(IEnumerable<StoreInfo> stores)
