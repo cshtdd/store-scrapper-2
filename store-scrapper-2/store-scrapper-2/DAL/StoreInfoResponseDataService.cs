@@ -19,6 +19,22 @@ namespace store_scrapper_2
 
     public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
+    public async Task CreateNewAsync(IEnumerable<StoreInfo> storesEnumerableParam)
+    {
+      var stores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
+      if (stores.Length == 0)
+      {
+        return;
+      }
+      
+      using (var db = _contextFactory.Create())
+      {
+        var newDbStores = stores.Select(_ => Mapper.Map<Store>(_));
+        await db.Stores.AddRangeAsync(newDbStores);
+        await SaveContextChangesAsync(db);
+      }
+    }
+    
     public async Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storesNumbersEnumerableParam)
     {
       var storeNumbers = (storesNumbersEnumerableParam ?? new StoreNumber[]{}).ToArray();
@@ -44,22 +60,6 @@ namespace store_scrapper_2
           .ToArray();
         
         return dbStoresNumbers;
-      }
-    }
-
-    public async Task CreateNewAsync(IEnumerable<StoreInfo> storesEnumerableParam)
-    {
-      var stores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
-      if (stores.Length == 0)
-      {
-        return;
-      }
-      
-      using (var db = _contextFactory.Create())
-      {
-        var newDbStores = stores.Select(_ => Mapper.Map<Store>(_));
-        await db.Stores.AddRangeAsync(newDbStores);
-        await SaveContextChangesAsync(db);
       }
     }
 
