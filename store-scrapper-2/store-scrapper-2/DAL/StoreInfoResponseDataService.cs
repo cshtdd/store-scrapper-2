@@ -21,16 +21,19 @@ namespace store_scrapper_2
 
     public async Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storesNumbersEnumerableParam)
     {
+      var storeNumbers = (storesNumbersEnumerableParam ?? new StoreNumber[]{}).ToArray();
+      if (storeNumbers.Length == 0)
+      {
+        return new StoreNumber[]{};
+      }
+
+      var optimizedStoreNumbers = storeNumbers
+        .Select(_ => _.Store)
+        .Select(_ => _.ToString())
+        .ToArray();
+
       using (var db = _contextFactory.Create())
       {
-        var storeNumbers = storesNumbersEnumerableParam
-          .ToArray();
-        
-        var optimizedStoreNumbers = storeNumbers
-          .Select(_ => _.Store)
-          .Select(_ => _.ToString())
-          .ToArray();
-
         var almostAccurateDbStoreNumbersList = await db.Stores
           .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
           .Select(_ => new StoreNumber(_.StoreNumber, _.SatelliteNumber))
@@ -44,8 +47,14 @@ namespace store_scrapper_2
       }
     }
 
-    public async Task CreateNewAsync(IEnumerable<StoreInfo> stores)
+    public async Task CreateNewAsync(IEnumerable<StoreInfo> storesEnumerableParam)
     {
+      var stores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
+      if (stores.Length == 0)
+      {
+        return;
+      }
+      
       using (var db = _contextFactory.Create())
       {
         var newDbStores = stores.Select(_ => Mapper.Map<Store>(_));
@@ -56,19 +65,24 @@ namespace store_scrapper_2
 
     public async Task UpdateAsync(IEnumerable<StoreInfo> storesEnumerableParam)
     {
+      var stores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
+      if (stores.Length == 0)
+      {
+        return;
+      }
+
+      var storeNumbers = stores
+        .Select(_ => _.StoreNumber)
+        .OrderBy(_ => _.ToString())
+        .ToArray();
+
+      var optimizedStoreNumbers = storeNumbers
+        .Select(_ => _.Store)
+        .Select(_ => _.ToString())
+        .ToArray();
+
       using (var db = _contextFactory.Create())
       {
-        var stores = storesEnumerableParam.ToArray();
-        var storeNumbers = stores
-          .Select(_ => _.StoreNumber)
-          .OrderBy(_ => _.ToString())
-          .ToArray();
-
-        var optimizedStoreNumbers = storeNumbers
-          .Select(_ => _.Store)
-          .Select(_ => _.ToString())
-          .ToArray();
-
         var almostAccurateDbStoresList = await db.Stores
           .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
           .ToArrayAsync();

@@ -70,7 +70,14 @@ namespace store_scrapper_2_int_Tests.DAL
       {
         context.Stores.Should().BeEmpty();
       }
-      
+
+      await _dataService.CreateNewAsync(new StoreInfo[] { });
+
+      using (var context = ContextFactory.Create())
+      {
+        context.Stores.Should().BeEmpty();
+      }
+
       await _dataService.CreateNewAsync(responses);
       
       using (var context = ContextFactory.Create())
@@ -97,6 +104,8 @@ namespace store_scrapper_2_int_Tests.DAL
       foundStoreNumbers.Should().BeEquivalentTo(storeNumbers);
       
       (await _dataService.ContainsStoreAsync(new StoreNumber[] {"7777-3"})).Should().BeEmpty();
+
+      (await _dataService.ContainsStoreAsync(new StoreNumber[] { })).Should().BeEmpty();
     }
     
     [Fact]
@@ -151,6 +160,8 @@ namespace store_scrapper_2_int_Tests.DAL
         context.Stores.Count().Should().Be(50);
         await Task.WhenAll(updatedResponses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
+
+      await _dataService.UpdateAsync(new StoreInfo[] { });
     }
 
     [Fact]
