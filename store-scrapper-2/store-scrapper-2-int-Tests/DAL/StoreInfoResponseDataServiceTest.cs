@@ -183,14 +183,31 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       await CreatePersistenceInitializer().InitializeAsync();
 
-      var response = StoreInfoResponseFactory.Create("11111-3");
+      await _dataService.CreateNewAsync(new []
+      {
+        StoreInfoResponseFactory.Create("11111-3"),
+        StoreInfoResponseFactory.Create("22222-3"),
+        StoreInfoResponseFactory.Create("33333-3")
+      });
+
+      var response = StoreInfoResponseFactory.Create("55555-3");
       
       ((Func<Task>) (async () =>
       {
         await _dataService.UpdateAsync(response);
       })).Should().Throw<InvalidOperationException>();
+      
+      ((Func<Task>) (async () =>
+      {
+        await _dataService.UpdateAsync(new [] { response });
+      })).Should().Throw<InvalidOperationException>();
+      
+      ((Func<Task>) (async () =>
+      {
+        await _dataService.UpdateAsync(new [] { response, StoreInfoResponseFactory.Create("22222-3") });
+      })).Should().Throw<InvalidOperationException>();
     }
-
+    
     private static StoreInfo CreateUpdatedResponse(StoreInfo original)
     {
       var updatedResponse = StoreInfoResponseFactory.Create(original.StoreNumber);

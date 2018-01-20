@@ -39,7 +39,10 @@ namespace store_scrapper_2
       using (var db = _contextFactory.Create())
       {
         var stores = storesEnumerableParam.ToArray();
-        var storeNumbers = stores.Select(_ => _.StoreNumber).ToArray();
+        var storeNumbers = stores
+          .Select(_ => _.StoreNumber)
+          .OrderBy(_ => _.ToString())
+          .ToArray();
 
         var optimizedStoreNumbers = storeNumbers
           .Select(_ => _.Store)
@@ -54,6 +57,18 @@ namespace store_scrapper_2
           .Where(_ => _.ExistsIn(storeNumbers))
           .Select(_ => _.UpdateFrom(stores))
           .ToArray();
+
+        var dbStoreNumbers = updatedDbStores
+          .Select(_ => _.ReadStoreNumber())
+          .OrderBy(_ => _.ToString())
+          .ToArray();
+
+        if (!storeNumbers.SequenceEqual(dbStoreNumbers))
+        {
+          throw new InvalidOperationException(
+            $"Update records mismatch; storeNumbersCount={storeNumbers.Length}; dbStoreNumbersCount={dbStoreNumbers.Length}"
+            );
+        }
 
         foreach (var entity in updatedDbStores)
         {
@@ -110,7 +125,7 @@ namespace store_scrapper_2
 
       if (changedEntries == 0)
       {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("A db operation produced no changes");
       }
     }
   }
@@ -119,7 +134,7 @@ namespace store_scrapper_2
   {
     internal static bool ExistsIn(this Store sender, IEnumerable<StoreNumber> list)
     {
-      var senderStoreNumber = new StoreNumber(sender.StoreNumber, sender.SatelliteNumber);
+      var senderStoreNumber = sender.ReadStoreNumber();
       return list.Contains(senderStoreNumber);
     }
 
@@ -131,8 +146,13 @@ namespace store_scrapper_2
     
     private static StoreInfo FindIn(this Store sender, IEnumerable<StoreInfo> list)
     {
-      var senderStoreNumber = new StoreNumber(sender.StoreNumber, sender.SatelliteNumber);
+      var senderStoreNumber = sender.ReadStoreNumber();
       return list.First(_ => _.StoreNumber == senderStoreNumber);
+    }
+
+    internal static StoreNumber ReadStoreNumber(this Store sender)
+    {
+      return new StoreNumber(sender.StoreNumber, sender.SatelliteNumber);
     }
   } 
 }
