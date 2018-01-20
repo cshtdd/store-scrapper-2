@@ -8,6 +8,7 @@ using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Model;
 using store_scrapper_2_int_Tests.Utils;
+using store_scrapper_2_Tests.Factory;
 using Xunit;
 
 namespace store_scrapper_2_int_Tests.DAL

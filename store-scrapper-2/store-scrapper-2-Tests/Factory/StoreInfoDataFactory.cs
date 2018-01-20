@@ -1,5 +1,4 @@
-﻿
-using store_scrapper_2;
+﻿using store_scrapper_2;
 using store_scrapper_2.Model;
 
 namespace store_scrapper_2_Tests.Factory

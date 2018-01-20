@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using store_scrapper_2.Model;
 
-namespace store_scrapper_2_int_Tests.Utils
+namespace store_scrapper_2_Tests.Factory
 {
   public static class StoreNumberFactory
   {
