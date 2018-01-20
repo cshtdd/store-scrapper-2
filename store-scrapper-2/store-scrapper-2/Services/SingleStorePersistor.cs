@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 
 namespace store_scrapper_2.Services
@@ -33,7 +34,7 @@ namespace store_scrapper_2.Services
     {
       Logger.Info($"Saving Store; storeNumber={storeInfo.StoreNumber};");
 
-      var shouldUpdateExistingStore = await _dataService.ContainsStoreAsync(storeInfo.StoreNumber);
+      var shouldUpdateExistingStore = (await _dataService.ContainsStoreAsync(new [] {storeInfo.StoreNumber})).Any();
       if (shouldUpdateExistingStore)
       {
         await UpdateStoreInfoAsync(storeInfo);
@@ -47,13 +48,13 @@ namespace store_scrapper_2.Services
     private async Task CreateStoreInfo(StoreInfo storeInfo)
     {
       Logger.Debug($"Creating new Store; storeNumber={storeInfo.StoreNumber};");
-      await _dataService.CreateNewAsync(storeInfo);
+      await _dataService.CreateNewAsync(new [] { storeInfo });
     }
 
     private async Task UpdateStoreInfoAsync(StoreInfo storeInfo)
     {
       Logger.Debug($"Updating Existing Store; storeNumber={storeInfo.StoreNumber};");
-      await _dataService.UpdateAsync(storeInfo);
+      await _dataService.UpdateAsync(new [] { storeInfo });
     }
   }
 }

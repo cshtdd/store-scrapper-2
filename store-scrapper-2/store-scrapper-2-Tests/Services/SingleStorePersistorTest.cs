@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using NSubstitute;
 using store_scrapper_2;
 using store_scrapper_2.DataTransmission;
@@ -26,13 +28,15 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task InsertsTheStoreDataIfItIsNew()
     {
-      _dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(false));
+      _dataService.ContainsStoreAsync(
+          Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(new StoreNumber[] {"77754-4"}))
+      ).Returns(Task.FromResult<IEnumerable<StoreNumber>>(new StoreNumber[]{}));
       
       await _singleStorePersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .Received(1)
-        .CreateNewAsync(Arg.Is(_storeInfo));
+        .CreateNewAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.SequenceEqual(new []{ _storeInfo })));
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
@@ -41,13 +45,15 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task UpdatesTheStoreDataIfItAlreadyExists()
     {
-      _dataService.ContainsStoreAsync("77754-4").Returns(Task.FromResult(true));
+      _dataService.ContainsStoreAsync(
+        Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(new StoreNumber[] {"77754-4"}))
+      ).Returns(Task.FromResult<IEnumerable<StoreNumber>>(new StoreNumber[]{"77754-4"}));
       
       await _singleStorePersistor.PersistAsync(_storeInfo);
 
       await _dataService
         .Received(1)
-        .UpdateAsync(Arg.Is(_storeInfo));
+        .UpdateAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.SequenceEqual(new [] { _storeInfo } )));
       _persistenceCalculator
         .Received(1)
         .PreventFuturePersistence("77754-4");
@@ -62,13 +68,13 @@ namespace store_scrapper_2_Tests.Services
 
       await _dataService
         .DidNotReceiveWithAnyArgs()
-        .ContainsStoreAsync(Arg.Any<StoreNumber>());
+        .ContainsStoreAsync(Arg.Any<IEnumerable<StoreNumber>>());
       await _dataService
         .DidNotReceiveWithAnyArgs()
-        .CreateNewAsync(Arg.Any<StoreInfo>());
+        .CreateNewAsync(Arg.Any<IEnumerable<StoreInfo>>());
       await _dataService
         .DidNotReceiveWithAnyArgs()
-        .UpdateAsync(Arg.Any<StoreInfo>());
+        .UpdateAsync(Arg.Any<IEnumerable<StoreInfo>>());
       _persistenceCalculator
         .DidNotReceiveWithAnyArgs()
         .PreventFuturePersistence(Arg.Any<StoreNumber>());

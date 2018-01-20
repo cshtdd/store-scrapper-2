@@ -113,44 +113,6 @@ namespace store_scrapper_2
       }
     }
 
-    public async Task<bool> ContainsStoreAsync(StoreNumber storeNumber)
-    {
-      using (var db = _contextFactory.Create())
-      {
-        return await db.Stores
-          .Where(_ => storeNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber))
-          .AnyAsync();
-      }
-    }
-
-    public async Task CreateNewAsync(StoreInfo storeInfo)
-    {
-      var store = Mapper.Map<Store>(storeInfo);
-      
-      using (var db = _contextFactory.Create())
-      {
-        db.Stores.Add(store);
-        
-        await SaveContextChangesAsync(db);
-      }
-    }
-
-    public async Task UpdateAsync(StoreInfo storeInfo)
-    {
-      using (var db = _contextFactory.Create())
-      {
-        var existingStore = await db.Stores
-          .Where(_ => storeInfo.StoreNumber == new StoreNumber(_.StoreNumber, _.SatelliteNumber))
-          .FirstAsync();
-
-        var updatedStore = Mapper.Map(storeInfo, existingStore);
-
-        db.Entry(updatedStore).State = EntityState.Modified;
-        
-        await SaveContextChangesAsync(db);
-      }
-    }
-
     private static async Task SaveContextChangesAsync(DbContext db)
     {
       var changedEntries = await db.SaveChangesAsync();

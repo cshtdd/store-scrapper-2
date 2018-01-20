@@ -19,42 +19,6 @@ namespace store_scrapper_2_int_Tests.DAL
     public StoreInfoResponseDataServiceTest() => _dataService = new StoreInfoResponseDataService(ContextFactory);
 
     [Fact]
-    [Obsolete]
-    public async Task SavesANewResponse()
-    {
-      await CreatePersistenceInitializer().InitializeAsync();
-
-      var responses = new List<StoreInfo>
-      {
-        StoreInfoResponseFactory.Create("11111-3"),
-        StoreInfoResponseFactory.Create("22222-3"),
-        StoreInfoResponseFactory.Create("33333-3")
-      };
-
-      using (var context = ContextFactory.Create())
-      {
-        context.Stores.Should().BeEmpty();
-      }
-      
-      await Task.WhenAll(responses.Select(_dataService.CreateNewAsync));
-      
-      using (var context = ContextFactory.Create())
-      {
-        context.Stores.Count().Should().Be(responses.Count);
-
-        await Task.WhenAll(responses.Select(context.ShouldContainStoreEquivalentToAsync));
-      }
-
-      Task.WhenAll(responses.Select(_ => _dataService.ContainsStoreAsync(_.StoreNumber)))
-        .Result
-        .All(_ => _)
-        .Should()
-        .BeTrue();
-
-      (await _dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
-    }
-
-    [Fact]
     public async Task SavesNewResponses()
     {
       await CreatePersistenceInitializer().InitializeAsync();
@@ -87,14 +51,6 @@ namespace store_scrapper_2_int_Tests.DAL
         await Task.WhenAll(responses.Select(context.ShouldContainStoreEquivalentToAsync));
       }
 
-      Task.WhenAll(responses.Select(_ => _dataService.ContainsStoreAsync(_.StoreNumber)))
-        .Result
-        .All(_ => _)
-        .Should()
-        .BeTrue();
-
-      (await _dataService.ContainsStoreAsync("7777-3")).Should().BeFalse();
-
       var foundStoreNumbers = (await _dataService.ContainsStoreAsync(storeNumbers)).ToArray();
       foundStoreNumbers.Should().BeEquivalentTo(storeNumbers);
       
@@ -106,31 +62,6 @@ namespace store_scrapper_2_int_Tests.DAL
       (await _dataService.ContainsStoreAsync(new StoreNumber[] {"7777-3"})).Should().BeEmpty();
 
       (await _dataService.ContainsStoreAsync(new StoreNumber[] { })).Should().BeEmpty();
-    }
-    
-    [Fact]
-    [Obsolete]
-    public async Task UpdatesAnExistingResponse()
-    {
-      await CreatePersistenceInitializer().InitializeAsync();
-
-      var originalResponse = StoreInfoResponseFactory.Create("11111-3");
-
-      await _dataService.CreateNewAsync(originalResponse);
-      (await _dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
-      
-      
-      var updatedResponse = CreateUpdatedResponse(originalResponse);
-
-      await _dataService.UpdateAsync(updatedResponse);
-      (await _dataService.ContainsStoreAsync(originalResponse.StoreNumber)).Should().BeTrue();
-      
-      using (var context = ContextFactory.Create())
-      {
-        context.Stores.Count().Should().Be(1);
-
-        await context.ShouldContainStoreEquivalentToAsync(updatedResponse);
-      }
     }
     
     [Fact]
@@ -172,17 +103,7 @@ namespace store_scrapper_2_int_Tests.DAL
       var response1 = StoreInfoResponseFactory.Create("11111-3");
       var response2 = StoreInfoResponseFactory.Create("11111-3");
 
-      await _dataService.CreateNewAsync(response1);
-
-      ((Func<Task>) (async () =>
-      {
-        await _dataService.CreateNewAsync(response1);
-      })).Should().Throw<DbUpdateException>();
-
-      ((Func<Task>) (async () =>
-      {
-        await _dataService.CreateNewAsync(response2);
-      })).Should().Throw<DbUpdateException>();
+      await _dataService.CreateNewAsync(new [] { response1 });
 
       ((Func<Task>) (async () =>
       {
@@ -213,12 +134,7 @@ namespace store_scrapper_2_int_Tests.DAL
       });
 
       var response = StoreInfoResponseFactory.Create("55555-3");
-      
-      ((Func<Task>) (async () =>
-      {
-        await _dataService.UpdateAsync(response);
-      })).Should().Throw<InvalidOperationException>();
-      
+        
       ((Func<Task>) (async () =>
       {
         await _dataService.UpdateAsync(new [] { response });
@@ -245,14 +161,11 @@ namespace store_scrapper_2_int_Tests.DAL
     {
       var storeNumbers = storeNumbersEnumerable.OrderBy(_ => _.ToString()).ToArray();
       
-      var result1 = (await Task.WhenAll(storeNumbers.Select(_dataService.ContainsStoreAsync))).All(_ => _);
-      var result2 = (await _dataService.ContainsStoreAsync(storeNumbers))
+      var result = (await _dataService.ContainsStoreAsync(storeNumbers))
         .OrderBy(_ => _.ToString())
         .SequenceEqual(storeNumbers);
 
-      result1.Should().Be(result2);
-
-      return result1;
+      return result;
     }
   }
 }
