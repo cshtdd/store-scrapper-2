@@ -12,6 +12,7 @@ namespace store_scrapper_2_Tests.Services
 {
   public class StoresPersistorTest
   {
+    [Obsolete]
     private readonly StoreInfo _storeInfo = new StoreInfo
     {
       StoreNumber = "77754-4",
@@ -26,6 +27,7 @@ namespace store_scrapper_2_Tests.Services
     public StoresPersistorTest() => _storesPersistor = new StoresPersistor(_dataService, _persistenceCalculator);
 
     [Fact]
+    [Obsolete]
     public async Task InsertsTheStoreDataIfItIsNew()
     {
       _dataService.ContainsStoreAsync(
@@ -43,6 +45,7 @@ namespace store_scrapper_2_Tests.Services
     }
     
     [Fact]
+    [Obsolete]
     public async Task UpdatesTheStoreDataIfItAlreadyExists()
     {
       _dataService.ContainsStoreAsync(
@@ -60,6 +63,7 @@ namespace store_scrapper_2_Tests.Services
     }
     
     [Fact]
+    [Obsolete]
     public async Task DoesNotDoAnyDataOperationWhenTheStoreWasPersistedRecently()
     {
       _persistenceCalculator.WasPersistedRecently("77754-4").Returns(true);
