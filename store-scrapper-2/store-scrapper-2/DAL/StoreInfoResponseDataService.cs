@@ -30,16 +30,16 @@ namespace store_scrapper_2
           .Select(_ => _.Store)
           .Select(_ => _.ToString())
           .ToArray();
-        
+
         var almostAccurateDbStoreNumbersList = await db.Stores
           .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
-          .Select(_ => _.ReadStoreNumber())
+          .Select(_ => new StoreNumber(_.StoreNumber, _.SatelliteNumber))
           .ToArrayAsync();
-        
+
         var dbStoresNumbers = almostAccurateDbStoreNumbersList
           .Where(storeNumbers.Contains)
           .ToArray();
-
+        
         return dbStoresNumbers;
       }
     }
