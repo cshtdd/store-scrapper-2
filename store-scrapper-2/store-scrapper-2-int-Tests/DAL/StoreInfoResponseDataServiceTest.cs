@@ -30,17 +30,11 @@ namespace store_scrapper_2_int_Tests.DAL
         .Select(StoreInfoResponseFactory.Create)
         .ToArray();
 
-      using (var context = ContextFactory.Create())
-      {
-        context.Stores.Should().BeEmpty();
-      }
+      StoresTableShouldBeEmpty();
 
       await _dataService.CreateNewAsync(new StoreInfo[] { });
 
-      using (var context = ContextFactory.Create())
-      {
-        context.Stores.Should().BeEmpty();
-      }
+      StoresTableShouldBeEmpty();
 
       await _dataService.CreateNewAsync(responses);
       
@@ -63,7 +57,7 @@ namespace store_scrapper_2_int_Tests.DAL
 
       (await _dataService.ContainsStoreAsync(new StoreNumber[] { })).Should().BeEmpty();
     }
-    
+
     [Fact]
     public async Task UpdatesExistingResponses()
     {
@@ -166,6 +160,14 @@ namespace store_scrapper_2_int_Tests.DAL
         .SequenceEqual(storeNumbers);
 
       return result;
+    }
+    
+    private static void StoresTableShouldBeEmpty()
+    {
+      using (var context = ContextFactory.Create())
+      {
+        context.Stores.Should().BeEmpty();
+      }
     }
   }
 }
