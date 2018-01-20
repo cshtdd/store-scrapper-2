@@ -95,10 +95,7 @@ namespace store_scrapper_2_Tests.Services
       
       var allStores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
       
-      foreach (var storeNumber in existingNumbers)
-      {
-        _persistenceCalculator.WasPersistedRecently(storeNumber).Returns(true);
-      }
+      SetupWasPersistedRecently(existingNumbers, true);
 
       await _storesPersistor.PersistAsync(allStores);
 
@@ -106,6 +103,14 @@ namespace store_scrapper_2_Tests.Services
       {
         _persistenceCalculator.Received(1).WasPersistedRecently(storeNumber);
       }
+    }
+
+    private void SetupWasPersistedRecently(IEnumerable<StoreNumber> storeNumbers, bool wasPersistedRecently = false)
+    {
+      foreach (var storeNumber in storeNumbers)
+      {
+        _persistenceCalculator.WasPersistedRecently(storeNumber).Returns(true);
+      }   
     }
   }
 }
