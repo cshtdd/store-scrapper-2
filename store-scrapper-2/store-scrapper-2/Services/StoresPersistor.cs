@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
 
@@ -36,12 +37,20 @@ namespace store_scrapper_2.Services
       var storesToPersist = allStores
         .Where(_ => !_persistenceCalculator.WasPersistedRecently(_.StoreNumber))
         .ToArray();
+      var numbersToPersist = storesToPersist.Select(_ => _.StoreNumber);
 
+      var numbersToUpdate = (await _dataService.ContainsStoreAsync(numbersToPersist)).ToArray();
+      var numbersToCreate = numbersToPersist.Except(numbersToUpdate).ToArray();
+
+      var storesToUpdate = storesToPersist.Where(_ => numbersToUpdate.Contains(_.StoreNumber)).ToArray();
+      var storesToCreate = storesToPersist.Where(_ => numbersToCreate.Contains(_.StoreNumber)).ToArray();
+
+      await _dataService.CreateNewAsync(storesToCreate);
+      await _dataService.UpdateAsync(storesToUpdate);
       
-      
-      foreach (var storeInfo in storesToPersist)
+      foreach (var storeNumber in numbersToPersist)
       {
-        _persistenceCalculator.PreventFuturePersistence(storeInfo.StoreNumber);
+        _persistenceCalculator.PreventFuturePersistence(storeNumber);
       }
     }
 
