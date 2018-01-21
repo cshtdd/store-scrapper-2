@@ -85,91 +85,9 @@ namespace store_scrapper_2_Tests.Services
         .DidNotReceiveWithAnyArgs()
         .PreventFuturePersistence(Arg.Any<StoreNumber>());
     }
-
-    [Fact]
-    public async Task DeterminesIfEachStoreWasPersistedRecently()
-    {
-      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
-      var recentlyPersistedNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
-      var stores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
-      
-      SetupWasPersistedRecently(recentlyPersistedNumbers, true);
-
-      
-      await _storesPersistor.PersistAsync(stores);
-
-      foreach (var storeNumber in allStoreNumbers)
-      {
-        _persistenceCalculator.Received(1).WasPersistedRecently(storeNumber);
-      }
-    }
     
     [Fact]
-    public async Task PreventsTheNewStoresFromBeingPersistedInTheFuture()
-    {
-      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
-      var recentlyPersistedNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
-      var numbersToPersist = allStoreNumbers.Except(recentlyPersistedNumbers).ToArray();
-      var stores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
-          
-      SetupWasPersistedRecently(recentlyPersistedNumbers, true);
-
-      
-      await _storesPersistor.PersistAsync(stores);
-
-      
-      foreach (var storeNumber in recentlyPersistedNumbers)
-      {
-        _persistenceCalculator.DidNotReceive().PreventFuturePersistence(storeNumber);
-      }
-      
-      foreach (var storeNumber in numbersToPersist)
-      {
-        _persistenceCalculator.Received(1).PreventFuturePersistence(storeNumber);
-      }
-    }
-    
-    [Fact]
-    public async Task DeterminesWhichStoresAreNew()
-    {
-      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
-      var recentlyPersistedNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
-      var numbersToPersist = allStoreNumbers.Except(recentlyPersistedNumbers).ToArray();
-      var stores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
-      
-      SetupWasPersistedRecently(recentlyPersistedNumbers, true);
-
-      
-      await _storesPersistor.PersistAsync(stores);
-
-
-      await _dataService.Received(1)
-        .ContainsStoreAsync(Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(numbersToPersist)));
-    }
-    
-    [Fact]
-    public async Task UpdatesTheExistingStores()
-    {
-      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
-      var recentlyPersistedNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
-      var numbersToPersist = allStoreNumbers.Except(recentlyPersistedNumbers).ToArray();
-      var numbersThatNeedToBeUpdated = new[] { numbersToPersist[0], numbersToPersist[1], numbersToPersist[2] };
-      var stores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
-      
-      SetupWasPersistedRecently(recentlyPersistedNumbers, true);
-      _dataService.ContainsStoreAsync(Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(numbersToPersist)))
-        .Returns(numbersThatNeedToBeUpdated);
-
-      
-      await _storesPersistor.PersistAsync(stores);
-
-
-      await _dataService.Received(1)
-        .UpdateAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.Select(s => s.StoreNumber).SequenceEqual(numbersThatNeedToBeUpdated)));
-    }
-    
-    [Fact]
-    public async Task InsertsTheNewStores()
+    public async Task PersistsMultipleStores()
     {
       var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
       var recentlyPersistedNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
@@ -185,9 +103,28 @@ namespace store_scrapper_2_Tests.Services
       
       await _storesPersistor.PersistAsync(stores);
 
-
+      
+      await _dataService.Received(1)
+        .ContainsStoreAsync(Arg.Is<IEnumerable<StoreNumber>>(_ => _.SequenceEqual(numbersToPersist)));
+      await _dataService.Received(1)
+        .UpdateAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.Select(s => s.StoreNumber).SequenceEqual(numbersThatNeedToBeUpdated)));
       await _dataService.Received(1)
         .CreateNewAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.Select(s => s.StoreNumber).SequenceEqual(numbersThatNeedToBeCreated)));
+      
+      foreach (var storeNumber in allStoreNumbers)
+      {
+        _persistenceCalculator.Received(1).WasPersistedRecently(storeNumber);
+      }
+      
+      foreach (var storeNumber in numbersToPersist)
+      {
+        _persistenceCalculator.Received(1).PreventFuturePersistence(storeNumber);
+      }
+      
+      foreach (var storeNumber in recentlyPersistedNumbers)
+      {
+        _persistenceCalculator.DidNotReceive().PreventFuturePersistence(storeNumber);
+      }
     }
 
     private void SetupWasPersistedRecently(IEnumerable<StoreNumber> storeNumbers, bool wasPersistedRecently = false)
