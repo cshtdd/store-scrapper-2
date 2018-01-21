@@ -129,5 +129,35 @@ namespace store_scrapper_2_Tests.Services
         _persistenceCalculator.DidNotReceive().PreventFuturePersistence(storeNumber);
       }
     }
+
+    [Fact]
+    public async Task DoesNotDoResourceIntensiveOperationsWhenAnEmptyListIsPassed()
+    {
+      await _storesPersistor.PersistAsync(null);
+      await _storesPersistor.PersistAsync(new StoreInfo[] {});
+      
+      _persistenceCalculator.DidNotReceiveWithAnyArgs().PreventFuturePersistence(Arg.Any<StoreNumber>());
+      _dataService.DidNotReceiveWithAnyArgs().ContainsStoreAsync(Arg.Any<IEnumerable<StoreNumber>>());
+      _dataService.DidNotReceiveWithAnyArgs().CreateNewAsync(Arg.Any<IEnumerable<StoreInfo>>());
+      _dataService.DidNotReceiveWithAnyArgs().UpdateAsync(Arg.Any<IEnumerable<StoreInfo>>());
+    }
+    
+    [Fact]
+    public async Task DoesNotDoResourceIntensiveOperationsWhenNoStoreShouldBePersisted()
+    {
+      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
+      var stores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
+      foreach (var storeNumber in allStoreNumbers)
+      {
+        _persistenceCalculator.WasPersistedRecently(storeNumber).Returns(true);
+      }
+
+      await _storesPersistor.PersistAsync(stores);
+      
+      _persistenceCalculator.DidNotReceiveWithAnyArgs().PreventFuturePersistence(Arg.Any<StoreNumber>());
+      _dataService.DidNotReceiveWithAnyArgs().ContainsStoreAsync(Arg.Any<IEnumerable<StoreNumber>>());
+      _dataService.DidNotReceiveWithAnyArgs().CreateNewAsync(Arg.Any<IEnumerable<StoreInfo>>());
+      _dataService.DidNotReceiveWithAnyArgs().UpdateAsync(Arg.Any<IEnumerable<StoreInfo>>());
+    }
   }
 }

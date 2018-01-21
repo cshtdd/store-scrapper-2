@@ -34,11 +34,16 @@ namespace store_scrapper_2.Services
 
     public async Task PersistAsync(IEnumerable<StoreInfo> storesEnumerableParam)
     {
-      var allStores = storesEnumerableParam.ToArray();
+      var allStores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
       var storesToPersist = allStores
         .Where(_ => !_persistenceCalculator.WasPersistedRecently(_.StoreNumber))
         .ToArray();
       var numbersToPersist = storesToPersist.Select(_ => _.StoreNumber);
+
+      if (!numbersToPersist.Any())
+      {
+        return;
+      }
 
       var numbersToUpdate = (await _dataService.ContainsStoreAsync(numbersToPersist)).ToArray();
       var numbersToCreate = numbersToPersist.Except(numbersToUpdate).ToArray();
