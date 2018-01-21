@@ -87,7 +87,27 @@ namespace store_scrapper_2_Tests.Services
     }
 
     [Fact]
-    public async Task OnlyTriesToPersistThoseStoresThatHaveNotBeenRecentlyPersisted()
+    public async Task DeterminesIfEachStoreWasPersistedRecently()
+    {
+      var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
+      var existingNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
+      
+      var allStores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
+      
+      
+      SetupWasPersistedRecently(existingNumbers, true);
+
+      
+      await _storesPersistor.PersistAsync(allStores);
+
+      foreach (var storeNumber in allStoreNumbers)
+      {
+        _persistenceCalculator.Received(1).WasPersistedRecently(storeNumber);
+      }
+    }
+    
+    [Fact]
+    public async Task PreventsTheNewStoresFromBeingPersistedInTheFuture()
     {
       var allStoreNumbers = StoreNumberFactory.Create(10).ToArray();
       var existingNumbers = new[] { allStoreNumbers[1], allStoreNumbers[3] };
@@ -95,13 +115,20 @@ namespace store_scrapper_2_Tests.Services
       
       var allStores = allStoreNumbers.Select(StoreInfoFactory.Create).ToArray();
       
+      
       SetupWasPersistedRecently(existingNumbers, true);
 
+      
       await _storesPersistor.PersistAsync(allStores);
 
-      foreach (var storeNumber in allStoreNumbers)
+      foreach (var storeNumber in existingNumbers)
       {
-        _persistenceCalculator.Received(1).WasPersistedRecently(storeNumber);
+        _persistenceCalculator.DidNotReceive().PreventFuturePersistence(storeNumber);
+      }
+      
+      foreach (var storeNumber in newNumbers)
+      {
+        _persistenceCalculator.Received(1).PreventFuturePersistence(storeNumber);
       }
     }
 

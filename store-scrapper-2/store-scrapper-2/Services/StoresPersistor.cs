@@ -36,6 +36,13 @@ namespace store_scrapper_2.Services
       var storesToPersist = allStores
         .Where(_ => !_persistenceCalculator.WasPersistedRecently(_.StoreNumber))
         .ToArray();
+
+      
+      
+      foreach (var storeInfo in storesToPersist)
+      {
+        _persistenceCalculator.PreventFuturePersistence(storeInfo.StoreNumber);
+      }
     }
 
     private async Task SaveStoreAsync(StoreInfo storeInfo)
