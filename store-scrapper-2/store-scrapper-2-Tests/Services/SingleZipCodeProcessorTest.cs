@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
 using store_scrapper_2;
 using store_scrapper_2.Model;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Services;
+using store_scrapper_2_Tests.Factory;
 using Xunit;
 
 namespace store_scrapper_2_Tests.Services
@@ -14,13 +16,14 @@ namespace store_scrapper_2_Tests.Services
     [Fact]
     public async Task DownloadsAndPersistsTheStoreData()
     {
+      var stores = StoreNumberFactory
+        .Create(10)
+        .Select(StoreInfoFactory.Create)
+        .ToArray();
+      
       var downloader = Substitute.For<IStoreInfoDownloader>();
       downloader.DownloadAsync(Arg.Any<ZipCode>())
-        .Returns(Task.FromResult((IEnumerable<StoreInfo>) new []
-        {
-          new StoreInfo{ StoreNumber = "55555-3" },
-          new StoreInfo{ StoreNumber = "66666-7" }
-        }));
+        .Returns(Task.FromResult<IEnumerable<StoreInfo>>(stores));
 
       var persistor = Substitute.For<IStoresPersistor>();
       var zipCodeDataService = Substitute.For<IZipCodeDataService>();
@@ -36,17 +39,12 @@ namespace store_scrapper_2_Tests.Services
         .DownloadAsync(Arg.Is(zipCode));
 
       
-      await persistor
-        .Received(2)
-        .PersistAsync(Arg.Any<StoreInfo>());
-
-      await persistor
-        .Received(1)
-        .PersistAsync(Arg.Is<StoreInfo>(_ => _.StoreNumber == "55555-3"));
-
-      await persistor
-        .Received(1)
-        .PersistAsync(Arg.Is<StoreInfo>(_ => _.StoreNumber == "66666-7"));
+      foreach (var store in stores)
+      {
+        await persistor
+          .Received(1)
+          .PersistAsync(store);        
+      }
 
       await zipCodeDataService
         .Received(1)
