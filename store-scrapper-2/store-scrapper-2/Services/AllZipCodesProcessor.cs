@@ -29,6 +29,8 @@ namespace store_scrapper_2.Services
 
     public async Task ProcessAsync()
     {
+      Logger.Debug("Reading all the ZipCodes;");
+      
       var zipCodes = (await _zipCodeDataService.AllAsync())
         .OrderBy(_ => _.UpdateTimeUtc)
         .Select(_ => _.ZipCode)
