@@ -31,9 +31,8 @@ namespace store_scrapper_2.Services
       var stores = (await _downloader.DownloadAsync(zipCode)).ToArray();
       Logger.Debug($"Stores Data Downloaded; storesCount={stores.Length}; zipCode={zipCode.Zip};");
 
-      var persistStoresTasks = stores.Select(_storesPersistor.PersistAsync);
-      await Task.WhenAll(persistStoresTasks);
-
+      await _storesPersistor.PersistAsync(stores);
+      
       await _zipCodeDataService.UpdateZipCodeAsync(zipCode.Zip);
 
       Logger.Info($"Processing; {zipCode} Result=true; zipCode={zipCode.Zip};");

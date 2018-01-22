@@ -36,15 +36,11 @@ namespace store_scrapper_2_Tests.Services
       
       await downloader
         .Received(1)
-        .DownloadAsync(Arg.Is(zipCode));
+        .DownloadAsync(zipCode);
 
-      
-      foreach (var store in stores)
-      {
-        await persistor
-          .Received(1)
-          .PersistAsync(store);        
-      }
+      await persistor
+        .Received(1)
+        .PersistAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.SequenceEqual(stores)));
 
       await zipCodeDataService
         .Received(1)
