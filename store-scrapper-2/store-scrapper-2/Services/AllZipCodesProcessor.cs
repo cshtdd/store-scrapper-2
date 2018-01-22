@@ -47,6 +47,8 @@ namespace store_scrapper_2.Services
 
       do
       {
+        Logger.Info($"ProcessAsync; count={zipCodes.Length}");
+
         foreach (var zipCode in zipCodes)
         {
           await _singleZipCodeProcessor.ProcessAsync(zipCode);
