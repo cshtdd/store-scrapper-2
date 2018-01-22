@@ -129,15 +129,7 @@ namespace store_scrapper_2_Tests.Services
 
       await _delaySimulator.Received(2).Delay();
     }
-
-    [Fact]
-    public async Task ProcessesAllTheZipCodes2()
-    {
-      await _allZipCodesProcessor.ProcessAsync2();
-
-      await _zipCodeDataService.Received(1).AllAsync();
-    }
-
+    
     [Fact]
     public async Task ProcessesEachZipCodeOldestFirst()
     {
