@@ -6,7 +6,6 @@
     "ZipsFilename": "zips.csv"
   },
   "ZipCodes": {
-    "BatchSize": "1",
     "DelayMs": "1500"
   },
   "Stores": {
