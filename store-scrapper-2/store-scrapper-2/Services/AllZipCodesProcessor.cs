@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -12,7 +13,9 @@ namespace store_scrapper_2.Services
   {
     private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     
+    [Obsolete]
     private readonly IZipCodeBatchesReader _zipCodeBatchesReader;
+    [Obsolete]
     private readonly IMultipleZipCodeProcessor _multipleZipCodeProcessor;
     private readonly IBatchDelaySimulator _delaySimulator;
     private readonly IConfigurationReader _configurationReader;
