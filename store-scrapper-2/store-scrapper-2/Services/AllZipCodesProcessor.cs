@@ -46,6 +46,7 @@ namespace store_scrapper_2.Services
       } while (_configurationReader.ReadBool(ConfigurationKeys.ZipCodesRunContinuosly));
     }
 
+    [Obsolete]
     private async Task ProcessAllBatchesAsync()
     {
       var maxBatchesCountSetting = _configurationReader.ReadUInt(ConfigurationKeys.ZipCodesMaxBatchCount);
@@ -71,12 +72,14 @@ namespace store_scrapper_2.Services
       Logger.Info($"ProcessAsync Completed; batchesCount={batches.Length};");
     }
 
+    [Obsolete]
     private async Task<IEnumerable<ZipCode>[]> ReadBatchesArray(uint maxBatchesCountSetting)
     {
       var batches = await ReadBatches(maxBatchesCountSetting);
       return batches.ToArray();
     }
 
+    [Obsolete]
     private async Task<IEnumerable<IEnumerable<ZipCode>>> ReadBatches(uint maxBatchesCountSetting)
     {
       var allBatches = await _zipCodeBatchesReader.ReadAllAsync();

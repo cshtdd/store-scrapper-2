@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -39,6 +40,7 @@ namespace store_scrapper_2_Tests.Services
       );
     }
     
+    [Obsolete]
     [Fact]
     public async Task ProcessesAllTheZipCodes()
     {
@@ -68,6 +70,7 @@ namespace store_scrapper_2_Tests.Services
       await _delaySimulator.Received(3).Delay();
     }
     
+    [Obsolete]
     [Fact]
     public async Task ProcessesAllTheZipCodesWhenConfigurationKeysAreNotSet()
     {
@@ -95,6 +98,7 @@ namespace store_scrapper_2_Tests.Services
       await _delaySimulator.Received(3).Delay();
     }
 
+    [Obsolete]
     [Fact]
     public async Task ProcessesTheMaximumNumberOfZipCodes()
     {
