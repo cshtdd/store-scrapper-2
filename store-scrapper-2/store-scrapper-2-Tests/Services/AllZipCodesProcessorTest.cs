@@ -157,6 +157,7 @@ namespace store_scrapper_2_Tests.Services
           "33333", "44444", "55555", "66666",
           "88888", "99999"
         });
+      await _delaySimulator.Received(10).Delay();
     }
   }
 }

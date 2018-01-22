@@ -48,6 +48,7 @@ namespace store_scrapper_2.Services
       foreach (var zipCode in zipCodes)
       {
         await _singleZipCodeProcessor.ProcessAsync(zipCode);
+        await _delaySimulator.Delay();
       }
     }
     
