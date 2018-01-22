@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
+using store_scrapper_2;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.Model;
 using store_scrapper_2.Services;
@@ -17,6 +18,8 @@ namespace store_scrapper_2_Tests.Services
     private readonly IZipCodeBatchesReader _zipCodeBatchesReader = Substitute.For<IZipCodeBatchesReader>();
     private readonly IMultipleZipCodeProcessor _multipleZipCodeProcessor = Substitute.For<IMultipleZipCodeProcessor>();
     private readonly IConfigurationReader _configurationReader = Substitute.For<IConfigurationReader>();
+    private readonly IZipCodeDataService _zipCodeDataService = Substitute.For<IZipCodeDataService>();
+    private readonly ISingleZipCodeProcessor _singleZipCodeProcessor = Substitute.For<ISingleZipCodeProcessor>();
     private readonly AllZipCodesProcessor _allZipCodesProcessor;
 
     private readonly List<string> _processedZipCodes = new List<string>();
@@ -29,6 +32,8 @@ namespace store_scrapper_2_Tests.Services
       _allZipCodesProcessor = new AllZipCodesProcessor(
         _zipCodeBatchesReader,
         _multipleZipCodeProcessor,
+        _zipCodeDataService,
+        _singleZipCodeProcessor,
         _delaySimulator,
         _configurationReader
       );

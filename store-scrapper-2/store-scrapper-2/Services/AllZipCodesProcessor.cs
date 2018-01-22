@@ -17,17 +17,23 @@ namespace store_scrapper_2.Services
     private readonly IZipCodeBatchesReader _zipCodeBatchesReader;
     [Obsolete]
     private readonly IMultipleZipCodeProcessor _multipleZipCodeProcessor;
+
+    private readonly IZipCodeDataService _zipCodeDataService;
+    private readonly ISingleZipCodeProcessor _singleZipCodeProcessor;
     private readonly IDelaySimulator _delaySimulator;
     private readonly IConfigurationReader _configurationReader;
 
-    public AllZipCodesProcessor(
-      IZipCodeBatchesReader zipCodeBatchesReader,
+    public AllZipCodesProcessor(IZipCodeBatchesReader zipCodeBatchesReader,
       IMultipleZipCodeProcessor multipleZipCodeProcessor,
+      IZipCodeDataService zipCodeDataService,
+      ISingleZipCodeProcessor singleZipCodeProcessor,
       IDelaySimulator delaySimulator,
       IConfigurationReader configurationReader)
     {
       _zipCodeBatchesReader = zipCodeBatchesReader;
       _multipleZipCodeProcessor = multipleZipCodeProcessor;
+      _zipCodeDataService = zipCodeDataService;
+      _singleZipCodeProcessor = singleZipCodeProcessor;
       _delaySimulator = delaySimulator;
       _configurationReader = configurationReader;
     }
