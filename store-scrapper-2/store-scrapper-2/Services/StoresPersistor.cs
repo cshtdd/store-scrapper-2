@@ -34,13 +34,15 @@ namespace store_scrapper_2.Services
 
     public async Task PersistAsync(IEnumerable<StoreInfo> storesEnumerableParam)
     {
-      var allStores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
+      var allStores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();      
       var storesToPersist = allStores
         .Where(_ => !_persistenceCalculator.WasPersistedRecently(_.StoreNumber))
         .ToArray();
-      var numbersToPersist = storesToPersist.Select(_ => _.StoreNumber);
-
-      if (!numbersToPersist.Any())
+      var numbersToPersist = storesToPersist.Select(_ => _.StoreNumber).ToArray();
+      
+      Logger.Info($"Saving Stores; totalCount={allStores.Length}; count=${numbersToPersist.Length}");
+      
+      if (numbersToPersist.Length == 0)
       {
         return;
       }
@@ -51,7 +53,10 @@ namespace store_scrapper_2.Services
       var storesToUpdate = storesToPersist.Where(_ => numbersToUpdate.Contains(_.StoreNumber)).ToArray();
       var storesToCreate = storesToPersist.Where(_ => numbersToCreate.Contains(_.StoreNumber)).ToArray();
 
+      Logger.Debug($"Creating Stores; count={storesToCreate.Length}");
       await _dataService.CreateNewAsync(storesToCreate);
+
+      Logger.Debug($"Updating Stores; count={storesToUpdate.Length}");
       await _dataService.UpdateAsync(storesToUpdate);
       
       foreach (var storeNumber in numbersToPersist)
