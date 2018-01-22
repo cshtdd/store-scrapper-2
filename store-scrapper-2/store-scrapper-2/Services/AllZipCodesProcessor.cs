@@ -45,11 +45,14 @@ namespace store_scrapper_2.Services
         .Select(_ => _.ZipCode)
         .ToArray();
 
-      foreach (var zipCode in zipCodes)
+      do
       {
-        await _singleZipCodeProcessor.ProcessAsync(zipCode);
-        await _delaySimulator.Delay();
-      }
+        foreach (var zipCode in zipCodes)
+        {
+          await _singleZipCodeProcessor.ProcessAsync(zipCode);
+          await _delaySimulator.Delay();
+        }
+      } while (_configurationReader.ReadBool(ConfigurationKeys.ZipCodesRunContinuosly));
     }
     
     public async Task ProcessAsync()
