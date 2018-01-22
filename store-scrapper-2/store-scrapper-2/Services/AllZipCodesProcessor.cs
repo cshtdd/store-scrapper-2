@@ -40,7 +40,15 @@ namespace store_scrapper_2.Services
 
     public async Task ProcessAsync2()
     {
-      var zipCodes = (await _zipCodeDataService.AllAsync()).ToArray();
+      var zipCodes = (await _zipCodeDataService.AllAsync())
+        .OrderBy(_ => _.UpdateTimeUtc)
+        .Select(_ => _.ZipCode)
+        .ToArray();
+
+      foreach (var zipCode in zipCodes)
+      {
+        await _singleZipCodeProcessor.ProcessAsync(zipCode);
+      }
     }
     
     public async Task ProcessAsync()

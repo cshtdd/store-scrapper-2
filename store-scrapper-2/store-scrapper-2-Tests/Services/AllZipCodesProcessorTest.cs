@@ -30,6 +30,9 @@ namespace store_scrapper_2_Tests.Services
       _multipleZipCodeProcessor.WhenForAnyArgs(_ => _.ProcessAsync(Arg.Any<IEnumerable<ZipCode>>()))
         .Do(_ => _processedZipCodes.AddRange(((IEnumerable<ZipCode>)_[0]).Select(z => z.Zip)));
 
+      _singleZipCodeProcessor.WhenForAnyArgs(_ => _.ProcessAsync(Arg.Any<ZipCode>()))
+        .Do(_ => _processedZipCodes.Add(((ZipCode)_[0]).Zip));
+      
       _allZipCodesProcessor = new AllZipCodesProcessor(
         _zipCodeBatchesReader,
         _multipleZipCodeProcessor,
@@ -133,6 +136,35 @@ namespace store_scrapper_2_Tests.Services
       await _allZipCodesProcessor.ProcessAsync2();
 
       await _zipCodeDataService.Received(1).AllAsync();
+    }
+
+    [Fact]
+    public async Task ProcessesEachZipCodeOldestFirst()
+    {
+      _zipCodeDataService.AllAsync().ReturnsForAnyArgs(new[]
+      {
+        ZipCodeInfoFactory.Create("00000", "2011-10-10"),
+        ZipCodeInfoFactory.Create("11111", "2011-10-10"), 
+        ZipCodeInfoFactory.Create("22222", "2011-10-10"), 
+        ZipCodeInfoFactory.Create("33333", "2012-10-10"), 
+        ZipCodeInfoFactory.Create("44444", "2012-10-10"), 
+        ZipCodeInfoFactory.Create("55555", "2012-10-10"), 
+        ZipCodeInfoFactory.Create("66666", "2012-10-10"), 
+        ZipCodeInfoFactory.Create("77777", "2011-10-10"), 
+        ZipCodeInfoFactory.Create("88888", "2012-10-10"), 
+        ZipCodeInfoFactory.Create("99999", "2012-10-10") 
+      });
+      
+      await _allZipCodesProcessor.ProcessAsync2();
+ 
+      _processedZipCodes
+        .ToArray()
+        .ShouldBeEquivalentTo(new []
+        {
+          "00000", "11111", "22222", "77777",
+          "33333", "44444", "55555", "66666",
+          "88888", "99999"
+        });
     }
   }
 }
