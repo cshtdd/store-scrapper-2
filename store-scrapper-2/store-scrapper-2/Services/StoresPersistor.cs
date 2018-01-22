@@ -40,7 +40,7 @@ namespace store_scrapper_2.Services
         .ToArray();
       var numbersToPersist = storesToPersist.Select(_ => _.StoreNumber).ToArray();
       
-      Logger.Info($"Saving Stores; totalCount={allStores.Length}; count=${numbersToPersist.Length}");
+      Logger.Info($"Saving Stores; totalCount={allStores.Length}; count={numbersToPersist.Length}");
       
       if (numbersToPersist.Length == 0)
       {
