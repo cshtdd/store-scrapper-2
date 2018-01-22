@@ -37,6 +37,11 @@ namespace store_scrapper_2.Services
       _delaySimulator = delaySimulator;
       _configurationReader = configurationReader;
     }
+
+    public async Task ProcessAsync2()
+    {
+      var zipCodes = (await _zipCodeDataService.AllAsync()).ToArray();
+    }
     
     public async Task ProcessAsync()
     {
