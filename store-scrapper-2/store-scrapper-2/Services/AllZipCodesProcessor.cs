@@ -17,13 +17,13 @@ namespace store_scrapper_2.Services
     private readonly IZipCodeBatchesReader _zipCodeBatchesReader;
     [Obsolete]
     private readonly IMultipleZipCodeProcessor _multipleZipCodeProcessor;
-    private readonly IBatchDelaySimulator _delaySimulator;
+    private readonly IDelaySimulator _delaySimulator;
     private readonly IConfigurationReader _configurationReader;
 
     public AllZipCodesProcessor(
       IZipCodeBatchesReader zipCodeBatchesReader,
       IMultipleZipCodeProcessor multipleZipCodeProcessor,
-      IBatchDelaySimulator delaySimulator,
+      IDelaySimulator delaySimulator,
       IConfigurationReader configurationReader)
     {
       _zipCodeBatchesReader = zipCodeBatchesReader;

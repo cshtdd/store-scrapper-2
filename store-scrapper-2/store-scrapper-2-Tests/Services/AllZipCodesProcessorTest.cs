@@ -13,7 +13,7 @@ namespace store_scrapper_2_Tests.Services
 {
   public class AllZipCodesProcessorTest
   {
-    private readonly IBatchDelaySimulator _batchDelaySimulator = Substitute.For<IBatchDelaySimulator>();
+    private readonly IDelaySimulator _delaySimulator = Substitute.For<IDelaySimulator>();
     private readonly IZipCodeBatchesReader _zipCodeBatchesReader = Substitute.For<IZipCodeBatchesReader>();
     private readonly IMultipleZipCodeProcessor _multipleZipCodeProcessor = Substitute.For<IMultipleZipCodeProcessor>();
     private readonly IConfigurationReader _configurationReader = Substitute.For<IConfigurationReader>();
@@ -29,7 +29,7 @@ namespace store_scrapper_2_Tests.Services
       _allZipCodesProcessor = new AllZipCodesProcessor(
         _zipCodeBatchesReader,
         _multipleZipCodeProcessor,
-        _batchDelaySimulator,
+        _delaySimulator,
         _configurationReader
       );
     }
@@ -60,7 +60,7 @@ namespace store_scrapper_2_Tests.Services
           "44444"
         });
 
-      await _batchDelaySimulator.Received(3).Delay();
+      await _delaySimulator.Received(3).Delay();
     }
     
     [Fact]
@@ -87,7 +87,7 @@ namespace store_scrapper_2_Tests.Services
           "44444"
         });
 
-      await _batchDelaySimulator.Received(3).Delay();
+      await _delaySimulator.Received(3).Delay();
     }
 
     [Fact]
@@ -115,7 +115,7 @@ namespace store_scrapper_2_Tests.Services
           "33333"
         });
 
-      await _batchDelaySimulator.Received(2).Delay();
+      await _delaySimulator.Received(2).Delay();
     }
   }
 }

@@ -5,13 +5,13 @@ using store_scrapper_2.Configuration;
 
 namespace store_scrapper_2.Services
 {
-  public class BatchDelaySimulator : IBatchDelaySimulator
+  public class DelaySimulator : IDelaySimulator
   {
     private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly IConfigurationReader _configurationReader;
 
-    public BatchDelaySimulator(IConfigurationReader configurationReader) => _configurationReader = configurationReader;
+    public DelaySimulator(IConfigurationReader configurationReader) => _configurationReader = configurationReader;
 
     public async Task Delay()
     {
