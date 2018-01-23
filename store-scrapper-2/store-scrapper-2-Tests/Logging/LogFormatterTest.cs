@@ -111,6 +111,41 @@ namespace store_scrapper_2_Tests.Logging
       {
         {"Key2", "1'2"}
       }, "Key2:\"1'2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1:2"}
+      }, "Key2:\"1:2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1{2"}
+      }, "Key2:\"1{2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1}2"}
+      }, "Key2:\"1}2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1(2"}
+      }, "Key2:\"1(2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1)2"}
+      }, "Key2:\"1)2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1-2"}
+      }, "Key2:\"1-2\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key2", "1,2"}
+      }, "Key2:\"1,2\"");
     }
     
     private void format(IDictionary<string, object> input, string expected)

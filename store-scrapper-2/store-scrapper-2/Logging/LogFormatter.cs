@@ -48,7 +48,7 @@ namespace store_scrapper_2.Logging
   internal static class StringExtentions
   {
     private static readonly string FieldWrapper = "\"";
-    private static readonly char[] WrappeableChars = new[] { '"', ' ', '\''};
+    private static readonly char[] WrappeableChars = { ' ', '"', '\'', ':', ',', '{', '}', '(', ')', '-'};
 
     internal static string SanitizeKey(this string key)
     {
