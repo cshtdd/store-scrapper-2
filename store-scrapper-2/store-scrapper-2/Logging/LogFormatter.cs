@@ -48,6 +48,7 @@ namespace store_scrapper_2.Logging
   internal static class StringExtentions
   {
     private static readonly string FieldWrapper = "\"";
+    private static readonly char[] WrappeableChars = new[] { '"', ' ', '\''};
 
     internal static string SanitizeKey(this string key)
     {
@@ -65,22 +66,13 @@ namespace store_scrapper_2.Logging
     
     internal static string Encapsulate(this string sender)
     {
-      if (sender == string.Empty)
-      {
-        return Wrap(sender); 
+      if (sender == string.Empty || 
+          WrappeableChars.Any(sender.Contains))
+      {        
+        return Wrap(sender);
       }
 
-      if (sender.Contains('"'))
-      {
-        return Wrap(sender);         
-      }
-      
-      if (!sender.Contains(' '))
-      {
-        return sender;
-      }
-
-      return Wrap(sender);
+      return sender;
     }
 
     private static string Wrap(string str) => $"{FieldWrapper}{str}{FieldWrapper}";
