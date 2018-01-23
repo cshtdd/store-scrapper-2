@@ -44,6 +44,11 @@ namespace store_scrapper_2_Tests.Logging
       {
         {"Ke\"y 1", null}
       }, "\"Key 1\":null");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Ke+)(*&^%$#@!`~=][{}';:/.,<>?y-_1234567890", null}
+      }, "Key_1234567890:null");
     }
 
     [Fact]

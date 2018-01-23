@@ -34,7 +34,7 @@ namespace store_scrapper_2.Logging
     private static string Format(string key, object value)
     {
       var formattedKey = key
-        .EscapeKey()
+        .SanitizeKey()
         .EncapsulateKey();
       return $"{formattedKey}:null";     
     }
@@ -44,9 +44,13 @@ namespace store_scrapper_2.Logging
   {
     private static readonly string FieldWrapper = "\"";
 
-    internal static string EscapeKey(this string key)
+    internal static string SanitizeKey(this string key)
     {
-      return key.Replace(FieldWrapper, string.Empty);
+      var sanitizedChars = key
+        .ToCharArray()
+        .Where(_ => char.IsLetterOrDigit(_) || char.IsWhiteSpace(_) || _ == '_')
+        .ToArray(); 
+      return new string(sanitizedChars);
     }
     
     internal static string EncapsulateKey(this string key)
