@@ -39,6 +39,7 @@ namespace store_scrapper_2.Logging
 
       var formattedValue = value
         .FormatValue()
+        .SanitizeValue()
         .Encapsulate();
       return $"{formattedKey}:{formattedValue}";     
     }
@@ -56,12 +57,22 @@ namespace store_scrapper_2.Logging
         .ToArray(); 
       return new string(sanitizedChars);
     }
+
+    internal static string SanitizeValue(this string value)
+    {
+      return value.Replace("\"", "\\\"");
+    }
     
     internal static string Encapsulate(this string sender)
     {
       if (sender == string.Empty)
       {
-        return $"{FieldWrapper}{sender}{FieldWrapper}"; 
+        return Wrap(sender); 
+      }
+
+      if (sender.Contains('"'))
+      {
+        return Wrap(sender);         
       }
       
       if (!sender.Contains(' '))
@@ -69,8 +80,10 @@ namespace store_scrapper_2.Logging
         return sender;
       }
 
-      return $"{FieldWrapper}{sender}{FieldWrapper}";
+      return Wrap(sender);
     }
+
+    private static string Wrap(string str) => $"{FieldWrapper}{str}{FieldWrapper}";
 
     internal static string FormatValue(this object sender)
     {

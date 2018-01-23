@@ -96,6 +96,16 @@ namespace store_scrapper_2_Tests.Logging
         {"Key1", ""},
         {"Key2", 12}
       }, "Key1:\"\", Key2:12");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key1", "pepe\"lolo\""}
+      }, "Key1:\"pepe\\\"lolo\\\"\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key1", "el pepe\"lolo\""}
+      }, "Key1:\"el pepe\\\"lolo\\\"\"");
     }
     
     private void format(IDictionary<string, object> input, string expected)
