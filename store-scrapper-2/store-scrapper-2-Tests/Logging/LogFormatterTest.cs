@@ -74,7 +74,7 @@ namespace store_scrapper_2_Tests.Logging
     }
 
     [Fact]
-    public void FormatsFielValues()
+    public void FormatsFieldValues()
     {
       format(new Dictionary<string, object>
       {

@@ -48,26 +48,22 @@ namespace store_scrapper_2.Logging
   internal static class StringExtentions
   {
     private static readonly string FieldWrapper = "\"";
-    private static readonly char[] WrappeableChars = { ' ', '"', '\'', ':', ',', '{', '}', '(', ')', '-'};
 
     internal static string SanitizeKey(this string key)
     {
       var sanitizedChars = key
         .ToCharArray()
-        .Where(_ => char.IsLetterOrDigit(_) || char.IsWhiteSpace(_) || _ == '_')
+        .Where(_ => IsAlwaysAllowed(_) || char.IsWhiteSpace(_))
         .ToArray(); 
       return new string(sanitizedChars);
     }
 
-    internal static string SanitizeValue(this string value)
-    {
-      return value.Replace("\"", "\\\"");
-    }
+    internal static string SanitizeValue(this string value) => value.Replace("\"", "\\\"");
     
     internal static string Encapsulate(this string sender)
     {
       if (sender == string.Empty || 
-          WrappeableChars.Any(sender.Contains))
+          sender.Any(_ => !IsAlwaysAllowed(_)))
       {        
         return Wrap(sender);
       }
@@ -76,6 +72,8 @@ namespace store_scrapper_2.Logging
     }
 
     private static string Wrap(string str) => $"{FieldWrapper}{str}{FieldWrapper}";
+
+    private static bool IsAlwaysAllowed(char c) => char.IsLetterOrDigit(c) || c == '_';
 
     internal static string FormatValue(this object sender)
     {
