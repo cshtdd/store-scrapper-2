@@ -22,12 +22,31 @@ namespace store_scrapper_2.Logging
 
       return logEntry
         .Select(_ => Format(_.Key, _.Value))
-        .Aggregate((i, j) => i + FIELD_SEPARATOR + j);
+        .Aggregate((i, j) => $"{i}{FIELD_SEPARATOR}{j}");
     }
 
     private static string Format(string key, object value)
     {
-      return $"{key}:null";     
+      var formattedKey = key.AddQuotes();
+      return $"{formattedKey}:null";     
+    }
+  }
+
+  internal static class StringExtentions
+  {
+    internal static string AddQuotes(this string sender)
+    {
+      if (string.IsNullOrEmpty(sender))
+      {
+        return sender;
+      }
+
+      if (!sender.Contains(' '))
+      {
+        return sender;
+      }
+
+      return $"\"{sender}\"";
     }
   }
 }

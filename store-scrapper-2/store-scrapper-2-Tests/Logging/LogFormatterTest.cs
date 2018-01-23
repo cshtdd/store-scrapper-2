@@ -27,6 +27,12 @@ namespace store_scrapper_2_Tests.Logging
         {"Key1", null},
         {"Key2", null}
       }, "Key1:null, Key2:null");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key Name", null},
+        {"Key2", null}
+      }, "\"Key Name\":null, Key2:null");
     }
 
     private void format(IDictionary<string, object> input, string expected)
