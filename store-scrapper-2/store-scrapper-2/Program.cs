@@ -14,7 +14,7 @@ namespace store_scrapper_2
     // ReSharper disable once UnusedParameter.Local
     public static async Task Main(string[] args)
     {
-      Logging.Initialize(Logging.ConfigurationSource.File);
+      LogConfiguration.Initialize(LogConfiguration.Source.File);
 
       try
       {

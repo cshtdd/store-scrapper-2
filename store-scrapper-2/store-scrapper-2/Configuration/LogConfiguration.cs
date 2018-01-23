@@ -10,17 +10,17 @@ using log4net.Repository.Hierarchy;
 
 namespace store_scrapper_2.Configuration
 {
-  public static class Logging
+  public static class LogConfiguration
   {
-    public enum ConfigurationSource
+    public enum Source
     {
       Memory,
       File
     }
     
-    public static void Initialize(ConfigurationSource source = ConfigurationSource.Memory)
+    public static void Initialize(Source source = Source.Memory)
     {
-      if (source == ConfigurationSource.File)
+      if (source == Source.File)
       {
         FileConfiguration.Load("log4net.config");
         return;
