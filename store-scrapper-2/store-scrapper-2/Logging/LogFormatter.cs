@@ -9,7 +9,34 @@ namespace store_scrapper_2.Logging
     private static readonly string NoOutput = string.Empty;
     private static readonly string FieldSeparator = ", ";
 
-    public static string Format(IDictionary<string, object> logEntry)
+    public static string Format(params object[] kvPairs)
+    {
+      if (kvPairs == null)
+      {
+        throw new ArgumentException($"{nameof(kvPairs)} cannot be null");
+      }
+
+      if (kvPairs.Length % 2 != 0)
+      {
+        throw new ArgumentException($"{nameof(kvPairs)}.Length must be even");
+      }
+
+      var logEntry = new Dictionary<string, object>();
+
+      for (int i = 0; i < kvPairs.Length; i += 2)
+      {
+        if (!(kvPairs[i] is string))
+        {
+          throw new ArgumentException("Invalid Non-String key");
+        }
+        
+        logEntry.Add((string)kvPairs[i], kvPairs[i + 1]);
+      }
+      
+      return Format(logEntry);
+    }
+    
+    private static string Format(IDictionary<string, object> logEntry)
     {
       if (logEntry == null)
       {
