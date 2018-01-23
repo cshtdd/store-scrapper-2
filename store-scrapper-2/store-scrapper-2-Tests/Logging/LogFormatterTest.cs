@@ -34,6 +34,16 @@ namespace store_scrapper_2_Tests.Logging
         {"Key Name", null},
         {"Key2", null}
       }, "\"Key Name\":null, Key2:null");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Ke\"y1", null}
+      }, "Key1:null");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Ke\"y 1", null}
+      }, "\"Key 1\":null");
     }
 
     [Fact]
