@@ -11,6 +11,21 @@ namespace store_scrapper_2.Logging
 
     public static string Format(params object[] kvPairs)
     {
+      ValidateInput(kvPairs);
+
+      if (kvPairs.Length == 0)
+      {
+        return NoOutput;
+      }
+
+      return kvPairs
+        .Keys()
+        .Select((k, i) => Format(k, kvPairs[i*2 + 1]))
+        .Aggregate((i, j) => $"{i}{FieldSeparator}{j}");
+    }
+
+    private static void ValidateInput(object[] kvPairs)
+    {
       if (kvPairs == null)
       {
         throw new ArgumentException($"{nameof(kvPairs)} cannot be null");
@@ -21,43 +36,31 @@ namespace store_scrapper_2.Logging
         throw new ArgumentException($"{nameof(kvPairs)}.Length must be even");
       }
 
-      var logEntry = new Dictionary<string, object>();
-
-      for (int i = 0; i < kvPairs.Length; i += 2)
+      var keys = kvPairs.Keys().ToArray();
+      
+      if (keys.Any(_ => _ == null))
       {
-        if (!(kvPairs[i] is string))
-        {
-          throw new ArgumentException("Invalid Non-String key");
-        }
-        
-        logEntry.Add((string)kvPairs[i], kvPairs[i + 1]);
+        throw new ArgumentException("All Keys must be non-null");
       }
       
-      return Format(logEntry);
+      if (keys.Any(string.Empty.Equals))
+      {
+        throw new ArgumentException("All Keys must be non-empty");
+      }
+      
+      if (keys.Any(_ => !(_ is string)))
+      {
+        throw new ArgumentException("Invalid Non-String key");
+      }
+
+      if (keys.Length != keys.Distinct().Count())
+      {
+        throw new ArgumentException("Found Duplicated key");
+      }
     }
+
+    private static string Format(object stringKey, object value) => Format((string) stringKey, value);
     
-    private static string Format(IDictionary<string, object> logEntry)
-    {
-      if (logEntry == null)
-      {
-        return NoOutput;
-      }
-
-      if (logEntry.Keys.Count == 0)
-      {
-        return NoOutput;
-      }
-
-      if (logEntry.Keys.Any(string.IsNullOrEmpty))
-      {
-        throw new ArgumentException("All keys must be non-Empty");
-      }
-
-      return logEntry
-        .Select(_ => Format(_.Key, _.Value))
-        .Aggregate((i, j) => $"{i}{FieldSeparator}{j}");
-    }
-
     private static string Format(string key, object value)
     {
       var formattedKey = key
@@ -111,5 +114,10 @@ namespace store_scrapper_2.Logging
 
       return sender.ToString();
     }
+  }
+  
+  internal static class ObjectArrayExtensions
+  {
+    public static IEnumerable<object> Keys(this IEnumerable<object> sender) => sender.Where((k, i) => i % 2 == 0);
   }
 }
