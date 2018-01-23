@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using store_scrapper_2.Logging;
 using Xunit;
@@ -33,6 +34,28 @@ namespace store_scrapper_2_Tests.Logging
         {"Key Name", null},
         {"Key2", null}
       }, "\"Key Name\":null, Key2:null");
+    }
+
+    [Fact]
+    public void FieldNamesCannotBeEmpty()
+    {
+      ((Action) (() =>
+      {
+        LogFormatter.Format(new Dictionary<string, object>
+        {
+          {null, null},
+          {"Key2", null}
+        });
+      })).ShouldThrow<ArgumentException>();
+      
+      ((Action) (() =>
+      {
+        LogFormatter.Format(new Dictionary<string, object>
+        {
+          {"", null},
+          {"Key2", null}
+        });
+      })).ShouldThrow<ArgumentException>();
     }
 
     private void format(IDictionary<string, object> input, string expected)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace store_scrapper_2.Logging
@@ -20,6 +21,11 @@ namespace store_scrapper_2.Logging
         return NO_OUTPUT;
       }
 
+      if (logEntry.Keys.Any(string.IsNullOrEmpty))
+      {
+        throw new ArgumentException("All keys must be non-Empty");
+      }
+
       return logEntry
         .Select(_ => Format(_.Key, _.Value))
         .Aggregate((i, j) => $"{i}{FIELD_SEPARATOR}{j}");
@@ -27,26 +33,21 @@ namespace store_scrapper_2.Logging
 
     private static string Format(string key, object value)
     {
-      var formattedKey = key.AddQuotes();
+      var formattedKey = key.AddQuotesToKey();
       return $"{formattedKey}:null";     
     }
   }
 
   internal static class StringExtentions
   {
-    internal static string AddQuotes(this string sender)
+    internal static string AddQuotesToKey(this string key)
     {
-      if (string.IsNullOrEmpty(sender))
+      if (!key.Contains(' '))
       {
-        return sender;
+        return key;
       }
 
-      if (!sender.Contains(' '))
-      {
-        return sender;
-      }
-
-      return $"\"{sender}\"";
+      return $"\"{key}\"";
     }
   }
 }
