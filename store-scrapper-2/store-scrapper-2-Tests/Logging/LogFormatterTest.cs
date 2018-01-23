@@ -73,6 +73,31 @@ namespace store_scrapper_2_Tests.Logging
       })).ShouldThrow<ArgumentException>();
     }
 
+    [Fact]
+    public void FormatsFielValues()
+    {
+      format(new Dictionary<string, object>
+      {
+        {"Key1", null}
+      }, "Key1:null");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key1", ""}
+      }, "Key1:\"\"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key1", " "}
+      }, "Key1:\" \"");
+      
+      format(new Dictionary<string, object>
+      {
+        {"Key1", ""},
+        {"Key2", 12}
+      }, "Key1:\"\", Key2:12");
+    }
+    
     private void format(IDictionary<string, object> input, string expected)
     {
       LogFormatter.Format(input).Should().Be(expected);      

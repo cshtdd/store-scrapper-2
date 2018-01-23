@@ -35,8 +35,12 @@ namespace store_scrapper_2.Logging
     {
       var formattedKey = key
         .SanitizeKey()
-        .EncapsulateKey();
-      return $"{formattedKey}:null";     
+        .Encapsulate();
+
+      var formattedValue = value
+        .FormatValue()
+        .Encapsulate();
+      return $"{formattedKey}:{formattedValue}";     
     }
   }
 
@@ -53,14 +57,29 @@ namespace store_scrapper_2.Logging
       return new string(sanitizedChars);
     }
     
-    internal static string EncapsulateKey(this string key)
+    internal static string Encapsulate(this string sender)
     {
-      if (!key.Contains(' '))
+      if (sender == string.Empty)
       {
-        return key;
+        return $"{FieldWrapper}{sender}{FieldWrapper}"; 
+      }
+      
+      if (!sender.Contains(' '))
+      {
+        return sender;
       }
 
-      return $"{FieldWrapper}{key}{FieldWrapper}";
+      return $"{FieldWrapper}{sender}{FieldWrapper}";
+    }
+
+    internal static string FormatValue(this object sender)
+    {
+      if (sender == null)
+      {
+        return "null";
+      }
+
+      return sender.ToString();
     }
   }
 }
