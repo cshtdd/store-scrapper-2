@@ -9,7 +9,7 @@ namespace store_scrapper_2.Logging
     private static readonly string NoOutput = string.Empty;
     private static readonly string FieldSeparator = ", ";
 
-    public static string Format(params object[] kvPairs)
+    public static string Format(object[] kvPairs)
     {
       ValidateInput(kvPairs);
 
