@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using log4net;
 using NSubstitute;
 using store_scrapper_2.Logging;
@@ -23,7 +24,7 @@ namespace store_scrapper_2_Tests.Logging
       }
     }
 
-    private readonly List<LogEntry> loggedEntries = new List<LogEntry>();
+    private readonly List<string> loggedEntries = new List<string>();
 
     private readonly ILog logger = Substitute.For<ILog>();
 
@@ -34,21 +35,33 @@ namespace store_scrapper_2_Tests.Logging
         {
           Level = "INFO",
           Message = _[0] as string
-        }));
+        }.ToString()));
+      
+      logger.WhenForAnyArgs(_ => _.Info(Arg.Any<string>(), Arg.Any<Exception>()))
+        .Do(_ => loggedEntries.Add(new LogEntry
+        {
+          Level = "INFO",
+          Message = _[0] as string,
+          Error = _[1] as Exception
+        }.ToString()));
     }
 
     [Fact]
     public void InfoLogsTheCorrectThings()
     {
-      logger.Info("msg1", "key1", 123);
-      logger.Info("msg2");
-      logger.Info("msg3", "key1", 123, "key2", "big wave");
+      logger.LogInfo("msg1", "key1", 123);
+      logger.LogInfo("msg2");
+      logger.LogInfo("msg3", "key1", 123, "key2", "big wave");
+      logger.LogInfo("msg4", new ArgumentNullException(), "key1", 123);
+      logger.LogInfo("msg5", new InvalidOperationException());
 
-      loggedEntries.Select(_ => _.ToString()).SequenceEqual(new []
+      loggedEntries.ShouldBeEquivalentTo(new []
       {
         "INFO message:msg1, key1:123 null", 
         "INFO message:msg2 null", 
-        "INFO message:msg1, key1:123, key2:\"big wave\" null" 
+        "INFO message:msg3, key1:123, key2:\"big wave\" null", 
+        "INFO message:msg4, key1:123 ArgumentNullException",
+        "INFO message:msg5 InvalidOperationException"
       });
     }
   }
