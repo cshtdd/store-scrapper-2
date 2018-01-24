@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using log4net;
 using NSubstitute;
@@ -17,6 +16,20 @@ namespace store_scrapper_2_Tests.Logging
       public string Message { get; set; }
       public Exception Error { get; set; }
 
+      
+      public LogEntry(object level, object message)
+        : this(level as string, message as string) { }
+      public LogEntry(object level, object message, object error)
+        : this(level as string, message as string, error as Exception) { }
+      public LogEntry(string level, string message)
+        : this(level, message, null) { }
+      public LogEntry(string level, string message, Exception error)
+      {
+        this.Level = level;
+        this.Message = message;
+        this.Error = error;
+      }
+
       public override string ToString()
       {
         var exceptionStr = Error != null ? Error.GetType().Name : "null";
@@ -30,20 +43,25 @@ namespace store_scrapper_2_Tests.Logging
 
     public LoggerExtensionsTests()
     {
-      logger.WhenForAnyArgs(_ => _.Info(Arg.Any<string>()))
-        .Do(_ => loggedEntries.Add(new LogEntry
-        {
-          Level = "INFO",
-          Message = _[0] as string
-        }.ToString()));
+      logger.WhenForAnyArgs(_ => _.Debug(Arg.Any<string>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("DEBUG", _[0]).ToString()));
+      logger.WhenForAnyArgs(_ => _.Debug(Arg.Any<string>(), Arg.Any<Exception>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("DEBUG", _[0], _[1]).ToString()));
       
+      logger.WhenForAnyArgs(_ => _.Info(Arg.Any<string>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("INFO", _[0]).ToString()));
       logger.WhenForAnyArgs(_ => _.Info(Arg.Any<string>(), Arg.Any<Exception>()))
-        .Do(_ => loggedEntries.Add(new LogEntry
-        {
-          Level = "INFO",
-          Message = _[0] as string,
-          Error = _[1] as Exception
-        }.ToString()));
+        .Do(_ => loggedEntries.Add(new LogEntry("INFO", _[0], _[1]).ToString()));
+      
+      logger.WhenForAnyArgs(_ => _.Warn(Arg.Any<string>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("WARN", _[0]).ToString()));
+      logger.WhenForAnyArgs(_ => _.Warn(Arg.Any<string>(), Arg.Any<Exception>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("WARN", _[0], _[1]).ToString()));
+      
+      logger.WhenForAnyArgs(_ => _.Error(Arg.Any<string>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("ERROR", _[0]).ToString()));      
+      logger.WhenForAnyArgs(_ => _.Error(Arg.Any<string>(), Arg.Any<Exception>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("ERROR", _[0], _[1]).ToString()));
     }
 
     [Fact]
