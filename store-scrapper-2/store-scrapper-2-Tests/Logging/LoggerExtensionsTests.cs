@@ -62,10 +62,34 @@ namespace store_scrapper_2_Tests.Logging
         .Do(_ => loggedEntries.Add(new LogEntry("ERROR", _[0]).ToString()));      
       logger.WhenForAnyArgs(_ => _.Error(Arg.Any<string>(), Arg.Any<Exception>()))
         .Do(_ => loggedEntries.Add(new LogEntry("ERROR", _[0], _[1]).ToString()));
+      
+      logger.WhenForAnyArgs(_ => _.Fatal(Arg.Any<string>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("FATAL", _[0]).ToString()));      
+      logger.WhenForAnyArgs(_ => _.Fatal(Arg.Any<string>(), Arg.Any<Exception>()))
+        .Do(_ => loggedEntries.Add(new LogEntry("FATAL", _[0], _[1]).ToString()));
     }
 
     [Fact]
-    public void InfoLogsTheCorrectThings()
+    public void DebugLogs()
+    {
+      logger.LogDebug("msg1", "key1", 123);
+      logger.LogDebug("msg2");
+      logger.LogDebug("msg3", "key1", 123, "key2", "big wave");
+      logger.LogDebug("msg4", new ArgumentNullException(), "key1", 123);
+      logger.LogDebug("msg5", new InvalidOperationException());
+
+      loggedEntries.ShouldBeEquivalentTo(new []
+      {
+        "DEBUG message:msg1, key1:123 null", 
+        "DEBUG message:msg2 null", 
+        "DEBUG message:msg3, key1:123, key2:\"big wave\" null", 
+        "DEBUG message:msg4, key1:123 ArgumentNullException",
+        "DEBUG message:msg5 InvalidOperationException"
+      });
+    }
+    
+    [Fact]
+    public void InfoLogs()
     {
       logger.LogInfo("msg1", "key1", 123);
       logger.LogInfo("msg2");
@@ -80,6 +104,63 @@ namespace store_scrapper_2_Tests.Logging
         "INFO message:msg3, key1:123, key2:\"big wave\" null", 
         "INFO message:msg4, key1:123 ArgumentNullException",
         "INFO message:msg5 InvalidOperationException"
+      });
+    }
+    
+    [Fact]
+    public void WarnLogs()
+    {
+      logger.LogWarn("msg1", "key1", 123);
+      logger.LogWarn("msg2");
+      logger.LogWarn("msg3", "key1", 123, "key2", "big wave");
+      logger.LogWarn("msg4", new ArgumentNullException(), "key1", 123);
+      logger.LogWarn("msg5", new InvalidOperationException());
+
+      loggedEntries.ShouldBeEquivalentTo(new []
+      {
+        "WARN message:msg1, key1:123 null", 
+        "WARN message:msg2 null", 
+        "WARN message:msg3, key1:123, key2:\"big wave\" null", 
+        "WARN message:msg4, key1:123 ArgumentNullException",
+        "WARN message:msg5 InvalidOperationException"
+      });
+    }
+    
+    [Fact]
+    public void ErrorLogs()
+    {
+      logger.LogError("msg1", "key1", 123);
+      logger.LogError("msg2");
+      logger.LogError("msg3", "key1", 123, "key2", "big wave");
+      logger.LogError("msg4", new ArgumentNullException(), "key1", 123);
+      logger.LogError("msg5", new InvalidOperationException());
+
+      loggedEntries.ShouldBeEquivalentTo(new []
+      {
+        "ERROR message:msg1, key1:123 null", 
+        "ERROR message:msg2 null", 
+        "ERROR message:msg3, key1:123, key2:\"big wave\" null", 
+        "ERROR message:msg4, key1:123 ArgumentNullException",
+        "ERROR message:msg5 InvalidOperationException"
+      });
+    }
+    
+    [Fact]
+    public void FatalLogs()
+    {
+      logger.LogFatal("msg1", "key1", 123);
+      logger.LogFatal("msg2");
+      logger.LogFatal("msg3", "key1", 123, "key2", "big wave");
+      logger.LogFatal("msg4", new ArgumentNullException(), "key1", 123);
+      logger.LogFatal("msg5", new InvalidOperationException());
+
+      loggedEntries.ShouldBeEquivalentTo(new []
+      {
+        "FATAL message:msg1, key1:123 null", 
+        "FATAL message:msg2 null", 
+        "FATAL message:msg3, key1:123, key2:\"big wave\" null", 
+        "FATAL message:msg4, key1:123 ArgumentNullException",
+        "FATAL message:msg5 InvalidOperationException"
       });
     }
   }
