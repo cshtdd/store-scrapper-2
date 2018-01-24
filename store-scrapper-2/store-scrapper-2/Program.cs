@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.Logging;
 using store_scrapper_2.Services;
 
 namespace store_scrapper_2
@@ -18,16 +19,16 @@ namespace store_scrapper_2
 
       try
       {
-        Logger.Info($"Launching Program with {nameof(args)}={string.Join(",", args)}");
+        Logger.LogInfo("Launching Program", nameof(args), string.Join(",", args));
 
         await InitializeAsync();
         await IocContainer.Resolve<IAllZipCodesProcessor>().ProcessAsync();
 
-        Logger.Info("Ending program; success=true;");
+        Logger.LogInfo("Ending program", "success", true);
       }
       catch (Exception ex)
       {
-        Logger.Error("Ending program; success=false;", ex);
+        Logger.LogError("Ending program", ex, "success", false);
         throw;
       }
     }

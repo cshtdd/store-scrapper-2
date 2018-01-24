@@ -8,6 +8,7 @@ using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
 using store_scrapper_2.DAL.Db;
 using store_scrapper_2.Model;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2
 {
@@ -100,8 +101,12 @@ namespace store_scrapper_2
         if (!storeNumbers.SequenceEqual(dbStoreNumbers))
         {
           throw new InvalidOperationException(
-            $"Update records mismatch; storeNumbersCount={storeNumbers.Length}; dbStoreNumbersCount={dbStoreNumbers.Length}"
-            );
+            LogFormatter.Format(new object[]
+            {
+              "error", "Update records mismatch", 
+              "storeNumbersCount", storeNumbers.Length, 
+              "dbStoreNumbersCount", dbStoreNumbers.Length
+            }));
         }
 
         foreach (var entity in updatedDbStores)
@@ -117,7 +122,7 @@ namespace store_scrapper_2
     {
       var changedEntries = await db.SaveChangesAsync();
 
-      Logger.Debug($"SaveContextChangesAsync; {nameof(changedEntries)}={changedEntries}");
+      Logger.LogDebug("SaveContextChangesAsync", nameof(changedEntries), changedEntries);
 
       if (changedEntries == 0)
       {

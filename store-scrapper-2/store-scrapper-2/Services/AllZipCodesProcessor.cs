@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.Services
 {
@@ -29,7 +30,7 @@ namespace store_scrapper_2.Services
 
     public async Task ProcessAsync()
     {
-      Logger.Debug("Reading all the ZipCodes;");
+      Logger.LogDebug("Reading all the ZipCodes;");
       
       var zipCodes = (await _zipCodeDataService.AllAsync())
         .OrderBy(_ => _.UpdateTimeUtc)
@@ -38,7 +39,7 @@ namespace store_scrapper_2.Services
 
       do
       {
-        Logger.Info($"ProcessAsync; count={zipCodes.Length}");
+        Logger.LogInfo("ProcessAsync", "count", zipCodes.Length);
 
         foreach (var zipCode in zipCodes)
         {

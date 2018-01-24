@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DAL.Db
 {
@@ -27,7 +28,7 @@ namespace store_scrapper_2.DAL.Db
         Exception exception,
         Func<TState, Exception, string> formatter)
       { 
-        Logger.Debug($"logLevel={logLevel}; eventId={eventId}; {formatter(state, exception)}");
+        Logger.LogDebug(formatter(state, exception), "efLogLevel", logLevel, nameof(eventId), eventId);
       }
 
       public bool IsEnabled(LogLevel logLevel) => true;

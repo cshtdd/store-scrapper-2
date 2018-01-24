@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DAL;
 using store_scrapper_2.DAL.Db;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2
 {
@@ -24,13 +25,13 @@ namespace store_scrapper_2
     
     public async Task SeedAsync()
     {
-      Logger.Debug("ZipCode Seed Started");
+      Logger.LogDebug("ZipCode Seed Started");
 
       var shouldSeed = await ShouldSeedAsync();
 
       if (!shouldSeed)
       {
-        Logger.Debug("ZipCode Seed Skipped");
+        Logger.LogDebug("ZipCode Seed Skipped");
         return;
       }
       
@@ -64,7 +65,7 @@ namespace store_scrapper_2
 
         await context.SaveChangesAsync();
 
-        Logger.Debug("ZipCode Seed Completed");
+        Logger.LogDebug("ZipCode Seed Completed");
       }
     }
     
@@ -72,11 +73,11 @@ namespace store_scrapper_2
     {
       using (var context = _contextFactory.Create())
       {
-        Logger.Debug("Clear ZipCodes Started");
+        Logger.LogDebug("Clear ZipCodes Started");
         var allZipCodes = context.Zips.Select(_ => _).AsEnumerable();
         context.Zips.RemoveRange(allZipCodes);
         await context.SaveChangesAsync();
-        Logger.Debug("Clear ZipCodes Completed");
+        Logger.LogDebug("Clear ZipCodes Completed");
       }
     }
     

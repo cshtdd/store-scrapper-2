@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DataTransmission
 {
@@ -16,7 +17,7 @@ namespace store_scrapper_2.DataTransmission
 
       try
       {
-        Logger.Debug($"Download; {url}");
+        Logger.LogDebug("Download", nameof(url), url);
 
         using (var response = request.GetResponse())
         using (var responseStream = response.GetResponseStream())
@@ -27,7 +28,7 @@ namespace store_scrapper_2.DataTransmission
       }
       catch (WebException ex)
       {
-        Logger.Debug("Download Error", ex);
+        Logger.LogDebug("Download Error", ex);
         throw;
       }
     }

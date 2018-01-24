@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.Model;
 using store_scrapper_2.DAL;
 using store_scrapper_2.DAL.Db;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2
 {
@@ -21,7 +22,7 @@ namespace store_scrapper_2
     {
       using (var db = _contextFactory.Create())
       {
-        Logger.Debug("AllAsync;");
+        Logger.LogDebug("AllAsync;");
 
         return await db.Zips.Select(_ => new ZipCodeInfo
         {
@@ -35,7 +36,7 @@ namespace store_scrapper_2
     {
       using (var db = _contextFactory.Create())
       {
-        Logger.Debug($"UpdateZipCodeAsync; {nameof(zipCode)}={zipCode}");
+        Logger.LogDebug("UpdateZipCodeAsync", nameof(zipCode), zipCode);
 
         var zip = db.Zips.First(_ => _.ZipCode == zipCode);
         zip.UpdateTimeUtc = DateTime.UtcNow;

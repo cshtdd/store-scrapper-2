@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.Model
 {
@@ -38,6 +39,11 @@ namespace store_scrapper_2.Model
       Longitude = longitude;
     }
     
-    public override string ToString() => $"Zip={Zip}; Latitude={Latitude:F8}; Longitude={Longitude:F8};";
+    public override string ToString() => LogFormatter.Format(new object[]
+    {
+      nameof(Zip), Zip,
+      nameof(Latitude), Latitude.ToString("F8"),
+      nameof(Longitude), Longitude.ToString("F8")
+    });
   }
 }

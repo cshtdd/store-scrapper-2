@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.Services
 {
@@ -26,7 +27,7 @@ namespace store_scrapper_2.Services
         .ToArray();
       var numbersToPersist = storesToPersist.Select(_ => _.StoreNumber).ToArray();
       
-      Logger.Info($"Saving Stores; totalCount={allStores.Length}; count={numbersToPersist.Length}");
+      Logger.LogInfo("Saving Stores", "totalCount", allStores.Length, "count", numbersToPersist.Length);
       
       if (numbersToPersist.Length == 0)
       {
@@ -39,10 +40,10 @@ namespace store_scrapper_2.Services
       var storesToUpdate = storesToPersist.Where(_ => numbersToUpdate.Contains(_.StoreNumber)).ToArray();
       var storesToCreate = storesToPersist.Where(_ => numbersToCreate.Contains(_.StoreNumber)).ToArray();
 
-      Logger.Debug($"Creating Stores; count={storesToCreate.Length}");
+      Logger.LogDebug("Creating Stores", "count", storesToCreate.Length);
       await _dataService.CreateNewAsync(storesToCreate);
 
-      Logger.Debug($"Updating Stores; count={storesToUpdate.Length}");
+      Logger.LogDebug("Updating Stores", "count", storesToUpdate.Length);
       await _dataService.UpdateAsync(storesToUpdate);
       
       foreach (var storeNumber in numbersToPersist)

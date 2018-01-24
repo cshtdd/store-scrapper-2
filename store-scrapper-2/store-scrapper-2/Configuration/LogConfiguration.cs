@@ -47,7 +47,7 @@ namespace store_scrapper_2.Configuration
     private static class MemoryConfiguration
     {
       private static string GetLogFilename() => $"logs/{Assembly.GetEntryAssembly().GetName().Name}.log";
-      private static string GetLogFormat() => "%-5p %utcdate{yyyy-MM-dd HH:mm:ss} [%32logger{1}] %message%newline";
+      private static string GetLogFormat() => "level:%p, timestamp:\"%utcdate{yyyy-MM-dd HH:mm:ss}\", actor:%logger{1}, %message%newline";
 
       public static void Load()
       {

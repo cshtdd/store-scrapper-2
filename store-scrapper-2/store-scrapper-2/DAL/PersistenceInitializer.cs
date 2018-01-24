@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DAL;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2
 {
@@ -26,9 +27,9 @@ namespace store_scrapper_2
     {
       using (var context = _contextFactory.Create())
       {
-        Logger.Debug("DbMigration Started");
+        Logger.LogDebug("DbMigration Started");
         await context.Database.MigrateAsync();
-        Logger.Debug("DbMigration Completed");
+        Logger.LogDebug("DbMigration Completed");
       }
     }
   }

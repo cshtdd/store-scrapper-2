@@ -33,7 +33,7 @@ namespace store_scrapper_2_Tests.Model
       new ZipCode("33123", 22, 25)
         .ToString()
         .Should()
-        .Be("Zip=33123; Latitude=22.00000000; Longitude=25.00000000;");
+        .Be("Zip:33123, Latitude:\"22.00000000\", Longitude:\"25.00000000\"");
     }
 
     [Theory]
