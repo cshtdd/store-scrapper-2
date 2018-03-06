@@ -8,13 +8,18 @@ An application that will leverage a publicly accessible Subway service to read s
 dotnet test
 ```
 
-## Run the application in the development machine  
+## Build the app  
 
 ```bash
 PROJECT_FILE=store-scrapper-2/store-scrapper-2.csproj && \
   dotnet clean $PROJECT_FILE && \
-  dotnet build $PROJECT_FILE&& \
-  pushd store-scrapper-2/bin/Debug/netcoreapp2.0 && \
+  dotnet build $PROJECT_FILE
+```
+
+## Run the application in the development machine  
+
+```bash
+pushd store-scrapper-2/bin/Debug/netcoreapp2.0 && \
   dotnet store-scrapper-2.dll && \
   popd
 ```
