@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using DebugEFCore;
 
 namespace store_scrapper_2.DAL.Db
 {
@@ -24,10 +25,7 @@ namespace store_scrapper_2.DAL.Db
 
     private void ConfigureLogging(DbContextOptionsBuilder optionsBuilder)
     {
-      if (_loggingEnabled)
-      {
-        optionsBuilder.UseLoggerFactory(DataContextLoggerProvider.CreateFactory());        
-      }
+      optionsBuilder.EnableLogging(_loggingEnabled);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
