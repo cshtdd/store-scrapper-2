@@ -55,7 +55,7 @@ namespace store_scrapper_2_Tests.Services
  
       _processedZipCodes
         .ToArray()
-        .ShouldBeEquivalentTo(new []
+        .Should().BeEquivalentTo(new []
         {
           "00000", "11111", "22222", "77777",
           "33333", "44444", "55555", "66666",

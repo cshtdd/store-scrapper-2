@@ -48,7 +48,7 @@ namespace store_scrapper_2_Tests.Model
       ((Action) (() =>
       {
         new ZipCode(zipCode, -23.45m, 67.89m);
-      })).ShouldThrow<ArgumentException>($"{zipCode} should have caused an error");
+      })).Should().Throw<ArgumentException>($"{zipCode} should have caused an error");
     }
 
     [Theory]
@@ -61,7 +61,7 @@ namespace store_scrapper_2_Tests.Model
       ((Action) (() =>
       {
         new ZipCode("33123", latitude, 67.89m);
-      })).ShouldThrow<ArgumentException>($"{latitude} should have caused an error");
+      })).Should().Throw<ArgumentException>($"{latitude} should have caused an error");
     }
     
     [Theory]
@@ -74,7 +74,7 @@ namespace store_scrapper_2_Tests.Model
       ((Action) (() =>
       {
         new ZipCode("33123", -12.34m, longitude);
-      })).ShouldThrow<ArgumentException>($"{longitude} should have caused an error");
+      })).Should().Throw<ArgumentException>($"{longitude} should have caused an error");
     }
   }
 }

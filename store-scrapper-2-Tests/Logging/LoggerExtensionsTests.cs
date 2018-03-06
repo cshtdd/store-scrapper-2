@@ -78,7 +78,7 @@ namespace store_scrapper_2_Tests.Logging
       logger.LogDebug("msg4", new ArgumentNullException(), "key1", 123);
       logger.LogDebug("msg5", new InvalidOperationException());
 
-      loggedEntries.ShouldBeEquivalentTo(new []
+      loggedEntries.Should().BeEquivalentTo(new []
       {
         "DEBUG message:msg1, key1:123 null", 
         "DEBUG message:msg2 null", 
@@ -97,7 +97,7 @@ namespace store_scrapper_2_Tests.Logging
       logger.LogInfo("msg4", new ArgumentNullException(), "key1", 123);
       logger.LogInfo("msg5", new InvalidOperationException());
 
-      loggedEntries.ShouldBeEquivalentTo(new []
+      loggedEntries.Should().BeEquivalentTo(new []
       {
         "INFO message:msg1, key1:123 null", 
         "INFO message:msg2 null", 
@@ -116,7 +116,7 @@ namespace store_scrapper_2_Tests.Logging
       logger.LogWarn("msg4", new ArgumentNullException(), "key1", 123);
       logger.LogWarn("msg5", new InvalidOperationException());
 
-      loggedEntries.ShouldBeEquivalentTo(new []
+      loggedEntries.Should().BeEquivalentTo(new []
       {
         "WARN message:msg1, key1:123 null", 
         "WARN message:msg2 null", 
@@ -135,7 +135,7 @@ namespace store_scrapper_2_Tests.Logging
       logger.LogError("msg4", new ArgumentNullException(), "key1", 123);
       logger.LogError("msg5", new InvalidOperationException());
 
-      loggedEntries.ShouldBeEquivalentTo(new []
+      loggedEntries.Should().BeEquivalentTo(new []
       {
         "ERROR message:msg1, key1:123 null", 
         "ERROR message:msg2 null", 
@@ -154,7 +154,7 @@ namespace store_scrapper_2_Tests.Logging
       logger.LogFatal("msg4", new ArgumentNullException(), "key1", 123);
       logger.LogFatal("msg5", new InvalidOperationException());
 
-      loggedEntries.ShouldBeEquivalentTo(new []
+      loggedEntries.Should().BeEquivalentTo(new []
       {
         "FATAL message:msg1, key1:123 null", 
         "FATAL message:msg2 null", 

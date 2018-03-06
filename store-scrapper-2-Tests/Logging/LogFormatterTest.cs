@@ -30,12 +30,12 @@ namespace store_scrapper_2_Tests.Logging
       ((Action) (() =>
       {
         Format(null, null, "Key2", null);
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
       
       ((Action) (() =>
       {
         Format("", null, "Key2", null);
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -44,12 +44,12 @@ namespace store_scrapper_2_Tests.Logging
       ((Action) (() =>
       {
         Format(12, "value");
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
       
       ((Action) (() =>
       {
         Format(DateTime.Now, "value");
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -58,7 +58,7 @@ namespace store_scrapper_2_Tests.Logging
       ((Action) (() =>
       {
         Format("key1", "value1", "key1", "value2");
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
     }
     
     [Fact]
@@ -67,22 +67,22 @@ namespace store_scrapper_2_Tests.Logging
       ((Action) (() =>
       {
         Format(null);
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
       
       ((Action) (() =>
       {
         Format(string.Empty);
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
       
       ((Action) (() =>
       {
         Format("key1");
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
       
       ((Action) (() =>
       {
         Format("key1", "value1", "key1");
-      })).ShouldThrow<ArgumentException>();
+      })).Should().Throw<ArgumentException>();
     }
 
     [Fact]
