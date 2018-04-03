@@ -36,11 +36,16 @@ namespace store_scrapper_2.Services
       
       await _zipCodeDataService.UpdateZipCodeAsync(zipCode.Zip);
 
-      Logger.LogInfo("Processing", 
-        "Result", true, 
-        nameof(zipCode), zipCode.Zip, 
-        "Latitude", zipCode.Latitude.ToString("F8"),
-        "Longitude", zipCode.Longitude.ToString("F8"));
+      LogSuccess(zipCode);
     }
+
+    private static void LogFailure(ZipCode zipCode) => LogResult(zipCode, false);
+    private static void LogSuccess(ZipCode zipCode) => LogResult(zipCode, true);
+    
+    private static void LogResult(ZipCode zipCode, bool result) => Logger.LogInfo("Processing",
+      "Result", result,
+      nameof(zipCode), zipCode.Zip,
+      "Latitude", zipCode.Latitude.ToString("F8"),
+      "Longitude", zipCode.Longitude.ToString("F8"));
   }
 }
