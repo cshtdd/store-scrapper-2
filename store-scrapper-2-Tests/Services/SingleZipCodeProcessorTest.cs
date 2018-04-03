@@ -58,5 +58,54 @@ namespace store_scrapper_2_Tests.Services
         .Received(1)
         .UpdateZipCodeAsync("55555");
     }
+
+    [Fact]
+    public async Task GracefullyHandlesPaymentRequiredWebExceptions()
+    {
+      _downloader.DownloadAsync(Arg.Any<ZipCode>())
+        .Throws(new WebException("The remote server returned an error: (402) Payment Required."));
+
+      
+      await _processor.ProcessAsync(_zipCode);
+
+      
+     await _downloader
+        .Received(1)
+        .DownloadAsync(_zipCode);
+
+      await _persistor
+        .DidNotReceiveWithAnyArgs()
+        .PersistAsync(Arg.Any<IEnumerable<StoreInfo>>());
+
+      _zipCodeDataService
+        .DidNotReceiveWithAnyArgs()
+        .UpdateZipCodeAsync(Arg.Any<string>());
+    }
+
+    [Fact]
+    public async Task BubblesUpAnyOtherException()
+    {
+      _downloader.DownloadAsync(Arg.Any<ZipCode>())
+        .Throws(new WebException("Remote host not found"));
+      
+      
+      ((Func<Task>) (async () =>
+      {
+        await _processor.ProcessAsync(_zipCode);
+      })).Should().Throw<WebException>();
+      
+      
+      await _downloader
+        .Received(1)
+        .DownloadAsync(_zipCode);
+
+      await _persistor
+        .DidNotReceiveWithAnyArgs()
+        .PersistAsync(Arg.Any<IEnumerable<StoreInfo>>());
+
+      _zipCodeDataService
+        .DidNotReceiveWithAnyArgs()
+        .UpdateZipCodeAsync(Arg.Any<string>());
+    }
   }
 }
