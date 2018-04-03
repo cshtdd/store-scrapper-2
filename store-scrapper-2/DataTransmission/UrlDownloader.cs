@@ -28,7 +28,7 @@ namespace store_scrapper_2.DataTransmission
       }
       catch (WebException ex)
       {
-        Logger.LogDebug("Download Error", ex);
+        Logger.LogError("Download Error", ex, nameof(url), url);
         throw;
       }
     }
