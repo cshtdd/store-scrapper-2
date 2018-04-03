@@ -59,6 +59,6 @@ Select the `filebeat-*` index
 
 ```
 Unhandled AND Exception
-*SingleZipCodeProcessor AND *Processing AND Result*
+"actor:SingleZipCodeProcessor" AND "message:Processing" AND "Result:True"
 SingleStorePersistor AND "Saving Store"
 ```
