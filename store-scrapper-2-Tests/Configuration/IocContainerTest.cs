@@ -43,6 +43,12 @@ namespace store_scrapper_2_Tests.Configuration
     {
       (IocContainer.Resolve<IMemoryCache>() as MemoryCache).Should().NotBeNull();
     }
+
+    [Fact]
+    public void CorrectlyResolvesTheWebExceptionHandler()
+    {
+      (IocContainer.Resolve<IWebExceptionHandler>() as IgnorePaymentRequiredExceptions).Should().NotBeNull();
+    }
     
     [Fact]
     public void CorrectlyBuildsStoreDataContextFactories()

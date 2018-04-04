@@ -28,7 +28,7 @@ namespace store_scrapper_2_Tests.Services
 
     public SingleZipCodeProcessorTest()
     {
-      _processor = new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService);
+      _processor = new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new IgnorePaymentRequiredExceptions());
     }
     
     [Fact]
@@ -70,6 +70,33 @@ namespace store_scrapper_2_Tests.Services
 
       
      await _downloader
+        .Received(1)
+        .DownloadAsync(_zipCode);
+
+      await _persistor
+        .DidNotReceiveWithAnyArgs()
+        .PersistAsync(Arg.Any<IEnumerable<StoreInfo>>());
+
+      _zipCodeDataService
+        .DidNotReceiveWithAnyArgs()
+        .UpdateZipCodeAsync(Arg.Any<string>());
+    }
+    
+    [Fact]
+    public async Task BubblesUpPaymentRequiredWebExceptionsIfNeeded()
+    {
+      _downloader.DownloadAsync(Arg.Any<ZipCode>())
+        .Throws(new WebException("The remote server returned an error: (402) Payment Required."));
+     
+      
+      ((Func<Task>) (async () =>
+      {
+        await new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new NeverIgnoreExceptions())
+          .ProcessAsync(_zipCode);
+      })).Should().Throw<WebException>();
+
+      
+      await _downloader
         .Received(1)
         .DownloadAsync(_zipCode);
 

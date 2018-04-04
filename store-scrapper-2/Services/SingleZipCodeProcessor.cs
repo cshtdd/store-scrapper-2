@@ -12,17 +12,20 @@ namespace store_scrapper_2.Services
     private readonly IStoreInfoDownloader _downloader;
     private readonly IStoresPersistor _storesPersistor;
     private readonly IZipCodeDataService _zipCodeDataService;
+    private readonly IWebExceptionHandler _webExceptionHandler;
 
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     public SingleZipCodeProcessor(
       IStoreInfoDownloader downloader,
       IStoresPersistor storesPersistor,
-      IZipCodeDataService zipCodeDataService)
+      IZipCodeDataService zipCodeDataService,
+      IWebExceptionHandler webExceptionHandler)
     {
       _downloader = downloader;
       _storesPersistor = storesPersistor;
       _zipCodeDataService = zipCodeDataService;
+      _webExceptionHandler = webExceptionHandler;
     }
 
     public async Task ProcessAsync(ZipCode zipCode)
@@ -39,7 +42,7 @@ namespace store_scrapper_2.Services
       }
       catch(WebException ex)
       {
-        if (!ex.Message.Contains("402"))
+        if (_webExceptionHandler.ShouldBubbleUpException(ex))
         {
           throw;
         }

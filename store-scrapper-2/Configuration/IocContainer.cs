@@ -53,6 +53,9 @@ namespace store_scrapper_2.Configuration
         .Where(_ => true)
         .AsImplementedInterfaces();
 
+      builder.RegisterType<IgnorePaymentRequiredExceptions>()
+        .As<IWebExceptionHandler>();
+
       builder.RegisterType<MemoryCache>()
         .As<IMemoryCache>()
         .SingleInstance()
