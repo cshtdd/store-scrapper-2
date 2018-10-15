@@ -41,15 +41,13 @@ pushd store-scrapper-2 && \
 
 ## Publish the app  
 
-[Configure Docker for Canister](https://canister.freshdesk.com/support/solutions/articles/14000044525-configure-the-docker-cli-for-use-with-canister)
-
 ```bash
-docker login --username=tddapps cloud.canister.io:5000
+docker login -u tddapps repo.treescale.com
 
-docker tag ss2 cloud.canister.io:5000/tddapps/ss2 && \
-  docker tag ss2-arm cloud.canister.io:5000/tddapps/ss2-arm && \
-  docker push cloud.canister.io:5000/tddapps/ss2 && \
-  docker push cloud.canister.io:5000/tddapps/ss2-arm && \
+docker tag ss2 repo.treescale.com/tddapps/ss2 && \
+  docker tag ss2-arm repo.treescale.com/tddapps/ss2-arm && \
+  docker push repo.treescale.com/tddapps/ss2 && \
+  docker push repo.treescale.com/tddapps/ss2-arm && \
   docker system prune -f
 ```
 
