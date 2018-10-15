@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
@@ -32,107 +32,107 @@ namespace store_scrapper_2_Tests.Services
     }
     
     [Fact]
-    public async Task DownloadsAndPersistsTheStoreData()
+    public void DownloadsAndPersistsTheStoreData()
     {
       var stores = StoreNumberFactory
         .Create(10)
         .Select(StoreInfoFactory.Create)
         .ToArray();
 
-      _downloader.DownloadAsync(Arg.Any<ZipCode>())
-        .Returns(Task.FromResult<IEnumerable<StoreInfo>>(stores));
+      _downloader.Download(Arg.Any<ZipCode>())
+        .Returns(stores);
       
 
-      await _processor.ProcessAsync(_zipCode);
+      _processor.Process(_zipCode);
 
       
-      await _downloader
+      _downloader
         .Received(1)
-        .DownloadAsync(_zipCode);
+        .Download(_zipCode);
 
-      await _persistor
+      _persistor
         .Received(1)
-        .PersistAsync(Arg.Is<IEnumerable<StoreInfo>>(_ => _.SequenceEqual(stores)));
+        .Persist(Arg.Is<IEnumerable<StoreInfo>>(_ => _.SequenceEqual(stores)));
 
-      await _zipCodeDataService
+      _zipCodeDataService
         .Received(1)
-        .UpdateZipCodeAsync("55555");
+        .UpdateZipCode("55555");
     }
 
     [Fact]
-    public async Task GracefullyHandlesPaymentRequiredWebExceptions()
+    public void GracefullyHandlesPaymentRequiredWebExceptions()
     {
-      _downloader.DownloadAsync(Arg.Any<ZipCode>())
+      _downloader.Download(Arg.Any<ZipCode>())
         .Throws(new WebException("The remote server returned an error: (402) Payment Required."));
 
       
-      await _processor.ProcessAsync(_zipCode);
+      _processor.Process(_zipCode);
 
       
-     await _downloader
+     _downloader
         .Received(1)
-        .DownloadAsync(_zipCode);
+        .Download(_zipCode);
 
-      await _persistor
+      _persistor
         .DidNotReceiveWithAnyArgs()
-        .PersistAsync(Arg.Any<IEnumerable<StoreInfo>>());
+        .Persist(Arg.Any<IEnumerable<StoreInfo>>());
 
       _zipCodeDataService
         .DidNotReceiveWithAnyArgs()
-        .UpdateZipCodeAsync(Arg.Any<string>());
+        .UpdateZipCode(Arg.Any<string>());
     }
     
     [Fact]
-    public async Task BubblesUpPaymentRequiredWebExceptionsIfNeeded()
+    public void BubblesUpPaymentRequiredWebExceptionsIfNeeded()
     {
-      _downloader.DownloadAsync(Arg.Any<ZipCode>())
+      _downloader.Download(Arg.Any<ZipCode>())
         .Throws(new WebException("The remote server returned an error: (402) Payment Required."));
      
       
-      ((Func<Task>) (async () =>
+      ((Action) (() =>
       {
-        await new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new NeverIgnoreExceptions())
-          .ProcessAsync(_zipCode);
+        new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new NeverIgnoreExceptions())
+          .Process(_zipCode);
       })).Should().Throw<WebException>();
 
       
-      await _downloader
+      _downloader
         .Received(1)
-        .DownloadAsync(_zipCode);
+        .Download(_zipCode);
 
-      await _persistor
+      _persistor
         .DidNotReceiveWithAnyArgs()
-        .PersistAsync(Arg.Any<IEnumerable<StoreInfo>>());
+        .Persist(Arg.Any<IEnumerable<StoreInfo>>());
 
       _zipCodeDataService
         .DidNotReceiveWithAnyArgs()
-        .UpdateZipCodeAsync(Arg.Any<string>());
+        .UpdateZipCode(Arg.Any<string>());
     }
 
     [Fact]
-    public async Task BubblesUpAnyOtherException()
+    public void BubblesUpAnyOtherException()
     {
-      _downloader.DownloadAsync(Arg.Any<ZipCode>())
+      _downloader.Download(Arg.Any<ZipCode>())
         .Throws(new WebException("Remote host not found"));
       
       
-      ((Func<Task>) (async () =>
+      ((Action) (() =>
       {
-        await _processor.ProcessAsync(_zipCode);
+        _processor.Process(_zipCode);
       })).Should().Throw<WebException>();
       
       
-      await _downloader
+      _downloader
         .Received(1)
-        .DownloadAsync(_zipCode);
+        .Download(_zipCode);
 
-      await _persistor
+      _persistor
         .DidNotReceiveWithAnyArgs()
-        .PersistAsync(Arg.Any<IEnumerable<StoreInfo>>());
+        .Persist(Arg.Any<IEnumerable<StoreInfo>>());
 
       _zipCodeDataService
         .DidNotReceiveWithAnyArgs()
-        .UpdateZipCodeAsync(Arg.Any<string>());
+        .UpdateZipCode(Arg.Any<string>());
     }
   }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
+
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2;
@@ -11,14 +11,14 @@ namespace store_scrapper_2_int_Tests.DAL
   public class PersistenceInitializerTest : DatabaseTest
   {
     [Fact]
-    public async Task RunsTheMigrations()
+    public void RunsTheMigrations()
     {
       using (var context = ContextFactory.Create())
       {
         context.Database.GetPendingMigrations().Should().NotBeEmpty();
       }
 
-      await CreatePersistenceInitializer().InitializeAsync();
+      CreatePersistenceInitializer().Initialize();
 
       using (var context = ContextFactory.Create())
       {
@@ -27,19 +27,19 @@ namespace store_scrapper_2_int_Tests.DAL
     }
 
     [Fact]
-    public async Task SeedsTheZipCodes()
+    public void SeedsTheZipCodes()
     {
-      await CreatePersistenceInitializer().InitializeAsync();
+      CreatePersistenceInitializer().Initialize();
 
       using (var context = ContextFactory.Create())
       {
-        var zipCodesCount = await context.Zips.CountAsync();
+        var zipCodesCount = context.Zips.Count();
         zipCodesCount.Should().Be(13);
 
-        var uniqueZipCodesCount = await context.Zips
+        var uniqueZipCodesCount = context.Zips
           .Select(_ => _.ZipCode)
           .Distinct()
-          .CountAsync();
+          .Count();
         uniqueZipCodesCount.Should().Be(zipCodesCount);
       }
     }

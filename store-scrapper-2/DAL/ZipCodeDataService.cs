@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.Model;
 using store_scrapper_2.DAL;
@@ -18,29 +18,29 @@ namespace store_scrapper_2
 
     public ZipCodeDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
-    public async Task<IEnumerable<ZipCodeInfo>> AllAsync()
+    public IEnumerable<ZipCodeInfo> All()
     {
       using (var db = _contextFactory.Create())
       {
-        Logger.LogDebug("AllAsync;");
+        Logger.LogDebug("All;");
 
-        return await db.Zips.Select(_ => new ZipCodeInfo
+        return db.Zips.Select(_ => new ZipCodeInfo
         {
           ZipCode = _.ToZipCode(),
           UpdateTimeUtc = _.UpdateTimeUtc ?? DateTime.MinValue
-        }).ToArrayAsync();
+        }).ToArray();
       }
     }
 
-    public async Task UpdateZipCodeAsync(string zipCode)
+    public void UpdateZipCode(string zipCode)
     {
       using (var db = _contextFactory.Create())
       {
-        Logger.LogDebug("UpdateZipCodeAsync", nameof(zipCode), zipCode);
+        Logger.LogDebug("UpdateZipCode", nameof(zipCode), zipCode);
 
         var zip = db.Zips.First(_ => _.ZipCode == zipCode);
         zip.UpdateTimeUtc = DateTime.UtcNow;
-        await db.SaveChangesAsync();
+        db.SaveChanges();
       }
     }
   }

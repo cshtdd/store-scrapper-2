@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Net;
-using System.Threading.Tasks;
+
 using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DataTransmission
@@ -9,9 +9,7 @@ namespace store_scrapper_2.DataTransmission
   {
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public string Download(string url) => DownloadAsync(url).Result;
-
-    public async Task<string> DownloadAsync(string url)
+    public string Download(string url)
     {
       var request = WebRequest.CreateHttp(url);
 
@@ -23,7 +21,7 @@ namespace store_scrapper_2.DataTransmission
         using (var responseStream = response.GetResponseStream())
         using (var reader = new StreamReader(responseStream))
         {
-          return await reader.ReadToEndAsync();
+          return reader.ReadToEnd();
         }
       }
       catch (WebException ex)

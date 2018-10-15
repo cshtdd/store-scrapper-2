@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+
 using log4net;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.Logging;
@@ -28,23 +28,23 @@ namespace store_scrapper_2.Services
       _configurationReader = configurationReader;
     }
 
-    public async Task ProcessAsync()
+    public void Process()
     {
       Logger.LogDebug("Reading all the ZipCodes;");
       
-      var zipCodes = (await _zipCodeDataService.AllAsync())
+      var zipCodes = _zipCodeDataService.All()
         .OrderBy(_ => _.UpdateTimeUtc)
         .Select(_ => _.ZipCode)
         .ToArray();
 
       do
       {
-        Logger.LogInfo("ProcessAsync", "count", zipCodes.Length);
+        Logger.LogInfo("Process", "count", zipCodes.Length);
 
         foreach (var zipCode in zipCodes)
         {
-          await _singleZipCodeProcessor.ProcessAsync(zipCode);
-          await _delaySimulator.Delay();
+          _singleZipCodeProcessor.Process(zipCode);
+          _delaySimulator.Delay();
         }
       } while (_configurationReader.ReadBool(ConfigurationKeys.ZipCodesRunContinuosly));
     }

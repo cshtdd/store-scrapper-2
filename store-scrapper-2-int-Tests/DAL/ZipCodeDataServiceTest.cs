@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
+
 using FluentAssertions;
 using store_scrapper_2.Model;
 using store_scrapper_2;
@@ -19,11 +19,11 @@ namespace store_scrapper_2_int_Tests.DAL
     }
 
     [Fact]
-    public async Task ReadsAllTheZipCodes()
+    public void ReadsAllTheZipCodes()
     {
-      await CreatePersistenceInitializer().InitializeAsync();
+      CreatePersistenceInitializer().Initialize();
 
-      var zips = (await _dataService.AllAsync()).ToList();
+      var zips = _dataService.All().ToList();
 
       zips.Count.Should().Be(13);
       
@@ -46,31 +46,31 @@ namespace store_scrapper_2_int_Tests.DAL
     }
 
     [Fact]
-    public async Task UpdatesTheZipCode()
+    public void UpdatesTheZipCode()
     {
-      await CreatePersistenceInitializer().InitializeAsync();
+      CreatePersistenceInitializer().Initialize();
 
-      (await _dataService.AllAsync())
+      _dataService.All()
         .First(_ => _.ZipCode.Zip == "601")
         .UpdateTimeUtc
         .Should()
         .Be(DateTime.MinValue);
       
-      (await _dataService.AllAsync())
+      _dataService.All()
         .First(_ => _.ZipCode.Zip == "605")
         .UpdateTimeUtc
         .Should()
         .Be(DateTime.MinValue);
 
-      await _dataService.UpdateZipCodeAsync("601");
+      _dataService.UpdateZipCode("601");
 
-      (await _dataService.AllAsync())
+      _dataService.All()
         .First(_ => _.ZipCode.Zip == "601")
         .UpdateTimeUtc
         .Should()
         .BeCloseTo(DateTime.UtcNow, 1000);
       
-      (await _dataService.AllAsync())
+      _dataService.All()
         .First(_ => _.ZipCode.Zip == "605")
         .UpdateTimeUtc
         .Should()

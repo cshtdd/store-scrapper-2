@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using System.Threading.Tasks;
+
 using log4net;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.Logging;
@@ -13,7 +13,7 @@ namespace store_scrapper_2
     private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
     // ReSharper disable once UnusedParameter.Local
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
       LogConfiguration.Initialize(LogConfiguration.Source.File);
 
@@ -21,8 +21,8 @@ namespace store_scrapper_2
       {
         Logger.LogInfo("Launching Program", nameof(args), string.Join(",", args));
 
-        await InitializeAsync();
-        await IocContainer.Resolve<IAllZipCodesProcessor>().ProcessAsync();
+        Initialize();
+        IocContainer.Resolve<IAllZipCodesProcessor>().Process();
 
         Logger.LogInfo("Ending program", "success", true);
       }
@@ -33,11 +33,11 @@ namespace store_scrapper_2
       }
     }
 
-    private static async Task InitializeAsync()
+    private static void Initialize()
     {
       IocContainer.Initialize();
       Mappings.Configure();
-      await IocContainer.Resolve<IPersistenceInitializer>().InitializeAsync();
+      IocContainer.Resolve<IPersistenceInitializer>().Initialize();
     }
   }
 }

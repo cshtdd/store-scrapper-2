@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.Logging;
 
@@ -19,7 +19,7 @@ namespace store_scrapper_2.Services
       _persistenceCalculator = persistenceCalculator;
     }
 
-    public async Task PersistAsync(IEnumerable<StoreInfo> storesEnumerableParam)
+    public void Persist(IEnumerable<StoreInfo> storesEnumerableParam)
     {
       var allStores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();      
       var storesToPersist = allStores
@@ -34,17 +34,17 @@ namespace store_scrapper_2.Services
         return;
       }
 
-      var numbersToUpdate = (await _dataService.ContainsStoreAsync(numbersToPersist)).ToArray();
+      var numbersToUpdate = (_dataService.ContainsStore(numbersToPersist)).ToArray();
       var numbersToCreate = numbersToPersist.Except(numbersToUpdate).ToArray();
 
       var storesToUpdate = storesToPersist.Where(_ => numbersToUpdate.Contains(_.StoreNumber)).ToArray();
       var storesToCreate = storesToPersist.Where(_ => numbersToCreate.Contains(_.StoreNumber)).ToArray();
 
       Logger.LogDebug("Creating Stores", "count", storesToCreate.Length);
-      await _dataService.CreateNewAsync(storesToCreate);
+      _dataService.CreateNew(storesToCreate);
 
       Logger.LogDebug("Updating Stores", "count", storesToUpdate.Length);
-      await _dataService.UpdateAsync(storesToUpdate);
+      _dataService.Update(storesToUpdate);
       
       foreach (var storeNumber in numbersToPersist)
       {

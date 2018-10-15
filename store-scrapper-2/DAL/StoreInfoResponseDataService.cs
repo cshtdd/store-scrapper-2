@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DataTransmission;
@@ -20,7 +20,7 @@ namespace store_scrapper_2
 
     public StoreInfoResponseDataService(IStoreDataContextFactory contextFactory) => _contextFactory = contextFactory;
 
-    public async Task CreateNewAsync(IEnumerable<StoreInfo> storesEnumerableParam)
+    public void CreateNew(IEnumerable<StoreInfo> storesEnumerableParam)
     {
       var stores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
       if (stores.Length == 0)
@@ -31,12 +31,12 @@ namespace store_scrapper_2
       using (var db = _contextFactory.Create())
       {
         var newDbStores = stores.Select(_ => Mapper.Map<Store>(_));
-        await db.Stores.AddRangeAsync(newDbStores);
-        await SaveContextChangesAsync(db);
+        db.Stores.AddRange(newDbStores);
+        SaveContextChanges(db);
       }
     }
     
-    public async Task<IEnumerable<StoreNumber>> ContainsStoreAsync(IEnumerable<StoreNumber> storesNumbersEnumerableParam)
+    public IEnumerable<StoreNumber> ContainsStore(IEnumerable<StoreNumber> storesNumbersEnumerableParam)
     {
       var storeNumbers = (storesNumbersEnumerableParam ?? new StoreNumber[]{}).ToArray();
       if (storeNumbers.Length == 0)
@@ -51,10 +51,10 @@ namespace store_scrapper_2
 
       using (var db = _contextFactory.Create())
       {
-        var almostAccurateDbStoreNumbersList = await db.Stores
+        var almostAccurateDbStoreNumbersList = db.Stores
           .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
           .Select(_ => new StoreNumber(_.StoreNumber, _.SatelliteNumber))
-          .ToArrayAsync();
+          .ToArray();
 
         var dbStoresNumbers = almostAccurateDbStoreNumbersList
           .Where(storeNumbers.Contains)
@@ -64,7 +64,7 @@ namespace store_scrapper_2
       }
     }
 
-    public async Task UpdateAsync(IEnumerable<StoreInfo> storesEnumerableParam)
+    public void Update(IEnumerable<StoreInfo> storesEnumerableParam)
     {
       var stores = (storesEnumerableParam ?? new StoreInfo[]{}).ToArray();
       if (stores.Length == 0)
@@ -84,9 +84,9 @@ namespace store_scrapper_2
 
       using (var db = _contextFactory.Create())
       {
-        var almostAccurateDbStoresList = await db.Stores
+        var almostAccurateDbStoresList = db.Stores
           .Where(_ => optimizedStoreNumbers.Contains(_.StoreNumber))
-          .ToArrayAsync();
+          .ToArray();
                
         var updatedDbStores = almostAccurateDbStoresList
           .Where(_ => _.ExistsIn(storeNumbers))
@@ -114,15 +114,15 @@ namespace store_scrapper_2
           db.Entry(entity).State = EntityState.Modified;
         }
         
-        await SaveContextChangesAsync(db);
+        SaveContextChanges(db);
       }
     }
 
-    private static async Task SaveContextChangesAsync(DbContext db)
+    private static void SaveContextChanges(DbContext db)
     {
-      var changedEntries = await db.SaveChangesAsync();
+      var changedEntries = db.SaveChanges();
 
-      Logger.LogDebug("SaveContextChangesAsync", nameof(changedEntries), changedEntries);
+      Logger.LogDebug("SaveContextChanges", nameof(changedEntries), changedEntries);
 
       if (changedEntries == 0)
       {

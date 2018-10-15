@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
+
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.Model;
@@ -12,7 +12,7 @@ namespace store_scrapper_2_Tests.DataTransmission
   public class StoreInfoDownloaderTest
   {
     [Fact]
-    public async Task DownloadsTheFirstStoreInfoFromTheStoreLocator()
+    public void DownloadsTheFirstStoreInfoFromTheStoreLocator()
     {
       var zipCode = new ZipCode("33009", 12.23m, 45.67m);
       var seededResponse = StoresLocatorResponseFactory.Create("67789-4", "77785-1");
@@ -22,12 +22,12 @@ namespace store_scrapper_2_Tests.DataTransmission
         .Returns("the converted url");
       
       var urlDownloader = Substitute.For<IUrlDownloader>();
-      urlDownloader.DownloadAsync("the converted url")
-        .Returns(Task.FromResult(seededResponse));
+      urlDownloader.Download("the converted url")
+        .Returns(seededResponse);
 
 
-      var responses = (await new StoreInfoDownloader(urlDownloader, urlSerializer)
-        .DownloadAsync(zipCode))
+      var responses = new StoreInfoDownloader(urlDownloader, urlSerializer)
+        .Download(zipCode)
         .ToList();
 
       responses.Count.Should().Be(2);

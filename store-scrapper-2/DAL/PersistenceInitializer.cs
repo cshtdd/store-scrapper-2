@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.DAL;
 using store_scrapper_2.Logging;
@@ -17,18 +17,18 @@ namespace store_scrapper_2
       _zipCodesSeeder = zipCodesSeeder;
     }
     
-    public async Task InitializeAsync()
+    public void Initialize()
     {
-      await RunMigrationsAsync();
-      await _zipCodesSeeder.SeedAsync();
+      RunMigrations();
+      _zipCodesSeeder.Seed();
     }
 
-    private async Task RunMigrationsAsync()
+    private void RunMigrations()
     {
       using (var context = _contextFactory.Create())
       {
         Logger.LogDebug("DbMigration Started");
-        await context.Database.MigrateAsync();
+        context.Database.Migrate();
         Logger.LogDebug("DbMigration Completed");
       }
     }

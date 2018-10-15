@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2;
@@ -23,7 +23,7 @@ namespace store_scrapper_2_Tests.Services
 
     public AllZipCodesProcessorTest()
     {
-      _singleZipCodeProcessor.WhenForAnyArgs(_ => _.ProcessAsync(Arg.Any<ZipCode>()))
+      _singleZipCodeProcessor.WhenForAnyArgs(_ => _.Process(Arg.Any<ZipCode>()))
         .Do(_ => _processedZipCodes.Add(((ZipCode)_[0]).Zip));
       
       _allZipCodesProcessor = new AllZipCodesProcessor(
@@ -35,9 +35,9 @@ namespace store_scrapper_2_Tests.Services
     }
     
     [Fact]
-    public async Task ProcessesEachZipCodeOldestFirst()
+    public void ProcessesEachZipCodeOldestFirst()
     {
-      _zipCodeDataService.AllAsync().ReturnsForAnyArgs(new[]
+      _zipCodeDataService.All().ReturnsForAnyArgs(new[]
       {
         ZipCodeInfoFactory.Create("00000", "2011-10-10"),
         ZipCodeInfoFactory.Create("11111", "2011-10-10"), 
@@ -51,17 +51,17 @@ namespace store_scrapper_2_Tests.Services
         ZipCodeInfoFactory.Create("99999", "2012-10-10") 
       });
       
-      await _allZipCodesProcessor.ProcessAsync();
+      _allZipCodesProcessor.Process();
  
       _processedZipCodes
         .ToArray()
-        .Should().BeEquivalentTo(new []
-        {
+        .Should()
+        .BeEquivalentTo(
           "00000", "11111", "22222", "77777",
           "33333", "44444", "55555", "66666",
           "88888", "99999"
-        });
-      await _delaySimulator.Received(10).Delay();
+        );
+      _delaySimulator.Received(10).Delay();
     }
   }
 }

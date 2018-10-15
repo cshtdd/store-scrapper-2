@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+
 using CsvHelper;
 using Microsoft.EntityFrameworkCore;
 using store_scrapper_2.Configuration;
@@ -23,11 +23,11 @@ namespace store_scrapper_2
       _configurationReader = configurationReader;
     }
     
-    public async Task SeedAsync()
+    public void Seed()
     {
       Logger.LogDebug("ZipCode Seed Started");
 
-      var shouldSeed = await ShouldSeedAsync();
+      var shouldSeed = ShouldSeed();
 
       if (!shouldSeed)
       {
@@ -35,21 +35,21 @@ namespace store_scrapper_2
         return;
       }
       
-      await ClearZipCodesAsync();
+      ClearZipCodes();
       var seedFilename = _configurationReader.ReadString(ConfigurationKeys.SeedsZipsFilename);
-      await LoadZipCodesFromCsvAsync(seedFilename);
+      LoadZipCodesFromCsv(seedFilename);
     }
 
-    private async Task<bool> ShouldSeedAsync()
+    private bool ShouldSeed()
     {
       using (var context = _contextFactory.Create())
       {
-        var containsData = await context.Zips.AnyAsync();
+        var containsData = context.Zips.Any();
         return !containsData;
       }
     }
 
-    private async Task LoadZipCodesFromCsvAsync(string filename)
+    private void LoadZipCodesFromCsv(string filename)
     {
       using (var context = _contextFactory.Create())
       {
@@ -60,23 +60,23 @@ namespace store_scrapper_2
           csvReader.Configuration.MissingFieldFound = null;
 
           var zipCodes = csvReader.GetRecords<Zip>();
-          await context.Zips.AddRangeAsync(zipCodes);
+          context.Zips.AddRange(zipCodes);
         }
 
-        await context.SaveChangesAsync();
+        context.SaveChanges();
 
         Logger.LogDebug("ZipCode Seed Completed");
       }
     }
     
-    private async Task ClearZipCodesAsync()
+    private void ClearZipCodes()
     {
       using (var context = _contextFactory.Create())
       {
         Logger.LogDebug("Clear ZipCodes Started");
         var allZipCodes = context.Zips.Select(_ => _).AsEnumerable();
         context.Zips.RemoveRange(allZipCodes);
-        await context.SaveChangesAsync();
+        context.SaveChanges();
         Logger.LogDebug("Clear ZipCodes Completed");
       }
     }
