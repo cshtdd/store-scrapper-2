@@ -53,10 +53,10 @@ docker tag ss2 repo.treescale.com/tddapps/ss2 && \
 
 ## Verify the application logs  
 
-Select the `filebeat-*` index 
+Select the `ss2*` index 
 
 ```
 Unhandled AND Exception
-"actor:SingleZipCodeProcessor" AND "message:Processing" AND "Result:True"
+LoggerName:store_scrapper_2.Services.SingleZipCodeProcessor AND message:Processing AND Result:True
 SingleStorePersistor AND "Saving Store"
 ```
