@@ -28,6 +28,12 @@ namespace store_scrapper_2.Configuration
       
       MemoryConfiguration.Load();
     }
+
+    public static void Shutdown()
+    {
+      LogManager.Flush(30000);
+      LogManager.Shutdown();
+    }
     
     private static class FileConfiguration
     {     

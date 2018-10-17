@@ -15,20 +15,21 @@ namespace store_scrapper_2
     // ReSharper disable once UnusedParameter.Local
     public static void Main(string[] args)
     {
-      LogConfiguration.Initialize(LogConfiguration.Source.File);
-
       try
       {
+        LogConfiguration.Initialize(LogConfiguration.Source.File);
         Logger.LogInfo("Launching Program", nameof(args), string.Join(",", args));
 
         Initialize();
         IocContainer.Resolve<IAllZipCodesProcessor>().Process();
 
-        Logger.LogInfo("Ending program", "success", true);
+        Logger.LogInfo("Ending program", "Result", true);
+        LogConfiguration.Shutdown();
       }
       catch (Exception ex)
       {
-        Logger.LogError("Ending program", ex, "success", false);
+        Logger.LogError("Ending program", ex, "Result", false);
+        LogConfiguration.Shutdown();
         throw;
       }
     }

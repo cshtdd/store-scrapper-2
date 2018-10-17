@@ -58,5 +58,5 @@ Select the `ss2*` index
 ```
 Unhandled AND Exception
 LoggerName:store_scrapper_2.Services.SingleZipCodeProcessor AND message:Processing AND Result:True
-SingleStorePersistor AND "Saving Store"
+Level:ERROR AND LoggerName:store_scrapper_2.Program AND Result:False
 ```
