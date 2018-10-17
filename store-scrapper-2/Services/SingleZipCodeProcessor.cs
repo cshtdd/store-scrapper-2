@@ -37,7 +37,7 @@ namespace store_scrapper_2.Services
       StoreInfo[] stores;
       try
       {
-        stores = (_downloader.Download(zipCode)).ToArray();
+        stores = _downloader.Download(zipCode).ToArray();
         Logger.LogDebug("Stores Data Downloaded", "storesCount", stores.Length, nameof(zipCode), zipCode.Zip);
       }
       catch(WebException ex)
