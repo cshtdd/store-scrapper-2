@@ -21,7 +21,11 @@ namespace store_scrapper_2.DataTransmission
         using (var responseStream = response.GetResponseStream())
         using (var reader = new StreamReader(responseStream))
         {
-          return reader.ReadToEnd();
+          var result = reader.ReadToEnd();
+          
+          Logger.LogInfo("Download", nameof(url), url, "bytes", result.Length, "Result", true);
+          
+          return result;
         }
       }
       catch (WebException ex)
