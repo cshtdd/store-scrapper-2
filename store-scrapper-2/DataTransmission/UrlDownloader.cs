@@ -23,7 +23,7 @@ namespace store_scrapper_2.DataTransmission
         {
           var result = reader.ReadToEnd();
           
-          Logger.LogInfo("Download", nameof(url), url, "bytes", result.Length, "Result", true);
+          Logger.LogInfo("Download", "bytes", result.Length, "Result", true);
           
           return result;
         }
