@@ -33,5 +33,12 @@ namespace store_scrapper_2_Tests.DataTransmission.Folder
       (new ProxyInfo("192.168.1" + ".1", 8080) == new ProxyInfo("192.168.1.1", 8080)).Should().BeTrue();
       (new ProxyInfo("127.0.0.1", 8080) != new ProxyInfo("192.168.1.1", 8000 + 80)).Should().BeTrue();
     }
+
+    [Fact]
+    public void CanBeImplicitlyBuiltOutOfAString()
+    {
+      ProxyInfo p = "127.0.0.1:8080";
+      p.Should().Be(new ProxyInfo("127.0.0.1", 8080));
+    }
   }
 }
