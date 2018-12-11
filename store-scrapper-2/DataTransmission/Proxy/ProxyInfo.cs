@@ -1,3 +1,5 @@
+using System;
+
 namespace store_scrapper_2.DataTransmission.Proxy
 {
   public struct ProxyInfo
@@ -14,6 +16,15 @@ namespace store_scrapper_2.DataTransmission.Proxy
     }
 
     public override string ToString() => $"{IpAddress}:{Port}";
+
+    public override bool Equals(object obj)
+    {
+      var that = (ProxyInfo)obj;
+      return String.Equals(IpAddress, that.IpAddress) &&
+        Port == that.Port;
+    }
+
+    public override int GetHashCode() => ToString().GetHashCode();
 
     public static bool operator == (ProxyInfo p1, ProxyInfo p2) => p1.Equals(p2);
     public static bool operator !=(ProxyInfo p1, ProxyInfo p2) => !(p1 == p2);
