@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
-  public class ProxyListRetriever : IProxyListRetriever
+  public class ProxyListReader : IProxyListReader
   {
     private readonly IUrlDownloader _urlDownloader;
 
-    public ProxyListRetriever(IUrlDownloader urlDownloader)
+    public ProxyListReader(IUrlDownloader urlDownloader)
     {
       _urlDownloader = urlDownloader;
     }
