@@ -1,7 +1,8 @@
 using FluentAssertions;
+using store_scrapper_2.DataTransmission;
 using Xunit;
 
-namespace store_scrapper_2.DataTransmission
+namespace store_scrapper_2_Tests.DataTransmission
 {
   public class ProxyInfoTest
   {
