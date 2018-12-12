@@ -1,4 +1,6 @@
-﻿namespace store_scrapper_2.DataTransmission
+﻿using store_scrapper_2.DataTransmission.Web.Support;
+
+namespace store_scrapper_2.DataTransmission.Web
 {
   public class UrlDownloader : IUrlDownloader
   {

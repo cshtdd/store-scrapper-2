@@ -3,6 +3,7 @@ using System.Linq;
 
 using store_scrapper_2.Model;
 using store_scrapper_2.DataTransmission.Serialization;
+using store_scrapper_2.DataTransmission.Web;
 
 namespace store_scrapper_2.DataTransmission
 {

@@ -4,6 +4,7 @@ using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.Model;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2_Tests.Factory;
 using Xunit;
 
