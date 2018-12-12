@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using store_scrapper_2.DataTransmission.WebRequests;
 
 namespace store_scrapper_2.DataTransmission
 {

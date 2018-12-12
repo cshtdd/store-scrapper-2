@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using store_scrapper_2.Logging;
 
-namespace store_scrapper_2.DataTransmission.WebRequests
+namespace store_scrapper_2.DataTransmission
 {
   public class WebRequestExecutor : IWebRequestExecutor
   {

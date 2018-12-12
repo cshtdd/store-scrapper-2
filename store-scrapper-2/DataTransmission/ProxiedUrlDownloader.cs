@@ -1,7 +1,6 @@
 using System.Net;
-using store_scrapper_2.DataTransmission.WebRequests;
 
-namespace store_scrapper_2.DataTransmission.Proxy
+namespace store_scrapper_2.DataTransmission
 {
   public class ProxiedUrlDownloader : IProxiedUrlDownloader
   {

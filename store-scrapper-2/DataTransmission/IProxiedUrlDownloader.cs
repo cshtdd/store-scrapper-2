@@ -1,4 +1,4 @@
-namespace store_scrapper_2.DataTransmission.Proxy
+namespace store_scrapper_2.DataTransmission
 {
   public interface IProxiedUrlDownloader
   {

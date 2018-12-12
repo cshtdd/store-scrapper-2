@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace store_scrapper_2.DataTransmission.WebRequests
+namespace store_scrapper_2.DataTransmission
 {
   public interface IWebRequestExecutor
   {
