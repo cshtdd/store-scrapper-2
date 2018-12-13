@@ -1,6 +1,7 @@
 using System;
 using FluentAssertions;
 using NSubstitute;
+using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
 using Xunit;
@@ -10,11 +11,13 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
   public class ProxyRepositoryTest
   {
     private readonly IProxyListReader proxyListReader = Substitute.For<IProxyListReader>();
+    private readonly IConfigurationReader configurationReader = Substitute.For<IConfigurationReader>();
+    
     private readonly ProxyRepository repository;
 
     public ProxyRepositoryTest()
     {
-      repository = new ProxyRepository(proxyListReader); 
+      repository = new ProxyRepository(proxyListReader, configurationReader); 
     }
 
     [Fact]

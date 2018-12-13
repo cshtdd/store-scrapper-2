@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using store_scrapper_2.Configuration;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
@@ -9,10 +10,12 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     private readonly List<ProxyInfo> proxies = new List<ProxyInfo>();
     
     private readonly IProxyListReader _proxyListReader;
+    private readonly IConfigurationReader _configurationReader;
 
-    public ProxyRepository(IProxyListReader proxyListReader)
+    public ProxyRepository(IProxyListReader proxyListReader, IConfigurationReader configurationReader)
     {
       _proxyListReader = proxyListReader;
+      _configurationReader = configurationReader;
     }
 
     public ProxyInfo Read()
