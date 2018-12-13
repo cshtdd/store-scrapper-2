@@ -36,6 +36,12 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       EnsureProxiesHaveBeenRead();
 
       var statistics = FindStatistics(proxy);
+      statistics.GoodRequestCount++;
+
+      if (statistics.GoodRequestCount >= ReadSuccessThreshold())
+      {
+        proxies.Remove(statistics);
+      }
     }
 
     public void MarkBadRequest(ProxyInfo proxy)
@@ -52,6 +58,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     }
 
     private int ReadFailThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5);
+    private int ReadSuccessThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100);
 
     private bool HasNoProxies() => proxies.Count == 0;
     private void EnsureProxiesHaveBeenRead()
@@ -80,11 +87,13 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       public ProxyInfo Proxy { get; }
       public int BadRequestCount { get; set; }
+      public int GoodRequestCount { get; set; }
 
       public ProxyStatistics(ProxyInfo proxy)
       {
         Proxy = proxy;
         BadRequestCount = 0;
+        GoodRequestCount = 0;
       }
     }
   }
