@@ -3,7 +3,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
   public interface IProxyRepository
   {
     ProxyInfo Read();
-    void MarkGoodRequest(ProxyInfo proxy);
-    void MarkBadRequest(ProxyInfo proxy);
+    void CountSuccessRequest(ProxyInfo proxy);
+    void CountFailedRequest(ProxyInfo proxy);
   }
 }

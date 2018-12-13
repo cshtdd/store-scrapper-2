@@ -25,7 +25,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       ((Action)(() =>
       {
-          repository.MarkGoodRequest("127.0.0.1:80");
+          repository.CountSuccessRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
     
@@ -43,7 +43,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       
       ((Action)(() =>
       {
-        repository.MarkGoodRequest("127.0.0.1:80");
+        repository.CountSuccessRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
     
@@ -52,7 +52,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       ((Action)(() =>
       {
-          repository.MarkBadRequest("127.0.0.1:80");
+          repository.CountFailedRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
     
@@ -70,7 +70,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       
       ((Action)(() =>
       {
-        repository.MarkBadRequest("127.0.0.1:80");
+        repository.CountFailedRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
 
@@ -118,6 +118,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
         .Returns(2);
+      configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
+        .Returns(200);
       
       proxyListReader.Read().Returns(new ProxyInfo[]
       {
@@ -130,13 +132,13 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
       
-      repository.MarkBadRequest("192.168.1.2:8080");
+      repository.CountFailedRequest("192.168.1.2:8080");
       
       repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
 
-      repository.MarkBadRequest("192.168.1.2:8080");
+      repository.CountFailedRequest("192.168.1.2:8080");
 
       repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
@@ -145,6 +147,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void RemoveProxiesThatHaveBeenUsedManyTimes()
     {
+      configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
+        .Returns(200);
       configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
         .Returns(2);
       
@@ -159,13 +163,13 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
       
-      repository.MarkGoodRequest("192.168.1.2:8080");
+      repository.CountSuccessRequest("192.168.1.2:8080");
       
       repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
 
-      repository.MarkGoodRequest("192.168.1.2:8080");
+      repository.CountSuccessRequest("192.168.1.2:8080");
 
       repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");

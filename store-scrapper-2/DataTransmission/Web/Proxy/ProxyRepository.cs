@@ -8,7 +8,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
   public class ProxyRepository : IProxyRepository
   {
     private int lastReadIndex;
-    private readonly List<ProxyStatistics> proxies = new List<ProxyStatistics>();
+    private readonly List<ProxyStatistics> proxyStorage = new List<ProxyStatistics>();
     
     private readonly IProxyListReader _proxyListReader;
     private readonly IConfigurationReader _configurationReader;
@@ -23,44 +23,37 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       if (HasNoProxies())
       {
-        lastReadIndex = 0;
-        var newProxies = _proxyListReader.Read().Select(ToProxyStatistics);
-        proxies.AddRange(newProxies); 
+        ReadProxies();
       }
 
-      return proxies[lastReadIndex++ % proxies.Count].Proxy;
+      return proxyStorage[lastReadIndex++ % proxyStorage.Count].Proxy;
     }
 
-    public void MarkGoodRequest(ProxyInfo proxy)
+    private void ReadProxies()
+    {
+      lastReadIndex = 0;
+      var toProxyStatistics = ToProxyStatistics();
+      var newProxies = _proxyListReader.Read().Select(toProxyStatistics);
+      proxyStorage.AddRange(newProxies);
+    }
+
+    public void CountSuccessRequest(ProxyInfo proxy)
     {
       EnsureProxiesHaveBeenRead();
 
-      var statistics = FindStatistics(proxy);
-      statistics.GoodRequestCount++;
-
-      if (statistics.GoodRequestCount >= ReadSuccessThreshold())
-      {
-        proxies.Remove(statistics);
-      }
+      var statistics = Find(proxy).IncrementSuccessCount();
+      RemoveIfNeeded(statistics);
     }
 
-    public void MarkBadRequest(ProxyInfo proxy)
+    public void CountFailedRequest(ProxyInfo proxy)
     {
       EnsureProxiesHaveBeenRead();
 
-      var statistics = FindStatistics(proxy);
-      statistics.BadRequestCount++;
-
-      if (statistics.BadRequestCount >= ReadFailThreshold())
-      {
-        proxies.Remove(statistics);
-      }
+      var statistics = Find(proxy).IncrementFailedCount();
+      RemoveIfNeeded(statistics);
     }
 
-    private int ReadFailThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5);
-    private int ReadSuccessThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100);
-
-    private bool HasNoProxies() => proxies.Count == 0;
+    private bool HasNoProxies() => proxyStorage.Count == 0;
     private void EnsureProxiesHaveBeenRead()
     {
       if (HasNoProxies())
@@ -69,11 +62,20 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       }
     }
 
-    private static ProxyStatistics ToProxyStatistics(ProxyInfo proxyInfo) => new ProxyStatistics(proxyInfo);
-
-    private ProxyStatistics FindStatistics(ProxyInfo proxy)
+    private Func<ProxyInfo, ProxyStatistics> ToProxyStatistics()
     {
-      var result = proxies.Find(s => s.Proxy.Equals(proxy));
+      var successThreshold = ReadSuccessThreshold();
+      var failThreshold = ReadFailedThreshold();
+
+      return proxyInfo => new ProxyStatistics(proxyInfo, successThreshold, failThreshold);
+    }
+
+    private int ReadFailedThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5);
+    private int ReadSuccessThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100);
+    
+    private ProxyStatistics Find(ProxyInfo proxy)
+    {
+      var result = proxyStorage.Find(s => s.Proxy.Equals(proxy));
 
       if (result == null)
       {
@@ -83,17 +85,48 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       return result;
     }
 
+    private void RemoveIfNeeded(ProxyStatistics statistics)
+    {
+      if (statistics.HasBeenUsedTooMuch)
+      {
+        proxyStorage.Remove(statistics);
+      }
+    } 
+    
     private class ProxyStatistics
     {
       public ProxyInfo Proxy { get; }
-      public int BadRequestCount { get; set; }
-      public int GoodRequestCount { get; set; }
+      
+      public int SuccessThreshold { get; }
+      public int FailedThreshold { get; }
 
-      public ProxyStatistics(ProxyInfo proxy)
+      public int SuccessCount { get; set; }
+      public int FailedCount { get; set; }
+
+      public ProxyStatistics(ProxyInfo proxy, int successThreshold, int failedThreshold)
       {
         Proxy = proxy;
-        BadRequestCount = 0;
-        GoodRequestCount = 0;
+
+        SuccessCount = 0;
+        SuccessThreshold = successThreshold;
+
+        FailedCount = 0;
+        FailedThreshold = failedThreshold;
+      }
+
+      public bool HasBeenUsedTooMuch => SuccessCount >= SuccessThreshold ||
+                                        FailedCount >= FailedThreshold;
+
+      public ProxyStatistics IncrementFailedCount()
+      {
+        FailedCount++;
+        return this;
+      }
+      
+      public ProxyStatistics IncrementSuccessCount()
+      {
+        SuccessCount++;
+        return this;
       }
     }
   }
