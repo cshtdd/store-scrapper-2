@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace store_scrapper_2.Configuration
+﻿namespace store_scrapper_2.Configuration
 {
   public static class ConfigurationKeys
   {
@@ -10,5 +8,7 @@ namespace store_scrapper_2.Configuration
     public const string ZipCodesDelayMs = "ZipCodes:DelayMs";
     public const string ZipCodesRunContinuosly = "ZipCodes:RunContinuosly";
     public const string StoresWriteCacheExpirationMs = "Stores:WriteCacheExpirationMs";
+    public const string ProxyFailThreshold = "Proxy:FailThreshold";
+    public const string ProxyMaxCount = "Proxy:MaxCount";
   }
 }
