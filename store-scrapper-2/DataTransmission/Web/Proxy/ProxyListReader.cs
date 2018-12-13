@@ -22,6 +22,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         .Split(Environment.NewLine)
         .ToList()
         .Skip(4)
+        .SkipLast(2)
         .Select(ParseSingleLine)
         .ToArray();
     }

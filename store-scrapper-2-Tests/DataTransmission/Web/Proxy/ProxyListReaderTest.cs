@@ -42,7 +42,9 @@ IP address:Port Country-Anonymity(Noa/Anm/Hia)-SSL_support(S)-Google_passed(+)
 73.239.197.175:8080 US-N-S + 
 204.245.9.15:50928 GB-H-S + 
 103.194.89.161:8080 IN-H-S! + 
-87.248.171.166:44576 MD-H-S! + ");
+87.248.171.166:44576 MD-H-S! + 
+
+Free HTTP/HTTPS(SSL) proxy list only. Text format. Updated hourly.");
 
       var proxies = reader.Read().ToArray();
 
