@@ -30,11 +30,47 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     }
     
     [Fact]
+    public void CannotMarkGoodRequestsIfTheProxyIsNotFound()
+    {
+      proxyListReader.Read().Returns(new ProxyInfo[]
+      {
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080"
+      });
+
+      repository.Read();
+      
+      ((Action)(() =>
+      {
+        repository.MarkGoodRequest("127.0.0.1:80");
+      })).Should().Throw<InvalidOperationException>();
+    }
+    
+    [Fact]
     public void CannotMarkBadRequestsIfNoProxiesHaveBeenRead()
     {
       ((Action)(() =>
       {
           repository.MarkBadRequest("127.0.0.1:80");
+      })).Should().Throw<InvalidOperationException>();
+    }
+    
+    [Fact]
+    public void CannotMarkBadRequestsIfTheProxyIsNotFound()
+    {
+      proxyListReader.Read().Returns(new ProxyInfo[]
+      {
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080"
+      });
+
+      repository.Read();
+      
+      ((Action)(() =>
+      {
+        repository.MarkBadRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
 

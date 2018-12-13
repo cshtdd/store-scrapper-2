@@ -34,6 +34,8 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     public void MarkGoodRequest(ProxyInfo proxy)
     {
       EnsureProxiesHaveBeenRead();
+
+      var statistics = FindStatistics(proxy);
     }
 
     public void MarkBadRequest(ProxyInfo proxy)
@@ -62,7 +64,17 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     private static ProxyStatistics ToProxyStatistics(ProxyInfo proxyInfo) => new ProxyStatistics(proxyInfo);
 
-    private ProxyStatistics FindStatistics(ProxyInfo proxy) => proxies.Find(s => s.Proxy.Equals(proxy));
+    private ProxyStatistics FindStatistics(ProxyInfo proxy)
+    {
+      var result = proxies.Find(s => s.Proxy.Equals(proxy));
+
+      if (result == null)
+      {
+        throw new InvalidOperationException($"Cannot find Proxy:{proxy}");
+      }
+      
+      return result;
+    }
 
     private class ProxyStatistics
     {
