@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using store_scrapper_2.Configuration;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
   public class ProxyRepository : IProxyRepository
   {
-    private int lastReadIndex = 0;
-    private readonly List<ProxyInfo> proxies = new List<ProxyInfo>();
+    private int lastReadIndex;
+    private readonly List<ProxyStatistics> proxies = new List<ProxyStatistics>();
     
     private readonly IProxyListReader _proxyListReader;
     private readonly IConfigurationReader _configurationReader;
@@ -20,23 +21,59 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     public ProxyInfo Read()
     {
-      if (proxies.Count == 0)
+      if (HasNoProxies())
       {
         lastReadIndex = 0;
-        proxies.AddRange(_proxyListReader.Read()); 
+        var newProxies = _proxyListReader.Read().Select(ToProxyStatistics);
+        proxies.AddRange(newProxies); 
       }
 
-      return proxies[lastReadIndex++ % proxies.Count];
+      return proxies[lastReadIndex++ % proxies.Count].Proxy;
     }
 
     public void MarkGoodRequest(ProxyInfo proxy)
     {
-      throw new InvalidOperationException("No Proxy has been read");
+      EnsureProxiesHaveBeenRead();
     }
 
     public void MarkBadRequest(ProxyInfo proxy)
     {
-      throw new InvalidOperationException("No Proxy has been read");
+      EnsureProxiesHaveBeenRead();
+
+      var statistics = FindStatistics(proxy);
+      statistics.BadRequestCount++;
+
+      if (statistics.BadRequestCount >= ReadFailThreshold())
+      {
+        proxies.Remove(statistics);
+      }
+    }
+
+    private int ReadFailThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5);
+
+    private bool HasNoProxies() => proxies.Count == 0;
+    private void EnsureProxiesHaveBeenRead()
+    {
+      if (HasNoProxies())
+      {
+        throw new InvalidOperationException("No Proxy has been read");       
+      }
+    }
+
+    private static ProxyStatistics ToProxyStatistics(ProxyInfo proxyInfo) => new ProxyStatistics(proxyInfo);
+
+    private ProxyStatistics FindStatistics(ProxyInfo proxy) => proxies.Find(s => s.Proxy.Equals(proxy));
+
+    private class ProxyStatistics
+    {
+      public ProxyInfo Proxy { get; }
+      public int BadRequestCount { get; set; }
+
+      public ProxyStatistics(ProxyInfo proxy)
+      {
+        Proxy = proxy;
+        BadRequestCount = 0;
+      }
     }
   }
 }

@@ -76,5 +76,34 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
     }
+
+    [Fact]
+    public void RemovesTroublesomeProxiesFromTheRotation()
+    {
+      configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
+        .Returns(2);
+      
+      proxyListReader.Read().Returns(new ProxyInfo[]
+      {
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080"
+      });
+
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      
+      repository.MarkBadRequest("192.168.1.2:8080");
+      
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+
+      repository.MarkBadRequest("192.168.1.2:8080");
+
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+    }
   }
 }
