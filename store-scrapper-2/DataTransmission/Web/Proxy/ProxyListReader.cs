@@ -23,10 +23,11 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         .ToList()
         .Skip(4)
         .SkipLast(2)
-        .Select(ParseSingleLine)
+        .Select(ExtractAddress)
+        .Select(ProxyInfo.Parse)
         .ToArray();
     }
 
-    private static ProxyInfo ParseSingleLine(string proxyDefinition) => new ProxyInfo(proxyDefinition.Split(" ")[0]);
+    private static string ExtractAddress(string proxyDefinition) => proxyDefinition.Split(" ")[0];
   }
 }

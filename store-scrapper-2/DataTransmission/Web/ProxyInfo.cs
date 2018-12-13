@@ -15,6 +15,8 @@ namespace store_scrapper_2.DataTransmission.Web
       Port = port;
     }
 
+    public static ProxyInfo Parse(string fullAddress) => new ProxyInfo(fullAddress);
+
     public override string ToString() => $"{IpAddress}:{Port}";
 
     public override bool Equals(object obj)
