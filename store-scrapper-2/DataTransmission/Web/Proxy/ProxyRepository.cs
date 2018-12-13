@@ -5,6 +5,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
   public class ProxyRepository : IProxyRepository
   {
+    private int lastReadIndex = 0;
     private readonly List<ProxyInfo> proxies = new List<ProxyInfo>();
     
     private readonly IProxyListReader _proxyListReader;
@@ -18,10 +19,11 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       if (proxies.Count == 0)
       {
+        lastReadIndex = 0;
         proxies.AddRange(_proxyListReader.Read()); 
       }
-      
-      return new ProxyInfo("127.0.0.1:80");
+
+      return proxies[lastReadIndex++ % proxies.Count];
     }
 
     public void MarkGoodRequest(ProxyInfo proxy)

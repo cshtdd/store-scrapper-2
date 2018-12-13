@@ -36,14 +36,6 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     }
 
     [Fact]
-    public void ReadRetrievesTheProxyList()
-    {
-      repository.Read();
-
-      proxyListReader.Received().Read();
-    }
-
-    [Fact]
     public void MultipleReadCallsDoNotCauseMultipleListRetrievals()
     {
       proxyListReader.Read().Returns(new ProxyInfo[]
@@ -59,6 +51,27 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       }
       
       proxyListReader.Received(1).Read();
+    }
+    
+    [Fact]
+    public void ReadRotatesTheProxies()
+    {
+      proxyListReader.Read().Returns(new ProxyInfo[]
+      {
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080"
+      });
+
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
     }
   }
 }
