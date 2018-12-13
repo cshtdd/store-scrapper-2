@@ -26,9 +26,6 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         .ToArray();
     }
 
-    private ProxyInfo ParseSingleLine(string proxyDefinition)
-    {
-      return new ProxyInfo("127.0.0.0:80");
-    }
+    private static ProxyInfo ParseSingleLine(string proxyDefinition) => new ProxyInfo(proxyDefinition.Split(" ")[0]);
   }
 }
