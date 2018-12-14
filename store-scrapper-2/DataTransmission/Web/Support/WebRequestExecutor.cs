@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using store_scrapper_2.Logging;
@@ -13,6 +14,8 @@ namespace store_scrapper_2.DataTransmission.Web.Support
     {
       var url = request.RequestUri.AbsoluteUri;
 
+      var stopwatch = Stopwatch.StartNew();
+
       try
       {
         Logger.LogDebug("Download", nameof(url), url, "Proxy", GetProxyString(request));
@@ -24,14 +27,16 @@ namespace store_scrapper_2.DataTransmission.Web.Support
           var result = reader.ReadToEnd();
           var kbytes = Convert.ToInt32(result.Length / 1024);
 
-          Logger.LogInfo("Download", "KBytes", kbytes, "Result", true);
+          stopwatch.Stop();
+          Logger.LogInfo("Download", "KBytes", kbytes, "Result", true, "ElapsedMs", stopwatch.ElapsedMilliseconds);
           
           return result;
         }
       }
       catch (WebException ex)
       {
-        Logger.LogError("Download Error", ex, nameof(url), url);
+        stopwatch.Stop();
+        Logger.LogError("Download Error", ex, nameof(url), url, "ElapsedMs", stopwatch.ElapsedMilliseconds);
         throw;
       }
     }
