@@ -8,6 +8,7 @@
     public const string ZipCodesDelayMs = "ZipCodes:DelayMs";
     public const string ZipCodesRunContinuosly = "ZipCodes:RunContinuosly";
     public const string StoresWriteCacheExpirationMs = "Stores:WriteCacheExpirationMs";
+    public const string ProxyTimeoutMs = "Proxy:TimeoutMs";
     public const string ProxyFailThreshold = "Proxy:FailThreshold";
     public const string ProxyMaxCount = "Proxy:MaxCount";
     public const string ProxyUrlMaxAttempts = "Proxy:UrlMaxAttempts";

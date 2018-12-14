@@ -7,7 +7,7 @@ namespace store_scrapper_2_int_Tests.Utils
 {
   public abstract class DatabaseTest : IntegrationTest, IDisposable
   {
-    private static ConfigurationReader ConfigurationReader { get; } = new ConfigurationReader("TEST");
+    public static ConfigurationReader ConfigurationReader { get; } = new ConfigurationReader("TEST");
     protected static IStoreDataContextFactory ContextFactory => new StoreDataContextFactory(ConfigurationReader);
 
     protected DatabaseTest() => DeleteDatabaseIfNeeded();
