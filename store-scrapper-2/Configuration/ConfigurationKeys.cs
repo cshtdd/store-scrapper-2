@@ -10,5 +10,6 @@
     public const string StoresWriteCacheExpirationMs = "Stores:WriteCacheExpirationMs";
     public const string ProxyFailThreshold = "Proxy:FailThreshold";
     public const string ProxyMaxCount = "Proxy:MaxCount";
+    public const string ProxyUrlMaxAttempts = "Proxy:UrlMaxAttempts";
   }
 }
