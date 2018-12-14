@@ -11,7 +11,7 @@ namespace store_scrapper_2.DataTransmission.Web.Support
 
     public string Run(HttpWebRequest request)
     {
-      var url = request.RequestUri.ToString();
+      var url = request.RequestUri.AbsoluteUri;
       
       try
       {
