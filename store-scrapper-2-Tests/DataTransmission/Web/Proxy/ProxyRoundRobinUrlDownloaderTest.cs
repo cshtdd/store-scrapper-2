@@ -19,6 +19,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     
     public ProxyRoundRobinUrlDownloaderTest()
     {
+      configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10).Returns(2);
+
       downloader = new ProxyRoundRobinUrlDownloader(proxyRepository, proxiedDownloader, configurationReader);
     }
 
@@ -75,6 +77,27 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       
       proxyRepository.DidNotReceive().CountSuccessRequest(Arg.Any<ProxyInfo>());
       proxyRepository.Received().CountFailedRequest("192.168.1.1:8080");
+    }
+    
+    [Fact]
+    public void AttemptsMultipleDownloadOnFailures()
+    {
+      proxyRepository.Read().Returns(
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080",
+        "192.168.1.4:8080"
+      );
+      
+      proxiedDownloader.Download("https://tddapps.com", "192.168.1.1:8080").Throws<WebException>();
+      proxiedDownloader.Download("https://tddapps.com", "192.168.1.2:8080").Returns("uff, barely");
+
+      downloader.Download("https://tddapps.com")
+        .Should()
+        .Be("uff, barely");
+      
+      proxyRepository.Received().CountFailedRequest("192.168.1.1:8080");
+      proxyRepository.Received().CountSuccessRequest("192.168.1.2:8080");
     }
   }
 }

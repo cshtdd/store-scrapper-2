@@ -21,19 +21,38 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     public string Download(string url)
     {
+      var maxAttempts = ReadMaxAttempts();
+
+      for (int i = 0; i < maxAttempts; i++)
+      {
+        try
+        {
+          return DownloadInternal(url);
+        }
+        catch (WebException)
+        {
+          
+        }
+      }
+
+      return "";
+    }
+
+    private int ReadMaxAttempts() => _configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);
+
+    private string DownloadInternal(string url)
+    {
       var proxy = _proxyRepository.Read();
-
-
       try
       {
         var result = _proxiedDownloader.Download(url, proxy);
         _proxyRepository.CountSuccessRequest(proxy);
         return result;
       }
-      catch (WebException)
+      catch
       {
         _proxyRepository.CountFailedRequest(proxy);
-        return string.Empty;
+        throw;
       }
     }
   }
