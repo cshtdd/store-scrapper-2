@@ -49,5 +49,17 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
         .Should()
         .Be("tdd rocks");
     }
+
+    [Fact]
+    public void CountsSuccessfulDownloads()
+    {
+      proxyRepository.Read().Returns("192.168.1.1:8080");
+      proxiedDownloader.Download("https://tddapps.com", "192.168.1.1:8080")
+        .Returns("tdd rocks");
+
+      downloader.Download("https://tddapps.com");
+      
+      proxyRepository.Received().CountSuccessRequest("192.168.1.1:8080");
+    }
   }
 }

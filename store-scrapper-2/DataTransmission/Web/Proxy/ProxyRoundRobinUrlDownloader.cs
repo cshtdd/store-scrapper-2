@@ -22,6 +22,8 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       var proxy = _proxyRepository.Read();
 
+      _proxyRepository.CountSuccessRequest(proxy);
+      
       return _proxiedDownloader.Download(url, proxy);
     }
   }
