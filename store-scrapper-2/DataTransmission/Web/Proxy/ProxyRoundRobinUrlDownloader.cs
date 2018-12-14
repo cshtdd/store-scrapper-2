@@ -34,14 +34,11 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         }
         catch (WebException)
         {
-          if (i + 1 == maxAttempts)
-          {
-            throw;
-          }
+          //TODO: log this
         }
       }
 
-      throw new InvalidOperationException("This should never execute");
+      return _urlDownloader.Download(url);
     }
 
     private int ReadMaxAttempts() => _configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);

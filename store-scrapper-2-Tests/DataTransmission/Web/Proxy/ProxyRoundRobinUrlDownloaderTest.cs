@@ -80,11 +80,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       proxyRepository.Read().Returns("192.168.1.1:8080");
       proxiedDownloader.Download("https://tddapps.com", "192.168.1.1:8080").Throws<WebException>();
 
-      ((Action)(() =>
-      {
-        downloader.Download("https://tddapps.com");
-      })).Should()
-      .Throw<WebException>();
+      downloader.Download("https://tddapps.com");
       
       proxyRepository.DidNotReceive().CountSuccessRequest(Arg.Any<ProxyInfo>());
       proxyRepository.Received().CountFailedRequest("192.168.1.1:8080");
@@ -110,9 +106,9 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       proxyRepository.Received().CountFailedRequest("192.168.1.1:8080");
       proxyRepository.Received().CountSuccessRequest("192.168.1.2:8080");
     }
-
+    
     [Fact]
-    public void BubblesUpExceptionWhenMaxNumberOfDownloadAttemptsExceeded()
+    public void ReturnsTheResultOfARegularUrlDownloaderWhenFailAttemptNumberExceeded()
     {
       proxyRepository.Read().Returns(
         "192.168.1.1:8080",
@@ -125,11 +121,11 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       proxiedDownloader.Download("https://tddapps.com", "192.168.1.2:8080").Throws<WebException>();
       proxiedDownloader.Download("https://tddapps.com", "192.168.1.3:8080").Returns("will not run");
 
-      ((Action)(() =>
-      {
-        downloader.Download("https://tddapps.com");
-      })).Should()
-      .Throw<WebException>();
+      urlDownloader.Download("https://tddapps.com").Returns("backups are important");
+      
+      downloader.Download("https://tddapps.com")
+        .Should()
+        .Be("backups are important");
       
       proxyRepository.Received().CountFailedRequest("192.168.1.1:8080");
       proxyRepository.Received().CountFailedRequest("192.168.1.2:8080");
