@@ -13,7 +13,7 @@ namespace store_scrapper_2.DataTransmission
       var qJson = q.ToJson(new DataContractJsonSerializerSettings());
       var qUrl = WebUtility.UrlEncode(qJson);
 
-      const string endpoint = "https://locator-svc.subway.com/v2//GetLocations.ashx";
+      const string endpoint = "http://locator-svc.subway.com/v2//GetLocations.ashx";
 
       return $"{endpoint}?q={qUrl}";
     }
