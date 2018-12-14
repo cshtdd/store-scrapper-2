@@ -9,15 +9,17 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     private readonly IProxyRepository _proxyRepository;
     private readonly IProxiedUrlDownloader _proxiedDownloader;
     private readonly IConfigurationReader _configurationReader;
+    private readonly IUrlDownloader _urlDownloader;
 
-    public ProxyRoundRobinUrlDownloader(
-      IProxyRepository proxyRepository,
+    public ProxyRoundRobinUrlDownloader(IProxyRepository proxyRepository,
       IProxiedUrlDownloader proxiedDownloader,
-      IConfigurationReader configurationReader)
+      IConfigurationReader configurationReader,
+      IUrlDownloader urlDownloader)
     {
       _proxyRepository = proxyRepository;
       _proxiedDownloader = proxiedDownloader;
       _configurationReader = configurationReader;
+      _urlDownloader = urlDownloader;
     }
 
     public string Download(string url)

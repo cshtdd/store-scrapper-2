@@ -15,6 +15,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     private readonly IProxyRepository proxyRepository = Substitute.For<IProxyRepository>();
     private readonly IProxiedUrlDownloader proxiedDownloader = Substitute.For<IProxiedUrlDownloader>();
     private readonly IConfigurationReader configurationReader = Substitute.For<IConfigurationReader>();
+    private readonly IUrlDownloader urlDownloader = Substitute.For<IUrlDownloader>();
 
     private readonly ProxyRoundRobinUrlDownloader downloader;
     
@@ -22,7 +23,12 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10).Returns(2);
 
-      downloader = new ProxyRoundRobinUrlDownloader(proxyRepository, proxiedDownloader, configurationReader);
+      downloader = new ProxyRoundRobinUrlDownloader(
+        proxyRepository, 
+        proxiedDownloader,
+        configurationReader,
+        urlDownloader
+      );
     }
 
     [Fact]
