@@ -1,11 +1,13 @@
-using System;
 using System.Net;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
   public class ProxyRoundRobinUrlDownloader : IProxyRoundRobinUrlDownloader
   {
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
     private readonly IProxyRepository _proxyRepository;
     private readonly IProxiedUrlDownloader _proxiedDownloader;
     private readonly IConfigurationReader _configurationReader;
@@ -30,20 +32,17 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       {
         try
         {
-          return DownloadInternal(url);
+          return ProxiedDownload(url);
         }
-        catch (WebException)
-        {
-          //TODO: log this
-        }
+        catch (WebException){ }
       }
-
-      return _urlDownloader.Download(url);
+      
+      return RegularDownload(url);
     }
 
     private int ReadMaxAttempts() => _configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);
 
-    private string DownloadInternal(string url)
+    private string ProxiedDownload(string url)
     {
       var proxy = _proxyRepository.Read();
       try
@@ -57,6 +56,13 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         _proxyRepository.CountFailedRequest(proxy);
         throw;
       }
+    }
+    
+    private string RegularDownload(string url)
+    {
+      var maxAttempts = ReadMaxAttempts();
+      Logger.LogInfo("UrlMaxFailedAttemptsReached", nameof(url), url, nameof(maxAttempts), maxAttempts);
+      return _urlDownloader.Download(url);
     }
   }
 }
