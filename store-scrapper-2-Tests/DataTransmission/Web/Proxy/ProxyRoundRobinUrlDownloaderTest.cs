@@ -1,3 +1,4 @@
+using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission.Web;
@@ -35,6 +36,18 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       downloader.Download("https://tddapps.com");
 
       proxiedDownloader.Received().Download("https://tddapps.com", "192.168.1.1:8080");
+    }
+
+    [Fact]
+    public void ReturnsTheDownloadedResult()
+    {
+      proxyRepository.Read().Returns("192.168.1.1:8080");
+      proxiedDownloader.Download("https://tddapps.com", "192.168.1.1:8080")
+        .Returns("tdd rocks");
+      
+      downloader.Download("https://tddapps.com")
+        .Should()
+        .Be("tdd rocks");
     }
   }
 }

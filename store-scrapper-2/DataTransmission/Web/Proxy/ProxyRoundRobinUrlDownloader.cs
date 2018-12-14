@@ -22,9 +22,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       var proxy = _proxyRepository.Read();
 
-      _proxiedDownloader.Download(url, proxy);
-      
-      return string.Empty;
+      return _proxiedDownloader.Download(url, proxy);
     }
   }
 }
