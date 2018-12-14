@@ -2,6 +2,8 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.Extensions.Caching.Memory;
+using store_scrapper_2.DataTransmission.Web;
+using store_scrapper_2.DataTransmission.Web.Proxy;
 using store_scrapper_2.Services;
 
 namespace store_scrapper_2.Configuration
@@ -56,6 +58,13 @@ namespace store_scrapper_2.Configuration
       builder.RegisterType<IgnorePaymentRequiredExceptions>()
         .As<IWebExceptionHandler>();
 
+      builder.RegisterType<UrlDownloader>()
+        .As<IUrlDownloader>();
+
+      builder.RegisterType<ProxyRoundRobinUrlDownloader>()
+        .As<IProxyRoundRobinUrlDownloader>()
+        .SingleInstance();
+      
       builder.RegisterType<MemoryCache>()
         .As<IMemoryCache>()
         .SingleInstance()

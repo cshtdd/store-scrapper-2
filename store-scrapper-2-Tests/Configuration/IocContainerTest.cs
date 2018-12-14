@@ -3,6 +3,8 @@ using Microsoft.Extensions.Caching.Memory;
 using store_scrapper_2;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission;
+using store_scrapper_2.DataTransmission.Web;
+using store_scrapper_2.DataTransmission.Web.Proxy;
 using store_scrapper_2.DAL;
 using store_scrapper_2.Services;
 using Xunit;
@@ -30,6 +32,19 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IStorePersistenceCalculator>().Should().NotBeNull();
 
       ValidateSingletonRegistration<IMemoryCache>();
+    }
+
+    [Fact]
+    public void CorrectlyResolvesTheUrlDownloader()
+    {
+      (IocContainer.Resolve<IUrlDownloader>() as UrlDownloader).Should().NotBeNull();
+    }
+
+    [Fact]
+    public void CorrectlyResolvesTheProxyRoundRobinUrlDownloader()
+    {
+      (IocContainer.Resolve<IProxyRoundRobinUrlDownloader>() as ProxyRoundRobinUrlDownloader).Should().NotBeNull();      
+      ValidateSingletonRegistration<IProxyRoundRobinUrlDownloader>();
     }
 
     [Fact]
