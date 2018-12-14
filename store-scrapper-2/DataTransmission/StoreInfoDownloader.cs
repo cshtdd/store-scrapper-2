@@ -9,7 +9,7 @@ namespace store_scrapper_2.DataTransmission
 {
   public class StoreInfoDownloader : IStoreInfoDownloader
   {
-    private readonly IUrlDownloader _urlDownloader;
+    public readonly IUrlDownloader _urlDownloader;
     private readonly IZipCodeUrlSerializer _zipCodeUrlSerializer;
 
     public StoreInfoDownloader(IUrlDownloader urlDownloader, IZipCodeUrlSerializer zipCodeUrlSerializer)

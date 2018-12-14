@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
+using Autofac.Core;
 using Microsoft.Extensions.Caching.Memory;
+using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
 using store_scrapper_2.Services;
@@ -64,6 +66,13 @@ namespace store_scrapper_2.Configuration
       builder.RegisterType<ProxyRoundRobinUrlDownloader>()
         .As<IProxyRoundRobinUrlDownloader>()
         .SingleInstance();
+      
+      builder.RegisterType<StoreInfoDownloader>()
+        .WithParameter(new ResolvedParameter(
+            (pi, ctx) => pi.ParameterType == typeof(IUrlDownloader),
+            (pi, ctx) => ctx.Resolve<IProxyRoundRobinUrlDownloader>()
+        ))
+        .As<IStoreInfoDownloader>();
       
       builder.RegisterType<MemoryCache>()
         .As<IMemoryCache>()

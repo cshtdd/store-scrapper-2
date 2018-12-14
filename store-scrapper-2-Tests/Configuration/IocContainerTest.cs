@@ -33,7 +33,7 @@ namespace store_scrapper_2_Tests.Configuration
 
       ValidateSingletonRegistration<IMemoryCache>();
     }
-
+    
     [Fact]
     public void CorrectlyResolvesTheUrlDownloader()
     {
@@ -45,6 +45,16 @@ namespace store_scrapper_2_Tests.Configuration
     {
       (IocContainer.Resolve<IProxyRoundRobinUrlDownloader>() as ProxyRoundRobinUrlDownloader).Should().NotBeNull();      
       ValidateSingletonRegistration<IProxyRoundRobinUrlDownloader>();
+    }
+    
+    [Fact]
+    public void CorrectlyResolvesTheStoreInfoDownloader()
+    {
+      var storeInfoDownloader = IocContainer.Resolve<IStoreInfoDownloader>() as StoreInfoDownloader;
+
+      storeInfoDownloader.Should().NotBeNull();
+
+      (storeInfoDownloader._urlDownloader as ProxyRoundRobinUrlDownloader).Should().NotBeNull();
     }
 
     [Fact]
