@@ -12,10 +12,10 @@ namespace store_scrapper_2.DataTransmission.Web.Support
     public string Run(HttpWebRequest request)
     {
       var url = request.RequestUri.AbsoluteUri;
-      
+
       try
       {
-        Logger.LogDebug("Download", nameof(url), url);
+        Logger.LogDebug("Download", nameof(url), url, "Proxy", GetProxyString(request));
 
         using (var response = request.GetResponse())
         using (var responseStream = response.GetResponseStream())
@@ -34,6 +34,18 @@ namespace store_scrapper_2.DataTransmission.Web.Support
         Logger.LogError("Download Error", ex, nameof(url), url);
         throw;
       }
+    }
+
+    private static string GetProxyString(WebRequest request)
+    {
+      var proxy = request.Proxy as WebProxy;
+
+      if (proxy == null)
+      {
+        return string.Empty;
+      }
+
+      return proxy.Address.AbsoluteUri;
     }
   }
 }
