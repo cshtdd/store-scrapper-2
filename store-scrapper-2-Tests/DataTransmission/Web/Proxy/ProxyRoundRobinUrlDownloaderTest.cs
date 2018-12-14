@@ -1,5 +1,7 @@
+using System.Net;
 using FluentAssertions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
@@ -60,6 +62,19 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       downloader.Download("https://tddapps.com");
       
       proxyRepository.Received().CountSuccessRequest("192.168.1.1:8080");
+      proxyRepository.DidNotReceive().CountFailedRequest(Arg.Any<ProxyInfo>());
+    }
+    
+    [Fact]
+    public void CountsFailedDownloads()
+    {
+      proxyRepository.Read().Returns("192.168.1.1:8080");
+      proxiedDownloader.Download("https://tddapps.com", "192.168.1.1:8080").Throws<WebException>();
+
+      downloader.Download("https://tddapps.com");
+      
+      proxyRepository.DidNotReceive().CountSuccessRequest(Arg.Any<ProxyInfo>());
+      proxyRepository.Received().CountFailedRequest("192.168.1.1:8080");
     }
   }
 }

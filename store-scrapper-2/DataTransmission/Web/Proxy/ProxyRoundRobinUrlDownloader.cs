@@ -1,3 +1,4 @@
+using System.Net;
 using store_scrapper_2.Configuration;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
@@ -22,9 +23,18 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       var proxy = _proxyRepository.Read();
 
-      _proxyRepository.CountSuccessRequest(proxy);
-      
-      return _proxiedDownloader.Download(url, proxy);
+
+      try
+      {
+        var result = _proxiedDownloader.Download(url, proxy);
+        _proxyRepository.CountSuccessRequest(proxy);
+        return result;
+      }
+      catch (WebException)
+      {
+        _proxyRepository.CountFailedRequest(proxy);
+        return string.Empty;
+      }
     }
   }
 }
