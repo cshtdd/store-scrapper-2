@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using store_scrapper_2.Configuration;
 
@@ -31,11 +32,14 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         }
         catch (WebException)
         {
-          
+          if (i + 1 == maxAttempts)
+          {
+            throw;
+          }
         }
       }
 
-      return "";
+      throw new InvalidOperationException("This should never execute");
     }
 
     private int ReadMaxAttempts() => _configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);
