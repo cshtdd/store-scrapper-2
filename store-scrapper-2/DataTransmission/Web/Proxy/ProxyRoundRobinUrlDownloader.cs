@@ -20,7 +20,11 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     public string Download(string url)
     {
-      throw new System.NotImplementedException();
+      var proxy = _proxyRepository.Read();
+
+      _proxiedDownloader.Download(url, proxy);
+      
+      return string.Empty;
     }
   }
 }

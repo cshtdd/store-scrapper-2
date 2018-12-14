@@ -1,6 +1,8 @@
 using NSubstitute;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
+using Xunit;
 
 namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
 {
@@ -16,7 +18,24 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       downloader = new ProxyRoundRobinUrlDownloader(proxyRepository, proxiedDownloader, configurationReader);
     }
-    
-    
+
+    [Fact]
+    public void ReadsAProxyToDownloadAUrl()
+    {
+      downloader.Download("https://tddapps.com");
+
+      proxyRepository.Received().Read();
+    }
+
+    [Fact]
+    public void DownloadsTheUrlWithTheReadProxy()
+    {
+      proxyRepository.Read()
+        .Returns((ProxyInfo)"192.168.1.1:8080");
+
+      downloader.Download("https://tddapps.com");
+
+      proxiedDownloader.Received().Download("https://tddapps.com", "192.168.1.1:8080");
+    }
   }
 }
