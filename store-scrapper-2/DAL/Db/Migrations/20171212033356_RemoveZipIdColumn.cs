@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace store_scrapper_2.DAL.Db.Migrations
 {

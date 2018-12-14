@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using store_scrapper_2.DAL.Db;
 using System;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace store_scrapper_2.DAL.Db.Migrations
 {
