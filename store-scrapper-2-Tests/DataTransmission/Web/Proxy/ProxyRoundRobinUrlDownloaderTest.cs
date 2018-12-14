@@ -30,8 +30,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void DownloadsTheUrlWithTheReadProxy()
     {
-      proxyRepository.Read()
-        .Returns((ProxyInfo)"192.168.1.1:8080");
+      proxyRepository.Read().Returns("192.168.1.1:8080");
 
       downloader.Download("https://tddapps.com");
 

@@ -203,9 +203,9 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
       repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
 
-      repository.CountSuccessRequest((ProxyInfo)"192.168.1.1:8080");
-      repository.CountSuccessRequest((ProxyInfo)"192.168.1.2:8080");
-      repository.CountSuccessRequest((ProxyInfo)"192.168.1.3:8080");
+      repository.CountSuccessRequest("192.168.1.1:8080");
+      repository.CountSuccessRequest("192.168.1.2:8080");
+      repository.CountSuccessRequest("192.168.1.3:8080");
       
       repository.Read().Should().Be((ProxyInfo)"10.0.0.1:9000");
       repository.Read().Should().Be((ProxyInfo)"10.0.0.2:9000");
