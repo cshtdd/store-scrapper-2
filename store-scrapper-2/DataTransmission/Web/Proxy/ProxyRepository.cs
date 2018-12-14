@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using log4net;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
@@ -9,6 +12,8 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
   {
     private int lastReadIndex;
     private readonly List<ProxyStatistics> proxyStorage = new List<ProxyStatistics>();
+    
+    private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly IProxyListReader _proxyListReader;
     private readonly IConfigurationReader _configurationReader;
@@ -35,6 +40,8 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       var toProxyStatistics = ToProxyStatistics();
       var newProxies = _proxyListReader.Read().Select(toProxyStatistics);
       proxyStorage.AddRange(newProxies);
+      
+      Logger.LogInfo("ReadProxies", "Count", newProxies.Count());
     }
 
     public void CountSuccessRequest(ProxyInfo proxy)
@@ -90,6 +97,14 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       if (statistics.HasBeenUsedTooMuch)
       {
         proxyStorage.Remove(statistics);
+        
+        Logger.LogInfo("RemoveOverUsedProxy", 
+          "Proxy", statistics.Proxy,
+          "SuccessCount", statistics.SuccessCount,
+          "SuccessThreshold", statistics.SuccessThreshold,
+          "FailedCount", statistics.FailedCount,
+          "FailedThreshold", statistics.FailedThreshold
+        );
       }
     } 
     
