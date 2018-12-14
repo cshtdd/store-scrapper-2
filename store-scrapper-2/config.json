@@ -6,7 +6,7 @@
     "ZipsFilename": "zips.csv"
   },
   "ZipCodes": {
-    "DelayMs": "4000"
+    "DelayMs": "50"
   },
   "Stores": {
     "WriteCacheExpirationMs": "14400000"
