@@ -48,6 +48,10 @@ namespace store_scrapper_2.DataTransmission.Web.Support
           return reader.ReadToEnd();
         }
       }
+      catch (IOException ex)
+      {
+        throw new WebException(ex.Message, ex);        
+      }
       catch (OperationCanceledException ex)
       { 
         throw new WebException(ex.Message, ex);
