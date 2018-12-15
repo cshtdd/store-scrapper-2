@@ -32,12 +32,19 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       {
         try
         {
-          return ProxiedDownload(url);
+          return ProxiedDownload(url, i);
         }
         catch (WebException){ }
       }
       
       return RegularDownload(url);
+    }
+
+    private string ProxiedDownload(string url, int i)
+    {
+      var result = ProxiedDownload(url);
+      Logger.LogInfo("ProxiedDownload", "Success", true, "Attempts", i + 1, "Url", url);
+      return result;
     }
 
     private int ReadMaxAttempts() => _configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);
