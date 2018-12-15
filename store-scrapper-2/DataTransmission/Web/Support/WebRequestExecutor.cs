@@ -20,24 +20,37 @@ namespace store_scrapper_2.DataTransmission.Web.Support
       {
         Logger.LogDebug("Download", nameof(url), url, "Proxy", GetProxyString(request));
 
-        using (var response = request.GetResponse())
-        using (var responseStream = response.GetResponseStream())
-        using (var reader = new StreamReader(responseStream))
-        {
-          var result = reader.ReadToEnd();
-          var kbytes = Convert.ToInt32(result.Length / 1024);
+        var result = RunInternal(request);
+        var kbytes = Convert.ToInt32(result.Length / 1024);
 
-          stopwatch.Stop();
-          Logger.LogInfo("Download", "KBytes", kbytes, "Result", true, "ElapsedMs", stopwatch.ElapsedMilliseconds);
-          
-          return result;
-        }
+        stopwatch.Stop();
+        Logger.LogInfo("Download", "KBytes", kbytes, "Result", true, "ElapsedMs", stopwatch.ElapsedMilliseconds);
+
+        return result;
       }
       catch (WebException ex)
       {
         stopwatch.Stop();
         Logger.LogError("Download Error", ex, nameof(url), url, "ElapsedMs", stopwatch.ElapsedMilliseconds);
+
         throw;
+      }
+    }
+
+    private static string RunInternal(WebRequest request)
+    {
+      try
+      {
+        using (var response = request.GetResponse())
+        using (var responseStream = response.GetResponseStream())
+        using (var reader = new StreamReader(responseStream))
+        {
+          return reader.ReadToEnd();
+        }
+      }
+      catch (OperationCanceledException ex)
+      { 
+        throw new WebException(ex.Message, ex);
       }
     }
 
