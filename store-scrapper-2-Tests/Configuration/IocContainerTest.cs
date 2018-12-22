@@ -54,6 +54,13 @@ namespace store_scrapper_2_Tests.Configuration
     }
     
     [Fact]
+    public void CorrectlyResolvesTheDeadlockDetector()
+    {
+      (IocContainer.Resolve<IDeadlockDetector>() as DeadlockDetector).Should().NotBeNull();      
+      ValidateSingletonRegistration<IDeadlockDetector>();
+    }
+    
+    [Fact]
     public void CorrectlyResolvesTheStoreInfoDownloader()
     {
       var storeInfoDownloader = IocContainer.Resolve<IStoreInfoDownloader>() as StoreInfoDownloader;

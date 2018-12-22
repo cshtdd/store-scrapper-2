@@ -70,6 +70,10 @@ namespace store_scrapper_2.Configuration
         .As<IProxyRoundRobinUrlDownloader>()
         .SingleInstance();
       
+      builder.RegisterType<DeadlockDetector>()
+        .As<IDeadlockDetector>()
+        .SingleInstance();
+      
       builder.RegisterType<StoreInfoDownloader>()
         .WithParameter(new ResolvedParameter(
             (pi, ctx) => pi.ParameterType == typeof(IUrlDownloader),
