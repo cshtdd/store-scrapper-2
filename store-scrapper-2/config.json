@@ -19,6 +19,6 @@
   },
   "DeadlockDetection": {
     "Enabled": "true",
-    "TimeoutMs": "600000"
+    "TimeoutMs": "300000"
   }
 }
