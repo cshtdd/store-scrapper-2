@@ -6,7 +6,7 @@
     "ZipsFilename": "zips.csv"
   },
   "ZipCodes": {
-    "DelayMs": "10"
+    "DelayMs": "50"
   },
   "Stores": {
     "WriteCacheExpirationMs": "14400000"
@@ -14,7 +14,7 @@
   "Proxy": {
     "TimeoutMs": "15000",
     "FailThreshold": "2",
-    "MaxCount": "1000",
+    "MaxCount": "300",
     "UrlMaxAttempts": "5"
   },
   "DeadlockDetection": {
