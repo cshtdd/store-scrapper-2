@@ -13,19 +13,21 @@ namespace store_scrapper_2.Services
     private readonly IStoresPersistor _storesPersistor;
     private readonly IZipCodeDataService _zipCodeDataService;
     private readonly IWebExceptionHandler _webExceptionHandler;
+    private readonly IDeadlockDetector _deadlockDetector;
 
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public SingleZipCodeProcessor(
-      IStoreInfoDownloader downloader,
+    public SingleZipCodeProcessor(IStoreInfoDownloader downloader,
       IStoresPersistor storesPersistor,
       IZipCodeDataService zipCodeDataService,
-      IWebExceptionHandler webExceptionHandler)
+      IWebExceptionHandler webExceptionHandler,
+      IDeadlockDetector deadlockDetector)
     {
       _downloader = downloader;
       _storesPersistor = storesPersistor;
       _zipCodeDataService = zipCodeDataService;
       _webExceptionHandler = webExceptionHandler;
+      _deadlockDetector = deadlockDetector;
     }
 
     public void Process(ZipCode zipCode)
@@ -56,6 +58,8 @@ namespace store_scrapper_2.Services
       _zipCodeDataService.UpdateZipCode(zipCode.Zip);
 
       LogSuccess(zipCode);
+      
+      _deadlockDetector.UpdateStatus();
     }
 
     private static void LogFailure(ZipCode zipCode) => LogResult(zipCode, false);

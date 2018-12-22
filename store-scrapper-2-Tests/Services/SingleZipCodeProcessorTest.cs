@@ -23,12 +23,18 @@ namespace store_scrapper_2_Tests.Services
     private readonly IStoreInfoDownloader _downloader = Substitute.For<IStoreInfoDownloader>();
     private readonly IStoresPersistor _persistor = Substitute.For<IStoresPersistor>();
     private readonly IZipCodeDataService _zipCodeDataService = Substitute.For<IZipCodeDataService>();
+    private readonly IDeadlockDetector _deadlockDetector = Substitute.For<IDeadlockDetector>();
 
     private readonly SingleZipCodeProcessor _processor;
 
     public SingleZipCodeProcessorTest()
     {
-      _processor = new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new IgnorePaymentRequiredExceptions());
+      _processor = new SingleZipCodeProcessor(
+        _downloader,
+        _persistor,
+        _zipCodeDataService,
+        new IgnorePaymentRequiredExceptions(),
+        _deadlockDetector);
     }
     
     [Fact]
@@ -57,6 +63,10 @@ namespace store_scrapper_2_Tests.Services
       _zipCodeDataService
         .Received(1)
         .UpdateZipCode("55555");
+      
+      _deadlockDetector
+        .Received(1)
+        .UpdateStatus();
     }
 
     [Fact]
@@ -91,7 +101,7 @@ namespace store_scrapper_2_Tests.Services
       
       ((Action) (() =>
       {
-        new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new NeverIgnoreExceptions())
+        new SingleZipCodeProcessor(_downloader, _persistor, _zipCodeDataService, new NeverIgnoreExceptions(), _deadlockDetector)
           .Process(_zipCode);
       })).Should().Throw<WebException>();
 
