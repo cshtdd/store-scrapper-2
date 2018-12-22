@@ -39,6 +39,12 @@ namespace store_scrapper_2_Tests.Configuration
     {
       (IocContainer.Resolve<IUrlDownloader>() as UrlDownloader).Should().NotBeNull();
     }
+    
+    [Fact]
+    public void CorrectlyResolvesTheProxyReadingStrategy()
+    {
+      (IocContainer.Resolve<IProxyReadingStrategy>() as ProxyReadingStrategyGreedy).Should().NotBeNull();
+    }
 
     [Fact]
     public void CorrectlyResolvesTheProxyRoundRobinUrlDownloader()
