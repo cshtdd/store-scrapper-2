@@ -10,17 +10,18 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
   public class ProxyRepository : IProxyRepository
   {
-    private int lastReadIndex;
-    private readonly List<ProxyStatistics> proxyStorage = new List<ProxyStatistics>();
+    private readonly List<ProxyStatistics> _proxyStorage = new List<ProxyStatistics>();
     
     private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly IProxyListReader _proxyListReader;
+    private readonly IProxyReadingStrategy _proxyReadingStrategy;
     private readonly IConfigurationReader _configurationReader;
 
-    public ProxyRepository(IProxyListReader proxyListReader, IConfigurationReader configurationReader)
+    public ProxyRepository(IProxyListReader proxyListReader, IProxyReadingStrategy proxyReadingStrategy, IConfigurationReader configurationReader)
     {
       _proxyListReader = proxyListReader;
+      _proxyReadingStrategy = proxyReadingStrategy;
       _configurationReader = configurationReader;
     }
 
@@ -31,15 +32,15 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         ReadProxies();
       }
 
-      return proxyStorage[lastReadIndex++ % proxyStorage.Count].Proxy;
+      return _proxyReadingStrategy.Read(_proxyStorage);
     }
 
     private void ReadProxies()
     {
-      lastReadIndex = 0;
+      _proxyReadingStrategy.Reset();
       var toProxyStatistics = ToProxyStatistics();
       var newProxies = _proxyListReader.Read().Select(toProxyStatistics);
-      proxyStorage.AddRange(newProxies);
+      _proxyStorage.AddRange(newProxies);
       
       Logger.LogInfo("ReadProxies", "Count", newProxies.Count());
     }
@@ -60,7 +61,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       RemoveIfNeeded(statistics);
     }
 
-    private bool HasNoProxies() => proxyStorage.Count == 0;
+    private bool HasNoProxies() => _proxyStorage.Count == 0;
     private void EnsureProxiesHaveBeenRead()
     {
       if (HasNoProxies())
@@ -82,7 +83,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     
     private ProxyStatistics Find(ProxyInfo proxy)
     {
-      var result = proxyStorage.Find(s => s.Proxy.Equals(proxy));
+      var result = _proxyStorage.Find(s => s.Proxy.Equals(proxy));
 
       if (result == null)
       {
@@ -96,7 +97,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       if (statistics.HasBeenUsedTooMuch)
       {
-        proxyStorage.Remove(statistics);
+        _proxyStorage.Remove(statistics);
         
         Logger.LogInfo("RemoveOverUsedProxy", 
           "Proxy", statistics.Proxy,

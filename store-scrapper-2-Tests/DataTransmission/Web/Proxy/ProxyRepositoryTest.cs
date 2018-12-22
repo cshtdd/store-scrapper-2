@@ -18,7 +18,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
 
     public ProxyRepositoryTest()
     {
-      repository = new ProxyRepository(proxyListReader, configurationReader); 
+      repository = new ProxyRepository(proxyListReader, new ProxyReadingStrategyRoundRobin(), configurationReader); 
     }
 
     [Fact]
