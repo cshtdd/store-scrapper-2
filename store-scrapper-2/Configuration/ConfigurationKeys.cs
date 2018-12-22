@@ -12,5 +12,7 @@
     public const string ProxyFailThreshold = "Proxy:FailThreshold";
     public const string ProxyMaxCount = "Proxy:MaxCount";
     public const string ProxyUrlMaxAttempts = "Proxy:UrlMaxAttempts";
+    public const string DeadlockDetectionEnabled = "DeadlockDetection:Enabled";
+    public const string DeadlockDetectionTimeoutMs = "DeadlockDetection:TimeoutMs";
   }
 }
