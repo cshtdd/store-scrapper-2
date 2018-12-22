@@ -32,9 +32,14 @@ pushd store-scrapper-2/bin/Debug/netcoreapp2.0 && \
 [Sample Dockerfile](https://github.com/dotnet/dotnet-docker-samples/blob/master/dotnetapp-prod/Dockerfile.arm32)  
 
 ```bash
+#pushd store-scrapper-2 && \
+#  docker build -t ss2 . && \
+#  docker build -f Dockerfile-arm -t ss2-arm . && \
+#  docker system prune -f && \
+#  popd
+
 pushd store-scrapper-2 && \
   docker build -t ss2 . && \
-  docker build -f Dockerfile-arm -t ss2-arm . && \
   docker system prune -f && \
   popd
 ```
@@ -44,10 +49,14 @@ pushd store-scrapper-2 && \
 ```bash
 docker login -u tddapps repo.treescale.com
 
-docker tag ss2 repo.treescale.com/tddapps/ss2:1.3 && \
-  docker tag ss2-arm repo.treescale.com/tddapps/ss2-arm:1.3 && \
+#docker tag ss2 repo.treescale.com/tddapps/ss2:1.4 && \
+#  docker tag ss2-arm repo.treescale.com/tddapps/ss2-arm:1.4 && \
+#  docker push repo.treescale.com/tddapps/ss2 && \
+#  docker push repo.treescale.com/tddapps/ss2-arm && \
+#  docker system prune -f
+
+docker tag ss2 repo.treescale.com/tddapps/ss2:1.4 && \
   docker push repo.treescale.com/tddapps/ss2 && \
-  docker push repo.treescale.com/tddapps/ss2-arm && \
   docker system prune -f
 ```
 
