@@ -44,12 +44,11 @@ namespace store_scrapper_2.Services
       {
         return;
       }
+      _initialized = true;
       
       Logger.LogInfo("Init", nameof(IsEnabled), IsEnabled, nameof(TimeoutMs), TimeoutMs);
       UpdateStatus();
       StartTimer();
-
-      _initialized = true;
     }
 
     public void Dispose()
