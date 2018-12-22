@@ -9,7 +9,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     
     public void Reset()
     {
-      throw new System.NotImplementedException();
+      lastReadIndex = 0;
     }
 
     public ProxyInfo Read(IEnumerable<ProxyStatistics> proxies)
