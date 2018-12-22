@@ -4,15 +4,15 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
   {
     public ProxyInfo Proxy { get; }
       
-    public int SuccessThreshold { get; }
-    public int FailedThreshold { get; }
+    public uint SuccessThreshold { get; }
+    public uint FailedThreshold { get; }
 
-    public int SuccessCount { get; set; }
-    public int FailedCount { get; set; }
+    public uint SuccessCount { get; set; }
+    public uint FailedCount { get; set; }
 
     public ProxyStatistics(ProxyInfo proxy,
-      int successThreshold, int failedThreshold, 
-      int successCount = 0, int failedCount = 0)
+      uint successThreshold, uint failedThreshold, 
+      uint successCount = 0, uint failedCount = 0)
     {
       Proxy = proxy;
 

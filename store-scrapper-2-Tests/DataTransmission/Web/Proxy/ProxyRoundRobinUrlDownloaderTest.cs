@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using FluentAssertions;
 using NSubstitute;
@@ -21,7 +20,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     
     public ProxyRoundRobinUrlDownloaderTest()
     {
-      configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10).Returns(2);
+      configurationReader.ReadUInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10).Returns(2u);
 
       downloader = new ProxyRoundRobinUrlDownloader(
         proxyRepository, 

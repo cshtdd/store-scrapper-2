@@ -28,7 +28,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
     {
       var maxAttempts = ReadMaxAttempts();
 
-      for (int i = 0; i < maxAttempts; i++)
+      for (var i = 0; i < maxAttempts; i++)
       {
         try
         {
@@ -47,7 +47,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       return result;
     }
 
-    private int ReadMaxAttempts() => _configurationReader.ReadInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);
+    private uint ReadMaxAttempts() => _configurationReader.ReadUInt(ConfigurationKeys.ProxyUrlMaxAttempts, 10);
 
     private string ProxiedDownload(string url)
     {

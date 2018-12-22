@@ -26,6 +26,6 @@ namespace store_scrapper_2.DataTransmission.Web.Support
       return request;
     }
 
-    private int ReadProxyTimeout() => _configurationReader.ReadInt(ConfigurationKeys.ProxyTimeoutMs, 30000);
+    private int ReadProxyTimeout() => (int)_configurationReader.ReadUInt(ConfigurationKeys.ProxyTimeoutMs, 30000);
   }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NSubstitute;
+using store_scrapper_2;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
@@ -135,10 +136,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void RemovesTroublesomeProxiesFromTheRotation()
     {
-      _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
-        .Returns(2);
-      _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
-        .Returns(200);
+      SeedFailThreshold(2);
+      SeedProxyMaxCount(200);
       
       _proxyListReader.Read().Returns(new ProxyInfo[]
       {
@@ -170,10 +169,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void RemoveProxiesThatHaveBeenUsedManyTimes()
     {
-      _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
-        .Returns(200);
-      _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
-        .Returns(2);
+      SeedFailThreshold(200);
+      SeedProxyMaxCount(2);
       
       _proxyListReader.Read().Returns(new ProxyInfo[]
       {
@@ -205,10 +202,8 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void RetrievesTheProxyListOnceAllProxiesAreRemoved()
     {
-      _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
-        .Returns(1);
-      _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
-        .Returns(1);
+      SeedFailThreshold(1);
+      SeedProxyMaxCount(1);
 
       IEnumerable<ProxyInfo> proxyList1 = new ProxyInfo[]
       {
@@ -242,5 +237,13 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       _proxyReadingStrategy.Received(2).Reset();
       _proxyListReader.Received(2).Read();
     }
+
+    private void SeedFailThreshold(uint value) => _configurationReader
+      .ReadUInt(ConfigurationKeys.ProxyFailThreshold, 5)
+      .Returns(value);
+
+    private void SeedProxyMaxCount(uint value) => _configurationReader
+      .ReadUInt(ConfigurationKeys.ProxyMaxCount, 100)
+      .Returns(value);
   }
 }

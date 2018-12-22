@@ -78,8 +78,8 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       return proxyInfo => new ProxyStatistics(proxyInfo, successThreshold, failThreshold);
     }
 
-    private int ReadFailedThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5);
-    private int ReadSuccessThreshold() => _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100);
+    private uint ReadFailedThreshold() => _configurationReader.ReadUInt(ConfigurationKeys.ProxyFailThreshold, 5);
+    private uint ReadSuccessThreshold() => _configurationReader.ReadUInt(ConfigurationKeys.ProxyMaxCount, 100);
     
     private ProxyStatistics Find(ProxyInfo proxy)
     {
