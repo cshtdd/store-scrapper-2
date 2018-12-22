@@ -10,7 +10,8 @@ namespace store_scrapper_2.Services
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly IConfigurationReader _configurationReader;
-    
+
+    private bool _initialized;
     private readonly object _statusLock = new object();
     private bool _disposed;
     private readonly Timer _deadlockTimer = new Timer();
@@ -27,19 +28,28 @@ namespace store_scrapper_2.Services
     private bool IsEnabled => _configurationReader.ReadBool(ConfigurationKeys.DeadlockDetectionEnabled);
     private uint TimeoutMs => _configurationReader.ReadUInt(ConfigurationKeys.DeadlockDetectionTimeoutMs, 600000);
 
-    public void Init()
-    {
-      Logger.LogInfo("Init", nameof(IsEnabled), IsEnabled, nameof(TimeoutMs), TimeoutMs);
-      UpdateStatus();
-      StartTimer();
-    }
-
     public void UpdateStatus()
     {
+      Init();
+      
       lock (_statusLock)
       {
         _lastStatus = DateTime.UtcNow;        
       }
+    }
+    
+    private void Init()
+    {
+      if (_initialized)
+      {
+        return;
+      }
+      
+      Logger.LogInfo("Init", nameof(IsEnabled), IsEnabled, nameof(TimeoutMs), TimeoutMs);
+      UpdateStatus();
+      StartTimer();
+
+      _initialized = true;
     }
 
     public void Dispose()
