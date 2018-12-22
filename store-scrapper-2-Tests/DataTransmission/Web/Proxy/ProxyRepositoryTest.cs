@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using store_scrapper_2.Configuration;
@@ -11,40 +12,41 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
 {
   public class ProxyRepositoryTest
   {
-    private readonly IProxyListReader proxyListReader = Substitute.For<IProxyListReader>();
-    private readonly IConfigurationReader configurationReader = Substitute.For<IConfigurationReader>();
+    private readonly IProxyListReader _proxyListReader = Substitute.For<IProxyListReader>();
+    private readonly IConfigurationReader _configurationReader = Substitute.For<IConfigurationReader>();
+    private readonly IProxyReadingStrategy _proxyReadingStrategy = Substitute.For<IProxyReadingStrategy>();
     
-    private readonly ProxyRepository repository;
-
+    private readonly ProxyRepository _repository;
+    
     public ProxyRepositoryTest()
     {
-      repository = new ProxyRepository(proxyListReader, new ProxyReadingStrategyRoundRobin(), configurationReader); 
+      _repository = new ProxyRepository(_proxyListReader, _proxyReadingStrategy, _configurationReader); 
     }
-
+    
     [Fact]
     public void CannotMarkGoodRequestsIfNoProxiesHaveBeenRead()
     {
       ((Action)(() =>
       {
-          repository.CountSuccessRequest("127.0.0.1:80");
+        _repository.CountSuccessRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
     
     [Fact]
     public void CannotMarkGoodRequestsIfTheProxyIsNotFound()
     {
-      proxyListReader.Read().Returns(new ProxyInfo[]
+      _proxyListReader.Read().Returns(new ProxyInfo[]
       {
         "192.168.1.1:8080",
         "192.168.1.2:8080",
         "192.168.1.3:8080"
       });
 
-      repository.Read();
+      _repository.Read();
       
       ((Action)(() =>
       {
-        repository.CountSuccessRequest("127.0.0.1:80");
+        _repository.CountSuccessRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
     
@@ -53,32 +55,32 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       ((Action)(() =>
       {
-          repository.CountFailedRequest("127.0.0.1:80");
+        _repository.CountFailedRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
     
     [Fact]
     public void CannotMarkBadRequestsIfTheProxyIsNotFound()
     {
-      proxyListReader.Read().Returns(new ProxyInfo[]
+      _proxyListReader.Read().Returns(new ProxyInfo[]
       {
         "192.168.1.1:8080",
         "192.168.1.2:8080",
         "192.168.1.3:8080"
       });
 
-      repository.Read();
+      _repository.Read();
       
       ((Action)(() =>
       {
-        repository.CountFailedRequest("127.0.0.1:80");
+        _repository.CountFailedRequest("127.0.0.1:80");
       })).Should().Throw<InvalidOperationException>();
     }
 
     [Fact]
     public void MultipleReadCallsDoNotCauseMultipleListRetrievals()
     {
-      proxyListReader.Read().Returns(new ProxyInfo[]
+      _proxyListReader.Read().Returns(new ProxyInfo[]
       {
         "192.168.1.1:8080",
         "192.168.1.2:8080",
@@ -87,101 +89,125 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
 
       for (int i = 0; i < 10; i++)
       {
-        repository.Read();
+        _repository.Read();
       }
       
-      proxyListReader.Received(1).Read();
+      _proxyListReader.Received(1).Read();
+    }
+
+    [Fact]
+    public void RetrievingTheProxiesResetsTheProxyReadingStrategy()
+    {
+      _proxyListReader.Read().Returns(new ProxyInfo[]
+      {
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080"
+      });
+
+      for (int i = 0; i < 10; i++)
+      {
+        _repository.Read();
+      }
+      
+      _proxyReadingStrategy.Received(1).Reset();
+    }
+
+    [Fact]
+    public void ReadReturnsTheReadingStrategyResult()
+    {
+      var seededProxies = new ProxyInfo[]
+      {
+        "192.168.1.1:8080",
+        "192.168.1.2:8080",
+        "192.168.1.3:8080"
+      };
+      _proxyListReader.Read().Returns(seededProxies);
+
+      _proxyReadingStrategy
+        .Read(Arg.Is<IEnumerable<ProxyStatistics>>(stats => 
+          stats.Select(s => s.Proxy).SequenceEqual(seededProxies)))
+        .Returns("10.0.0.1:9000");
+
+      _repository.Read().Should().Be((ProxyInfo) "10.0.0.1:9000");
     }
     
     [Fact]
-    public void ReadRotatesTheProxies()
-    {
-      proxyListReader.Read().Returns(new ProxyInfo[]
-      {
-        "192.168.1.1:8080",
-        "192.168.1.2:8080",
-        "192.168.1.3:8080"
-      });
-
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
-    }
-
-    [Fact]
     public void RemovesTroublesomeProxiesFromTheRotation()
     {
-      configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
+      _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
         .Returns(2);
-      configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
+      _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
         .Returns(200);
       
-      proxyListReader.Read().Returns(new ProxyInfo[]
+      _proxyListReader.Read().Returns(new ProxyInfo[]
       {
         "192.168.1.1:8080",
         "192.168.1.2:8080",
         "192.168.1.3:8080"
       });
 
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
-      
-      repository.CountFailedRequest("192.168.1.2:8080");
-      
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      var roundRobin = new ProxyReadingStrategyRoundRobin();
+      _proxyReadingStrategy.Read(Arg.Any<IEnumerable<ProxyStatistics>>())
+        .Returns(s => roundRobin.Read(s.Arg<IEnumerable<ProxyStatistics>>()));
 
-      repository.CountFailedRequest("192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      
+      _repository.CountFailedRequest("192.168.1.2:8080");
+      
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
 
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      _repository.CountFailedRequest("192.168.1.2:8080");
+
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
     }
 
     [Fact]
     public void RemoveProxiesThatHaveBeenUsedManyTimes()
     {
-      configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
+      _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
         .Returns(200);
-      configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
+      _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
         .Returns(2);
       
-      proxyListReader.Read().Returns(new ProxyInfo[]
+      _proxyListReader.Read().Returns(new ProxyInfo[]
       {
         "192.168.1.1:8080",
         "192.168.1.2:8080",
         "192.168.1.3:8080"
       });
       
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      var roundRobin = new ProxyReadingStrategyRoundRobin();
+      _proxyReadingStrategy.Read(Arg.Any<IEnumerable<ProxyStatistics>>())
+        .Returns(s => roundRobin.Read(s.Arg<IEnumerable<ProxyStatistics>>()));
       
-      repository.CountSuccessRequest("192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
       
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      _repository.CountSuccessRequest("192.168.1.2:8080");
+      
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
 
-      repository.CountSuccessRequest("192.168.1.2:8080");
+      _repository.CountSuccessRequest("192.168.1.2:8080");
 
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
     }
 
     [Fact]
     public void RetrievesTheProxyListOnceAllProxiesAreRemoved()
     {
-      configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
+      _configurationReader.ReadInt(ConfigurationKeys.ProxyFailThreshold, 5)
         .Returns(1);
-      configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
+      _configurationReader.ReadInt(ConfigurationKeys.ProxyMaxCount, 100)
         .Returns(1);
 
       IEnumerable<ProxyInfo> proxyList1 = new ProxyInfo[]
@@ -197,20 +223,24 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
         "10.0.0.3:9000",
         "10.0.0.4:9000"
       };
-      proxyListReader.Read().Returns(proxyList1, proxyList2);
-     
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
-      repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
-
-      repository.CountSuccessRequest("192.168.1.1:8080");
-      repository.CountSuccessRequest("192.168.1.2:8080");
-      repository.CountSuccessRequest("192.168.1.3:8080");
+      _proxyListReader.Read().Returns(proxyList1, proxyList2);
       
-      repository.Read().Should().Be((ProxyInfo)"10.0.0.1:9000");
-      repository.Read().Should().Be((ProxyInfo)"10.0.0.2:9000");
-      repository.Read().Should().Be((ProxyInfo)"10.0.0.3:9000");
-      repository.Read().Should().Be((ProxyInfo)"10.0.0.4:9000");
+      var roundRobin = new ProxyReadingStrategyRoundRobin();
+      _proxyReadingStrategy.Read(Arg.Any<IEnumerable<ProxyStatistics>>())
+        .Returns(s => roundRobin.Read(s.Arg<IEnumerable<ProxyStatistics>>()));
+     
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.1:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.2:8080");
+      _repository.Read().Should().Be((ProxyInfo)"192.168.1.3:8080");
+
+      _repository.CountSuccessRequest("192.168.1.1:8080");
+      _repository.CountSuccessRequest("192.168.1.2:8080");
+      _repository.CountSuccessRequest("192.168.1.3:8080");
+
+      _repository.Read();
+      
+      _proxyReadingStrategy.Received(2).Reset();
+      _proxyListReader.Received(2).Read();
     }
   }
 }
