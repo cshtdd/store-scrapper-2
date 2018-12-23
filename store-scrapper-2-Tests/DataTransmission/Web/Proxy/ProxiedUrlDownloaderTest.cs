@@ -46,7 +46,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       _webRequestFactory.CreateHttp(Arg.Any<string>(), Arg.Any<ProxyInfo>())
         .Returns(WebRequest.CreateHttp("https://tddapps.com"));
       
-      _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
+      _webRequestExecutor.Run(Arg.Any<WebRequest>())
         .Throws(new WebException("download error"));
       
       ((Action) (() =>
@@ -63,7 +63,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       _webRequestFactory.CreateHttp(Arg.Any<string>(), Arg.Any<ProxyInfo>())
         .Returns(WebRequest.CreateHttp("https://tddapps.com"));
       
-      _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
+      _webRequestExecutor.Run(Arg.Any<WebRequest>())
         .Throws(new IOException("socket closed"));
       
       ((Action) (() =>
@@ -80,7 +80,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
       _webRequestFactory.CreateHttp(Arg.Any<string>(), Arg.Any<ProxyInfo>())
         .Returns(WebRequest.CreateHttp("https://tddapps.com"));
       
-      _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
+      _webRequestExecutor.Run(Arg.Any<WebRequest>())
         .Throws(new OperationCanceledException("the request was canceled"));
       
       ((Action) (() =>

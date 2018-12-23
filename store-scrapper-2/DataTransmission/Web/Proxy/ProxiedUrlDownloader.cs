@@ -46,7 +46,7 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       }
     }
 
-    private string DownloadInternal(HttpWebRequest request)
+    private string DownloadInternal(WebRequest request)
     {
       try
       {

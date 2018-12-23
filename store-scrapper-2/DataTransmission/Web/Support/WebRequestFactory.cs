@@ -12,9 +12,9 @@ namespace store_scrapper_2.DataTransmission.Web.Support
       _configurationReader = configurationReader;
     }
     
-    public HttpWebRequest CreateHttp(string url) => WebRequest.CreateHttp(url);
+    public WebRequest CreateHttp(string url) => WebRequest.CreateHttp(url);
 
-    public HttpWebRequest CreateHttp(string url, ProxyInfo proxy)
+    public WebRequest CreateHttp(string url, ProxyInfo proxy)
     {
       var request = WebRequest.CreateHttp(url);
       request.Proxy = new WebProxy(proxy.IpAddress, proxy.Port);

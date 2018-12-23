@@ -5,7 +5,7 @@ namespace store_scrapper_2.DataTransmission.Web.Support
 {
   public class WebRequestExecutor : IWebRequestExecutor
   {
-    public string Run(HttpWebRequest request)
+    public string Run(WebRequest request)
     {
       using (var response = request.GetResponse())
       using (var responseStream = response.GetResponseStream())

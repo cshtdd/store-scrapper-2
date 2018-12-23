@@ -4,6 +4,6 @@ namespace store_scrapper_2.DataTransmission.Web.Support
 {
   public interface IWebRequestExecutor
   {
-    string Run(HttpWebRequest request);
+    string Run(WebRequest request);
   }
 }

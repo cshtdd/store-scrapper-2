@@ -4,7 +4,7 @@ namespace store_scrapper_2.DataTransmission.Web.Support
 {
   public interface IWebRequestFactory
   {
-    HttpWebRequest CreateHttp(string url);
-    HttpWebRequest CreateHttp(string url, ProxyInfo proxy);
+    WebRequest CreateHttp(string url);
+    WebRequest CreateHttp(string url, ProxyInfo proxy);
   }
 }

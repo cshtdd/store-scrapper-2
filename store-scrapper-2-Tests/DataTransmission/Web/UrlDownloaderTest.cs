@@ -43,7 +43,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web
       _webRequestFactory.CreateHttp(Arg.Any<string>())
         .Returns(WebRequest.CreateHttp("https://tddapps.com"));
       
-      _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
+      _webRequestExecutor.Run(Arg.Any<WebRequest>())
         .Throws(new WebException("download error"));
       
       ((Action) (() => { _downloader.Download("my url"); }))
