@@ -67,5 +67,19 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
         .Should()
         .Throw<WebException>();
     }
+    
+    [Fact]
+    public void BubblesUpOperationCanceledExceptionsAsWebExceptions()
+    {
+      _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
+        .Throws(new OperationCanceledException("the request was canceled"));
+      
+      ((Action) (() =>
+        {
+          _downloader.Download("my url", new ProxyInfo("192.168.1.1:8080"));
+        }))
+        .Should()
+        .Throw<WebException>();
+    }
   }
 }

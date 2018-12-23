@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using store_scrapper_2.DataTransmission.Web.Support;
@@ -21,6 +22,10 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
       try
       {
         return RunInternal(request);        
+      }
+      catch (OperationCanceledException ex)
+      { 
+        throw new WebException(ex.Message, ex);
       }
       catch (IOException ex)
       {
