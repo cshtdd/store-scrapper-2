@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using FluentAssertions;
 using NSubstitute;
@@ -44,6 +45,20 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     {
       _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
         .Throws(new WebException("download error"));
+      
+      ((Action) (() =>
+        {
+          _downloader.Download("my url", new ProxyInfo("192.168.1.1:8080"));
+        }))
+        .Should()
+        .Throw<WebException>();
+    }
+    
+    [Fact]
+    public void BubblesUpIOExceptionsAsWebExceptions()
+    {
+      _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
+        .Throws(new IOException("socket closed"));
       
       ((Action) (() =>
         {
