@@ -40,6 +40,9 @@ namespace store_scrapper_2_Tests.DataTransmission.Web
     [Fact]
     public void BubblesUpWebExceptions()
     {
+      _webRequestFactory.CreateHttp(Arg.Any<string>())
+        .Returns(WebRequest.CreateHttp("https://tddapps.com"));
+      
       _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
         .Throws(new WebException("download error"));
       

@@ -43,6 +43,9 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void BubblesUpWebExceptions()
     {
+      _webRequestFactory.CreateHttp(Arg.Any<string>(), Arg.Any<ProxyInfo>())
+        .Returns(WebRequest.CreateHttp("https://tddapps.com"));
+      
       _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
         .Throws(new WebException("download error"));
       
@@ -57,6 +60,9 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void BubblesUpIOExceptionsAsWebExceptions()
     {
+      _webRequestFactory.CreateHttp(Arg.Any<string>(), Arg.Any<ProxyInfo>())
+        .Returns(WebRequest.CreateHttp("https://tddapps.com"));
+      
       _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
         .Throws(new IOException("socket closed"));
       
@@ -71,6 +77,9 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     [Fact]
     public void BubblesUpOperationCanceledExceptionsAsWebExceptions()
     {
+      _webRequestFactory.CreateHttp(Arg.Any<string>(), Arg.Any<ProxyInfo>())
+        .Returns(WebRequest.CreateHttp("https://tddapps.com"));
+      
       _webRequestExecutor.Run(Arg.Any<HttpWebRequest>())
         .Throws(new OperationCanceledException("the request was canceled"));
       

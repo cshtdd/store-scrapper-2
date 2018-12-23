@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using store_scrapper_2.DataTransmission.Web.Support;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DataTransmission.Web.Proxy
 {
@@ -9,6 +11,8 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
   {
     private readonly IWebRequestExecutor _webRequestExecutor;
     private readonly IWebRequestFactory _webRequestFactory;
+
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     public ProxiedUrlDownloader(IWebRequestExecutor webRequestExecutor, IWebRequestFactory webRequestFactory)
     {
@@ -18,24 +22,44 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     public string Download(string url, ProxyInfo proxy)
     {
+      var stopwatch = Stopwatch.StartNew();
+      
       var request = _webRequestFactory.CreateHttp(url, proxy);
+      Logger.LogDebug("Download", nameof(url), url, "Proxy", request.GetProxyString());
+
       try
       {
-        return RunInternal(request);        
+        var result = DownloadInternal(request);
+
+        var kbytes = Convert.ToInt32(result.Length / 1024);
+        stopwatch.Stop();
+        Logger.LogInfo("Download", "KBytes", kbytes, "Result", true, "ElapsedMs", stopwatch.ElapsedMilliseconds);
+
+        return result;
       }
-      catch (OperationCanceledException ex)
-      { 
-        throw new WebException(ex.Message, ex);
-      }
-      catch (IOException ex)
+      catch (WebException e)
       {
-        throw new WebException(ex.Message, ex);        
+        stopwatch.Stop();
+        Logger.LogError("Download Error", e, nameof(url), url, "ElapsedMs", stopwatch.ElapsedMilliseconds);
+
+        throw;
       }
     }
 
-    private string RunInternal(HttpWebRequest request)
+    private string DownloadInternal(HttpWebRequest request)
     {
-      return _webRequestExecutor.Run(request);
+      try
+      {
+        return _webRequestExecutor.Run(request);
+      }
+      catch (OperationCanceledException e)
+      {
+        throw new WebException(e.Message, e);
+      }
+      catch (IOException e)
+      {
+        throw new WebException(e.Message, e);
+      }
     }
   }
 }
