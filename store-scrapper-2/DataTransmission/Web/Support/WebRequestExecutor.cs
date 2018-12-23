@@ -18,7 +18,7 @@ namespace store_scrapper_2.DataTransmission.Web.Support
 
       try
       {
-        Logger.LogDebug("Download", nameof(url), url, "Proxy", GetProxyString(request));
+        Logger.LogDebug("Download", nameof(url), url, "Proxy", request.GetProxyString());
 
         var result = RunInternal(request);
         var kbytes = Convert.ToInt32(result.Length / 1024);
@@ -56,18 +56,6 @@ namespace store_scrapper_2.DataTransmission.Web.Support
       { 
         throw new WebException(ex.Message, ex);
       }
-    }
-
-    private static string GetProxyString(WebRequest request)
-    {
-      var proxy = request.Proxy as WebProxy;
-
-      if (proxy == null)
-      {
-        return string.Empty;
-      }
-
-      return proxy.Address.AbsoluteUri;
     }
   }
 }
