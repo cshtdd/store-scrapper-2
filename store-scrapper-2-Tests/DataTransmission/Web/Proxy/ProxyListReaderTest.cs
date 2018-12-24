@@ -48,7 +48,7 @@ Free HTTP/HTTPS(SSL) proxy list only. Text format. Updated hourly.");
 
       var proxies = reader.Read().ToArray();
 
-      proxies.Length.Should().Be(10);
+      proxies.Length.Should().Be(8);
       proxies[0].Should().Be(new ProxyInfo("107.150.10.35:3128"));
       proxies[1].Should().Be(new ProxyInfo("70.28.43.61:8080"));
       proxies[2].Should().Be(new ProxyInfo("179.43.81.135:80"));
@@ -57,8 +57,6 @@ Free HTTP/HTTPS(SSL) proxy list only. Text format. Updated hourly.");
       proxies[5].Should().Be(new ProxyInfo("24.37.245.42:46795"));
       proxies[6].Should().Be(new ProxyInfo("73.239.197.175:8080"));
       proxies[7].Should().Be(new ProxyInfo("204.245.9.15:50928"));
-      proxies[8].Should().Be(new ProxyInfo("103.194.89.161:8080"));
-      proxies[9].Should().Be(new ProxyInfo("87.248.171.166:44576"));
     }
   }
 }

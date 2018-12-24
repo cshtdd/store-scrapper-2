@@ -23,10 +23,13 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         .ToList()
         .Skip(4)
         .SkipLast(2)
+        .Where(SameIncomingOutgoingIp)
         .Select(ExtractAddress)
         .Select(ProxyInfo.Parse)
         .ToArray();
     }
+
+    private static bool SameIncomingOutgoingIp(string proxyDefinition) => !proxyDefinition.Contains("!");
 
     private static string ExtractAddress(string proxyDefinition) => proxyDefinition.Split(" ")[0];
   }
