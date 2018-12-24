@@ -6,6 +6,7 @@ using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
 using store_scrapper_2.DAL;
+using store_scrapper_2.Instrumentation;
 using store_scrapper_2.Services;
 using Xunit;
 
@@ -58,6 +59,13 @@ namespace store_scrapper_2_Tests.Configuration
     {
       (IocContainer.Resolve<IDeadlockDetector>() as DeadlockDetector).Should().NotBeNull();      
       ValidateSingletonRegistration<IDeadlockDetector>();
+    }
+
+    [Fact]
+    public void CorrectlyResolvesTheResourcesManager()
+    {
+      (IocContainer.Resolve<IResourcesManager>() as ResourcesManager).Should().NotBeNull();
+      ValidateSingletonRegistration<IResourcesManager>();
     }
     
     [Fact]

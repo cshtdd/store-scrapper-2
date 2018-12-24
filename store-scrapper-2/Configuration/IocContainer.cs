@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
+using store_scrapper_2.Instrumentation;
 using store_scrapper_2.Services;
 
 namespace store_scrapper_2.Configuration
@@ -72,6 +73,10 @@ namespace store_scrapper_2.Configuration
       
       builder.RegisterType<DeadlockDetector>()
         .As<IDeadlockDetector>()
+        .SingleInstance();
+      
+      builder.RegisterType<ResourcesManager>()
+        .As<IResourcesManager>()
         .SingleInstance();
       
       builder.RegisterType<StoreInfoDownloader>()
