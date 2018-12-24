@@ -3,6 +3,7 @@ using System.Reflection;
 
 using log4net;
 using store_scrapper_2.Configuration;
+using store_scrapper_2.Instrumentation;
 using store_scrapper_2.Logging;
 using store_scrapper_2.Services;
 
@@ -39,6 +40,7 @@ namespace store_scrapper_2
       IocContainer.Initialize();
       Mappings.Configure();
       IocContainer.Resolve<IPersistenceInitializer>().Initialize();
+      IocContainer.Resolve<IResourcesManager>().Monitor();
     }
   }
 }
