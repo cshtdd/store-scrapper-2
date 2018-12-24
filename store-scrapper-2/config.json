@@ -20,5 +20,8 @@
   "DeadlockDetection": {
     "Enabled": "true",
     "TimeoutMs": "300000"
+  },
+  "Instrumentation": {
+    "Enabled": "true"
   }
 }
