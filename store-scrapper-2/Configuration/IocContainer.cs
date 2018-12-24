@@ -60,7 +60,7 @@ namespace store_scrapper_2.Configuration
       builder.RegisterType<IgnorePaymentRequiredExceptions>()
         .As<IWebExceptionHandler>();
       
-      builder.RegisterType<ProxyReadingStrategyRoundRobinNeglectFailures>()
+      builder.RegisterType<ProxyReadingStrategyGreedy>()
         .As<IProxyReadingStrategy>();
       
       builder.RegisterType<UrlDownloader>()
