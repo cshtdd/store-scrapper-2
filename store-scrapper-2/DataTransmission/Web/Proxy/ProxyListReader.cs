@@ -18,34 +18,23 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     public IEnumerable<ProxyInfo> Read()
     {
-      var proxyStatusList = ReadSuccessfulProxies();
-
-      return ReadProxies()
-        .Where(p => proxyStatusList.Contains(p.IpAddress))
-        .ToArray();
-    }
-
-    private string[] ReadSuccessfulProxies()
-    {
-      return _urlDownloader.Download(ProxyListStatusUrl)
+      var successfulIps = _urlDownloader
+        .Download(ProxyListStatusUrl)
         .Split(Environment.NewLine)
         .SkipLast(6)
         .Where(IsSuccess)
         .Select(ExtractIp)
         .ToArray();
-    }
 
-    private ProxyInfo[] ReadProxies()
-    {
       return _urlDownloader
         .Download(ProxyListUrl)
         .Split(Environment.NewLine)
-        .ToList()
         .Skip(4)
         .SkipLast(2)
         .Where(SameIncomingOutgoingIp)
         .Select(ExtractAddress)
         .Select(ProxyInfo.Parse)
+        .Where(p => successfulIps.Contains(p.IpAddress))
         .ToArray();
     }
 
