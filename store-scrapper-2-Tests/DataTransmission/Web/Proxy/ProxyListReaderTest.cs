@@ -26,6 +26,14 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
     }
 
     [Fact]
+    public void DownloadsTheProxyStatus()
+    {
+      reader.Read();
+      
+      urlDownloader.Received().Download("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-status.txt");      
+    }
+    
+    [Fact]
     public void CorrectlyParsesTheProxyList()
     {
       urlDownloader.Download(Arg.Any<string>())
