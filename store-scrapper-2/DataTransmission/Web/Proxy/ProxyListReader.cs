@@ -18,8 +18,25 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
 
     public IEnumerable<ProxyInfo> Read()
     {
-      var proxyStatusRaw = _urlDownloader.Download(ProxyListStatusUrl);
+      var proxyStatusList = ReadSuccessfulProxies();
 
+      return ReadProxies()
+        .Where(p => proxyStatusList.Contains(p.IpAddress))
+        .ToArray();
+    }
+
+    private string[] ReadSuccessfulProxies()
+    {
+      return _urlDownloader.Download(ProxyListStatusUrl)
+        .Split(Environment.NewLine)
+        .SkipLast(6)
+        .Where(IsSuccess)
+        .Select(ExtractIp)
+        .ToArray();
+    }
+
+    private ProxyInfo[] ReadProxies()
+    {
       return _urlDownloader
         .Download(ProxyListUrl)
         .Split(Environment.NewLine)
@@ -32,8 +49,9 @@ namespace store_scrapper_2.DataTransmission.Web.Proxy
         .ToArray();
     }
 
+    private static bool IsSuccess(string proxyStatus) => proxyStatus.Contains("success");
     private static bool SameIncomingOutgoingIp(string proxyDefinition) => !proxyDefinition.Contains("!");
-
     private static string ExtractAddress(string proxyDefinition) => proxyDefinition.Split(" ")[0];
+    private static string ExtractIp(string proxyStatus) => proxyStatus.Split(":")[0];
   }
 }
