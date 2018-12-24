@@ -12,15 +12,27 @@ namespace store_scrapper_2_Tests.Instrumentation
     private readonly IConfigurationReader _configurationReader = Substitute.For<IConfigurationReader>();
 
     [Fact]
+    public void CanReceiveNoPerformanceCounters()
+    {
+      new ResourcesManager(null, _configurationReader)
+        .Counters
+        .Count()
+        .Should()
+        .Be(0);
+    }
+    
+    [Fact]
     public void ReceivesAListOfPerformanceCounters()
     {
-      var manager = new ResourcesManager(new[]
+      new ResourcesManager(new[]
       {
         Substitute.For<IPerformanceCounter>(),
         Substitute.For<IPerformanceCounter>()
-      }, _configurationReader);
-
-      manager.Counters.Count().Should().Be(2);
+      }, _configurationReader)
+        .Counters
+        .Count()
+        .Should()
+        .Be(2);
     }
 
     [Fact]

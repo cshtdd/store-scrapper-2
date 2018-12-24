@@ -14,7 +14,7 @@ namespace store_scrapper_2.Instrumentation
     public ResourcesManager(IEnumerable<IPerformanceCounter> counters, IConfigurationReader configurationReader)
     {
       _configurationReader = configurationReader;
-      _counters.AddRange(counters);
+      _counters.AddRange(counters ?? new IPerformanceCounter[] { });
     }
 
     private bool Enabled => _configurationReader.ReadBool(ConfigurationKeys.InstrumentationEnabled);
