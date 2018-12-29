@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using store_scrapper_2;
 using store_scrapper_2.Configuration;
@@ -66,6 +68,13 @@ namespace store_scrapper_2_Tests.Configuration
     {
       (IocContainer.Resolve<IResourcesManager>() as ResourcesManager).Should().NotBeNull();
       ValidateSingletonRegistration<IResourcesManager>();
+
+      var resourcesManager = (ResourcesManager)IocContainer.Resolve<IResourcesManager>();
+      resourcesManager
+        .Counters
+        .FirstOrDefault(c => c is MemoryUsage)
+        .Should()
+        .NotBeNull();
     }
     
     [Fact]
