@@ -26,7 +26,8 @@ namespace store_scrapper_2.Instrumentation
         "WorkingSet64", currentProcess.WorkingSet64,
         "MaxWorkingSet", currentProcess.MaxWorkingSet,
         "PagedMemorySize64", currentProcess.PagedMemorySize64,  
-        "WorkingSet64KB", Convert.ToInt32(currentProcess.WorkingSet64 / 1024)
+        "WorkingSet64KB", Convert.ToInt32(currentProcess.WorkingSet64 / 1024),
+        "TotalGCMemoryKB", Convert.ToInt32(GC.GetTotalMemory(false) / 1024)
       );
     }
   }
