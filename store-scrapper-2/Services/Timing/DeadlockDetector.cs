@@ -2,26 +2,23 @@ using System;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.Logging;
 
-namespace store_scrapper_2.Services
+namespace store_scrapper_2.Services.Timing
 {
   public class DeadlockDetector : IDeadlockDetector, IDisposable
   {
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly IConfigurationReader _configurationReader;
+    private readonly ITimerFactory _timerFactory;
 
     private bool _initialized;
     private readonly object _statusLock = new object();
-    private bool _disposed;
-    private readonly System.Timers.Timer _deadlockTimer = new System.Timers.Timer();
     private DateTime _lastStatus;
 
-    public DeadlockDetector(IConfigurationReader configurationReader)
+    public DeadlockDetector(IConfigurationReader configurationReader, ITimerFactory timerFactory)
     {
       _configurationReader = configurationReader;
-      _deadlockTimer.Interval = 1000;
-      _deadlockTimer.Enabled = false;
-      _deadlockTimer.Elapsed += CheckDeadlock;
+      _timerFactory = timerFactory;
     }
 
     private bool IsEnabled => _configurationReader.ReadBool(ConfigurationKeys.DeadlockDetectionEnabled);
@@ -50,28 +47,7 @@ namespace store_scrapper_2.Services
       StartTimer();
     }
 
-    public void Dispose()
-    {
-      Dispose(true);
-      GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-      if (_disposed)
-      {
-        return;       
-      }
-
-      if (disposing)
-      {
-        StopTimer();
-        _deadlockTimer.Elapsed -= CheckDeadlock;
-        _deadlockTimer.Dispose();
-      }
-
-      _disposed = true;
-    }
+    public void Dispose() => StopTimer();
 
     private void StartTimer()
     {
@@ -80,7 +56,7 @@ namespace store_scrapper_2.Services
         return;
       }
 
-      _deadlockTimer.Start();
+      _timerFactory.Create(CheckDeadlock, 1000).Start();
     }
 
     private void StopTimer()
@@ -90,10 +66,10 @@ namespace store_scrapper_2.Services
         return;
       }
 
-      _deadlockTimer.Stop();
+      _timerFactory.LastCreated.Stop();
     }
 
-    private void CheckDeadlock(object sender, EventArgs e)
+    private void CheckDeadlock()
     {
       double inactivityPeriodMs;
       

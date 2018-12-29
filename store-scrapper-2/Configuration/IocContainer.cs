@@ -8,6 +8,7 @@ using store_scrapper_2.DataTransmission.Web;
 using store_scrapper_2.DataTransmission.Web.Proxy;
 using store_scrapper_2.Instrumentation;
 using store_scrapper_2.Services;
+using store_scrapper_2.Services.Timing;
 
 namespace store_scrapper_2.Configuration
 {

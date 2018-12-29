@@ -9,6 +9,7 @@ using store_scrapper_2.DataTransmission.Web.Proxy;
 using store_scrapper_2.DAL;
 using store_scrapper_2.Instrumentation;
 using store_scrapper_2.Services;
+using store_scrapper_2.Services.Timing;
 using Xunit;
 
 namespace store_scrapper_2_Tests.Configuration
