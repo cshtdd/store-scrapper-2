@@ -1,5 +1,4 @@
 using System;
-using System.Timers;
 using store_scrapper_2.Configuration;
 using store_scrapper_2.Logging;
 
@@ -14,7 +13,7 @@ namespace store_scrapper_2.Services
     private bool _initialized;
     private readonly object _statusLock = new object();
     private bool _disposed;
-    private readonly Timer _deadlockTimer = new Timer();
+    private readonly System.Timers.Timer _deadlockTimer = new System.Timers.Timer();
     private DateTime _lastStatus;
 
     public DeadlockDetector(IConfigurationReader configurationReader)
