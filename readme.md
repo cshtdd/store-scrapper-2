@@ -44,8 +44,8 @@ pushd store-scrapper-2 && \
 ```bash
 docker login -u tddapps repo.treescale.com
 
-docker tag ss2 repo.treescale.com/tddapps/ss2:1.12 && \
- docker tag ss2-arm repo.treescale.com/tddapps/ss2-arm:1.12 && \
+docker tag ss2 repo.treescale.com/tddapps/ss2:1.13 && \
+ docker tag ss2-arm repo.treescale.com/tddapps/ss2-arm:1.13 && \
  docker push repo.treescale.com/tddapps/ss2 && \
  docker push repo.treescale.com/tddapps/ss2-arm && \
  docker system prune -f
