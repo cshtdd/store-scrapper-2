@@ -71,6 +71,12 @@ namespace store_scrapper_2_Tests.Configuration
       ValidateSingletonRegistration<IResourcesManager>();
 
       var resourcesManager = (ResourcesManager)IocContainer.Resolve<IResourcesManager>();
+
+      resourcesManager
+        .Counters
+        .Count()
+        .Should()
+        .Be(3);
       
       resourcesManager
         .Counters
@@ -81,6 +87,12 @@ namespace store_scrapper_2_Tests.Configuration
       resourcesManager
         .Counters
         .FirstOrDefault(c => c is UnhandledExceptionLogger)
+        .Should()
+        .NotBeNull();
+      
+      resourcesManager
+        .Counters
+        .FirstOrDefault(c => c is MemoryReclaimer)
         .Should()
         .NotBeNull();
     }
