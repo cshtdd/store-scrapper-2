@@ -84,7 +84,7 @@ namespace store_scrapper_2.Services.Timing
       }
     }
 
-    private void AbortProgram()
+    protected virtual void AbortProgram()
     {
       System.Threading.ThreadPool.QueueUserWorkItem(_ =>
       {
