@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using store_scrapper_2.Logging;
 using store_scrapper_2.Services;
@@ -24,8 +25,9 @@ namespace store_scrapper_2.Instrumentation
         "MinWorkingSet", currentProcess.MinWorkingSet,
         "WorkingSet64", currentProcess.WorkingSet64,
         "MaxWorkingSet", currentProcess.MaxWorkingSet,
-        "PagedMemorySize64", currentProcess.PagedMemorySize64
-        );
+        "PagedMemorySize64", currentProcess.PagedMemorySize64,  
+        "WorkingSet64KB", Convert.ToInt32(currentProcess.WorkingSet64 / 1024)
+      );
     }
   }
 }
