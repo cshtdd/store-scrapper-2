@@ -6,14 +6,11 @@ namespace store_scrapper_2_Tests.Services.Timing
 {
   public class DeadlockDetectorStub : DeadlockDetector
   {
-    public bool ProgramAborted { get; set; }
+    public bool ProgramAborted { get; private set; }
     
     public DeadlockDetectorStub(IConfigurationReader configurationReader, ITimerFactory timerFactory) 
       : base(configurationReader, timerFactory) { }
 
-    protected override void AbortProgram()
-    {
-      ProgramAborted = true;
-    }
+    protected override void AbortProgram() => ProgramAborted = true;
   }
 }
