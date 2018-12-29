@@ -26,12 +26,12 @@ namespace store_scrapper_2.Services.Timing
 
     public void UpdateStatus()
     {
-      Init();
-      
       lock (_statusLock)
       {
         _lastStatus = DateTime.UtcNow;        
       }
+      
+      Init();
     }
     
     private void Init()
@@ -43,7 +43,6 @@ namespace store_scrapper_2.Services.Timing
       _initialized = true;
       
       Logger.LogInfo("Init", nameof(IsEnabled), IsEnabled, nameof(TimeoutMs), TimeoutMs);
-      UpdateStatus();
       StartTimer();
     }
 
