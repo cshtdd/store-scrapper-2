@@ -2,7 +2,7 @@ using System;
 
 namespace store_scrapper_2.Services
 {
-  public class Timer : ITimer
+  internal sealed class Timer : ITimer
   {
     private readonly Action _timerElapsedDelegate;
     private readonly uint _intervalMs;
@@ -50,7 +50,7 @@ namespace store_scrapper_2.Services
       GC.SuppressFinalize(this);
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
       if (_disposed)
       {
