@@ -19,7 +19,7 @@
   },
   "DeadlockDetection": {
     "Enabled": "true",
-    "TimeoutMs": "300000"
+    "TimeoutMs": "180000"
   },
   "Instrumentation": {
     "Enabled": "true"
