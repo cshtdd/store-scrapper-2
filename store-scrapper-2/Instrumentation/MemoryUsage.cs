@@ -1,43 +1,22 @@
-using System;
 using System.Diagnostics;
-using System.Timers;
 using store_scrapper_2.Logging;
+using store_scrapper_2.Services;
 
 namespace store_scrapper_2.Instrumentation
 {
   public class MemoryUsage : IPerformanceCounter
   {
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
-    private Timer _memoryTimer;
-    
-    public void Start()
-    {
-      if (_memoryTimer != null)
-      {
-        return;
-      }
-      
-      _memoryTimer = new Timer();
-      _memoryTimer.Interval = 1000;
-      _memoryTimer.Elapsed += CheckMemoryUsage;
-      _memoryTimer.Start();
-    }
 
-    public void Stop()
-    {
-      if (_memoryTimer == null)
-      {
-        return;
-      }
-      
-      _memoryTimer.Elapsed -= CheckMemoryUsage;
-      _memoryTimer.Stop();
-      _memoryTimer.Dispose();
-      _memoryTimer = null;
-    }
+    private readonly ITimerFactory _timerFactory;
 
-    private void CheckMemoryUsage(object sender, EventArgs e)
+    public MemoryUsage(ITimerFactory timerFactory) => _timerFactory = timerFactory;
+
+    public void Start() => _timerFactory.Create(CheckMemoryUsage, 1000).Start();
+
+    public void Stop() => _timerFactory.LastCreated.Stop();
+
+    private void CheckMemoryUsage()
     {
       var currentProcess = Process.GetCurrentProcess();
       Logger.LogInfo("MemoryUsage", 
