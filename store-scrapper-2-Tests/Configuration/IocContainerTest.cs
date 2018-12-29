@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using store_scrapper_2;
 using store_scrapper_2.Configuration;
@@ -33,6 +32,7 @@ namespace store_scrapper_2_Tests.Configuration
       IocContainer.Resolve<IDelaySimulator>().Should().NotBeNull();
       IocContainer.Resolve<ICacheWithExpiration>().Should().NotBeNull();
       IocContainer.Resolve<IStorePersistenceCalculator>().Should().NotBeNull();
+      IocContainer.Resolve<ITimerFactory>().Should().NotBeNull();
 
       ValidateSingletonRegistration<IMemoryCache>();
     }
