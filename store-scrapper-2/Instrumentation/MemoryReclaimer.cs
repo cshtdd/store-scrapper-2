@@ -22,12 +22,13 @@ namespace store_scrapper_2.Instrumentation
 
     private void InvokeGarbageCollection()
     {
+      Logger.LogInfo("InvokeGarbageCollection Start");
       var stopwatch = Stopwatch.StartNew();
 
       GCCollectInternal();
 
       stopwatch.Stop();
-      Logger.LogInfo("InvokeGarbageCollection", "ElapsedMs", stopwatch.ElapsedMilliseconds);
+      Logger.LogInfo("InvokeGarbageCollection", "Result", true, "ElapsedMs", stopwatch.ElapsedMilliseconds);
     }
 
     private static void GCCollectInternal()
