@@ -11,7 +11,9 @@ namespace store_scrapper_2.Instrumentation
     private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly ITimerFactory _timerFactory;
-
+    private readonly object _statusLock = new object();
+    private bool _gcBusy = false;
+    
     public MemoryReclaimer(ITimerFactory timerFactory)
     {
       _timerFactory = timerFactory;
@@ -22,23 +24,63 @@ namespace store_scrapper_2.Instrumentation
 
     private void InvokeGarbageCollection()
     {
-      Logger.LogInfo("InvokeGarbageCollection Start");
       var stopwatch = Stopwatch.StartNew();
-
-      GCCollectInternal();
-
+      var shouldCollect = AcquireCollectionLock();
+      
+      Logger.LogInfo("InvokeGarbageCollectionStart", "ShouldCollect", shouldCollect);
+      
+      if (shouldCollect)
+      {
+        CollectInternal();        
+      }
+      
       stopwatch.Stop();
-      Logger.LogInfo("InvokeGarbageCollection", "Result", true, "ElapsedMs", stopwatch.ElapsedMilliseconds);
+      Logger.LogInfo("InvokeGarbageCollection", 
+        "Result", true,
+        "ShouldCollect", shouldCollect,
+        "ElapsedMs", stopwatch.ElapsedMilliseconds
+        );
     }
 
-    private static void GCCollectInternal()
+    private void CollectInternal()
     {
-      var prevCompactionMode = GCSettings.LargeObjectHeapCompactionMode;
+      try
+      {
+        var prevCompactionMode = GCSettings.LargeObjectHeapCompactionMode;
+
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect();
+
+        GCSettings.LargeObjectHeapCompactionMode = prevCompactionMode;
+      }
+      finally
+      {
+        ReleaseCollectionLock();
+      }
+    }
+
+    private bool AcquireCollectionLock()
+    {
+      var result = false;
       
-      GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-      GC.Collect();
-      
-      GCSettings.LargeObjectHeapCompactionMode = prevCompactionMode;
+      lock (_statusLock)
+      {
+        if (!_gcBusy)
+        {
+          _gcBusy = true;
+          result = true;
+        }
+      }
+
+      return result;
+    }
+    
+    private void ReleaseCollectionLock()
+    {
+      lock (_statusLock)
+      {
+        _gcBusy = false;
+      }
     }
   }
 }
