@@ -41,6 +41,7 @@ namespace store_scrapper_2
       Mappings.Configure();
       IocContainer.Resolve<IPersistenceInitializer>().Initialize();
       IocContainer.Resolve<IResourcesManager>().Monitor();
+      IocContainer.Resolve<IDeadlockDetector>().UpdateStatus();
     }
   }
 }
