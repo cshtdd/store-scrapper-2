@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DebugEFCore;
+using store_scrapper_2.Logging;
 
 namespace store_scrapper_2.DAL.Db
 {
@@ -8,6 +9,8 @@ namespace store_scrapper_2.DAL.Db
     private readonly string _connectionString;
     private readonly bool _loggingEnabled;
 
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    
     internal StoreDataContext(string connectionString, bool loggingEnabled)
     {
       _connectionString = connectionString;
@@ -20,6 +23,9 @@ namespace store_scrapper_2.DAL.Db
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       ConfigureLogging(optionsBuilder);
+      
+      Logger.LogDebug("OnConfiguring", "ConnectionString", _connectionString);
+      
       optionsBuilder.UseNpgsql(_connectionString);
     }
 
