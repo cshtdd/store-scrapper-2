@@ -19,7 +19,7 @@ PROJECT_FILE=store-scrapper-2/store-scrapper-2.csproj && \
 ## Run the application in the development machine  
 
 ```bash
-pushd store-scrapper-2/bin/Debug/netcoreapp2.0 && \
+pushd store-scrapper-2/bin/Debug/netcoreapp2.1 && \
   dotnet store-scrapper-2.dll && \
   popd
 ```
