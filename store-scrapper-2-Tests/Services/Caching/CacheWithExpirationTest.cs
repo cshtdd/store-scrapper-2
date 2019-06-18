@@ -11,17 +11,17 @@ namespace store_scrapper_2_Tests.Services
     private readonly ICacheWithExpiration cache = new CacheWithExpiration(new MemoryCache(new MemoryCacheOptions()));
     
     [Fact]
-    public void DoesNotFindEpiredKeys()
+    public void DoesNotFindExpiredKeys()
     {
       cache.Contains("key1").Should().BeFalse();
       cache.Contains("key2").Should().BeFalse();
     
-      cache.Add("key1", 5);
+      cache.Add("key1", 100);
 
       cache.Contains("key1").Should().BeTrue();
       cache.Contains("key2").Should().BeFalse();
 
-      Thread.Sleep(10);
+      Thread.Sleep(200);
 
       cache.Contains("key1").Should().BeFalse();
       cache.Contains("key2").Should().BeFalse();
@@ -32,15 +32,15 @@ namespace store_scrapper_2_Tests.Services
     {
       cache.Contains("key1").Should().BeFalse();
 
-      cache.Add("key1", 5);
+      cache.Add("key1", 100);
 
       cache.Contains("key1").Should().BeTrue();
 
-      cache.Add("key1", 5);
+      cache.Add("key1", 100);
 
       cache.Contains("key1").Should().BeTrue();
       
-      Thread.Sleep(10);
+      Thread.Sleep(200);
 
       cache.Contains("key1").Should().BeFalse();
     }
