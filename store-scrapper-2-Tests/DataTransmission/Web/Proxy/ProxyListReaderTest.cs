@@ -10,7 +10,7 @@ namespace store_scrapper_2_Tests.DataTransmission.Web.Proxy
   public class ProxyListReaderTest
   {
     private const string ProxyListUrl = "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt";
-    private const string ProxyListStatusUrl = "https://raw.githubusercontent.com/clarketm/proxy-list/32211a1624f0038c80886617e8536b140f220865/proxy-list-status.txt";
+    private const string ProxyListStatusUrl = "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-status.txt";
     
     private readonly IUrlDownloader urlDownloader = Substitute.For<IUrlDownloader>();
     private readonly ProxyListReader reader;
