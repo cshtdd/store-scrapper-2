@@ -6,15 +6,21 @@ namespace store_scrapper_2.Configuration
 {
   public static class Mappings
   {
+    private static IMapper _mapper;
+
     public static void Configure()
     {
-      Mapper.Initialize(_ =>
+      var config = new MapperConfiguration(_ =>
       {
         _.AddProfile<DalMappingProfile>();
       });
       
-      Mapper.AssertConfigurationIsValid();
+      _mapper = new Mapper(config);
+      _mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
+
+    public static TDestination Map<TDestination>(object source) => _mapper.Map<TDestination>(source);
+    public static TDestination Map<TSource, TDestination>(TSource source, TDestination destination) => _mapper.Map(source, destination);
 
     private class DalMappingProfile : Profile
     {

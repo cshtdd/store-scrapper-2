@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using store_scrapper_2.Configuration;
 using store_scrapper_2.DataTransmission;
 using store_scrapper_2.DAL;
 using store_scrapper_2.DAL.Db;
@@ -30,7 +29,7 @@ namespace store_scrapper_2
       
       using (var db = _contextFactory.Create())
       {
-        var newDbStores = stores.Select(_ => Mapper.Map<Store>(_));
+        var newDbStores = stores.Select(_ => Mappings.Map<Store>(_));
         db.Stores.AddRange(newDbStores);
         SaveContextChanges(db);
       }
@@ -142,7 +141,7 @@ namespace store_scrapper_2
     internal static Store UpdateFrom(this Store sender, IEnumerable<StoreInfo> list)
     {
       var source = sender.FindIn(list);
-      return Mapper.Map(source, sender);
+      return Mappings.Map(source, sender);
     }
     
     private static StoreInfo FindIn(this Store sender, IEnumerable<StoreInfo> list)
